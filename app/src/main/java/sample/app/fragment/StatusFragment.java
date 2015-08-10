@@ -13,15 +13,12 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
 import com.squareup.picasso.Picasso;
-
 import twitter4j.Status;
 import twitter4j.MediaEntity;
 
 import sample.app.R;
 import sample.app.fragment.StatusFragment;
-import sample.app.util.PicassoLoader;
 import sample.app.view.adapter.MediaGridViewAdapter;
 
 public class StatusFragment extends Fragment {
@@ -56,10 +53,9 @@ public class StatusFragment extends Fragment {
         super.onResume();
         Log.v(TAG, "onResume");
 
+        Picasso pcs = Picasso.with(getActivity());
         Status status = getStatus();
         statusText.setText(status.getText());
-
-        Picasso pcs = PicassoLoader.getPicasso(getActivity());
 
         pcs.load(status.getUser().getProfileBackgroundImageURL())
             .fit()

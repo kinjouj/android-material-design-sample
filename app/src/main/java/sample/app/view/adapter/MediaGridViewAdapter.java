@@ -10,9 +10,8 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
 import twitter4j.MediaEntity;
-
-import sample.app.util.PicassoLoader;
 
 public class MediaGridViewAdapter extends BaseAdapter {
 
@@ -47,23 +46,19 @@ public class MediaGridViewAdapter extends BaseAdapter {
 
         if (convertView == null) {
             imageView = new ImageView(context);
-            imageView.setLayoutParams(
-                new GridView.LayoutParams(130, 130)
-            );
+            imageView.setLayoutParams(new GridView.LayoutParams(130, 130));
         } else {
             imageView = (ImageView)convertView;
         }
 
         final MediaEntity entity = (MediaEntity)getItem(position);
-        PicassoLoader.load(context, entity.getMediaURL()).fit().into(imageView);
+        Picasso.with(context).load(entity.getMediaURL()).fit().into(imageView);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(entity.getMediaURL())
-                );
+                Uri uri = Uri.parse(entity.getMediaURL());
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 context.startActivity(intent);
             }
         });

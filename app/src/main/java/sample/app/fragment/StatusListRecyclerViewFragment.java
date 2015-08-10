@@ -59,7 +59,7 @@ public class StatusListRecyclerViewFragment extends Fragment
     public void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         Log.v(TAG, "onCreate");
-        adapter = new SampleAdapter();
+        adapter = new SampleAdapter(getActivity());
     }
 
     @Override
@@ -102,9 +102,7 @@ public class StatusListRecyclerViewFragment extends Fragment
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            for (Status status : statuses) {
-                                adapter.add(status);
-                            }
+                            adapter.addAll(statuses);
 
                             if (runOnUiThreadRunnable != null) {
                                 runOnUiThreadRunnable.run();

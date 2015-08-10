@@ -9,11 +9,10 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
+import com.squareup.picasso.Picasso;
 import twitter4j.User;
 
 import sample.app.R;
-import sample.app.util.PicassoLoader;
 import sample.app.util.TwitterApi;
 
 public class DrawerHeaderView extends FrameLayout {
@@ -45,17 +44,15 @@ public class DrawerHeaderView extends FrameLayout {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
+                            Picasso pcs = Picasso.with(context);
+
                             userName.setText(user.getName());
 
-                            PicassoLoader.load(
-                                context,
-                                user.getProfileBackgroundImageURL()
-                            ).fit().into(userBg);
+                            pcs.load(user.getProfileBackgroundImageURL())
+                                .fit()
+                                .into(userBg);
 
-                            PicassoLoader.load(
-                                context,
-                                user.getProfileImageURL()
-                            ).into(userIcon);
+                            pcs.load(user.getProfileImageURL()).into(userIcon);
                         }
                     });
                 } catch (Exception e) {

@@ -1,6 +1,7 @@
 package sample.app.view.adapter;
 
 import java.io.IOException;
+import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,11 +28,17 @@ import twitter4j.User;
 import sample.app.MainActivity;
 import sample.app.R;
 import sample.app.fragment.StatusFragment;
-import sample.app.util.PicassoLoader;
 
 public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.ViewHolder> {
 
-    SortedList<Status> statuses = new SortedList<>(Status.class, new SampleCallback());
+    private SortedList<Status> statuses = new SortedList<>(Status.class, new SampleCallback());
+    private Context context;
+    private Picasso picasso;
+
+    public SampleAdapter(Context context) {
+        this.context = context;
+        picasso = Picasso.with(context);
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -52,29 +59,27 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.ViewHolder
 
         viewHolder.content.setText(status.getText());
         viewHolder.mediaGrid.setAdapter(
-            new MediaGridViewAdapter(
-                viewHolder.getContext(),
-                status.getExtendedMediaEntities()
-            )
+            new MediaGridViewAdapter(context, status.getExtendedMediaEntities())
         );
 
         User user = status.getUser();
-        Picasso pcs = PicassoLoader.getPicasso(viewHolder.getContext());
-        pcs.load(user.getProfileBackgroundImageURL()).fit().into(viewHolder.userBg);
-        pcs.load(user.getProfileImageURL()).into(viewHolder.userIcon);
+        picasso.load(user.getProfileBackgroundImageURL())
+                .fit()
+                .into(viewHolder.userBg);
+
+        picasso.load(user.getProfileImageURL())
+                .into(viewHolder.userIcon);
 
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AppCompatActivity activity = (AppCompatActivity)view.getContext();
-
                 Bundle extras = new Bundle();
                 extras.putSerializable(StatusFragment.EXTRA_STATUS, status);
 
                 StatusFragment fragment = new StatusFragment();
                 fragment.setArguments(extras);
 
-                FragmentTransaction transaction = activity
+                FragmentTransaction transaction = ((AppCompatActivity)context)
                                                     .getSupportFragmentManager()
                                                     .beginTransaction();
 
@@ -93,6 +98,16 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.ViewHolder
 
     public void add(Status status) {
         statuses.add(status);
+    }
+
+    public void addAll(List<Status> statuses) {
+        this.statuses.beginBatchedUpdates();
+
+        for (Status status : statuses) {
+            add(status);
+        }
+
+        this.statuses.endBatchedUpdates();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -115,10 +130,6 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.ViewHolder
             super(view);
             root = view;
             ButterKnife.bind(this, view);
-        }
-
-        public Context getContext() {
-            return root.getContext();
         }
     }
 
@@ -143,8 +154,8 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.ViewHolder
 
         @Override
         public void onInserted(int position, int count) {
+            Log.v(TAG, "onInserted: " + position + " , " + count);
             notifyItemRangeInserted(position, count);
-            Log.v(TAG, "count: " + count);
         }
 
         @Override
