@@ -1,4 +1,4 @@
-package sample.app.fragment;
+package kinjouj.app.android.twitter.fragment;
 
 import java.util.List;
 
@@ -20,10 +20,10 @@ import butterknife.ButterKnife;
 
 import twitter4j.Status;
 
-import sample.app.MainActivity;
-import sample.app.R;
-import sample.app.util.TwitterApi;
-import sample.app.view.adapter.SampleAdapter;
+import kinjouj.app.android.twitter.MainActivity;
+import kinjouj.app.android.twitter.TwitterApi;
+import kinjouj.app.android.twitter.R;
+import kinjouj.app.android.twitter.view.adapter.SampleAdapter;
 
 public class StatusListRecyclerViewFragment extends Fragment
     implements SwipeRefreshLayout.OnRefreshListener,

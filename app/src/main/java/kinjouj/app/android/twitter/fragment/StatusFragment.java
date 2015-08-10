@@ -1,4 +1,4 @@
-package sample.app.fragment;
+package kinjouj.app.android.twitter.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,9 +17,9 @@ import com.squareup.picasso.Picasso;
 import twitter4j.Status;
 import twitter4j.MediaEntity;
 
-import sample.app.R;
-import sample.app.fragment.StatusFragment;
-import sample.app.view.adapter.MediaGridViewAdapter;
+import kinjouj.app.android.twitter.R;
+import kinjouj.app.android.twitter.fragment.StatusFragment;
+import kinjouj.app.android.twitter.view.adapter.MediaGridViewAdapter;
 
 public class StatusFragment extends Fragment {
 

@@ -1,4 +1,4 @@
-package sample.app.view.adapter;
+package kinjouj.app.android.twitter.view.adapter;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,9 +25,9 @@ import com.squareup.picasso.Picasso;
 import twitter4j.Status;
 import twitter4j.User;
 
-import sample.app.MainActivity;
-import sample.app.R;
-import sample.app.fragment.StatusFragment;
+import kinjouj.app.android.twitter.MainActivity;
+import kinjouj.app.android.twitter.R;
+import kinjouj.app.android.twitter.fragment.StatusFragment;
 
 public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.ViewHolder> {
 

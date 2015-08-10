@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <sample.app.view.MediaGridView
+            <kinjouj.app.android.twitter.view.MediaGridView
                 android:id="@+id/status_per_media_grid"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

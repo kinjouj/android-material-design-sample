@@ -1,4 +1,4 @@
-package sample.app.view;
+package kinjouj.app.android.twitter.view;
 
 import android.content.Context;
 import android.view.ViewGroup;

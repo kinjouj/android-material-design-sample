@@ -1,10 +1,12 @@
-package sample.app.util;
+package kinjouj.app.android.twitter;
 
 import java.util.List;
 import java.util.ArrayList;
 
 import android.app.Activity;
 
+import butterknife.BindString;
+import butterknife.ButterKnife;
 import twitter4j.Paging;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -13,10 +15,7 @@ import twitter4j.User;
 import twitter4j.UserList;
 import twitter4j.auth.AccessToken;
 
-import butterknife.BindString;
-import butterknife.ButterKnife;
-
-import sample.app.R;
+import kinjouj.app.android.twitter.R;
 
 public class TwitterApi {
 

@@ -1,4 +1,4 @@
-package sample.app;
+package kinjouj.app.android.twitter;
 
 import java.util.List;
 
@@ -24,8 +24,8 @@ import android.support.design.widget.NavigationView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import sample.app.fragment.StatusListRecyclerViewFragment;
-import sample.app.view.DrawerHeaderView;
+import kinjouj.app.android.twitter.fragment.StatusListRecyclerViewFragment;
+import kinjouj.app.android.twitter.view.DrawerHeaderView;
 
 public class MainActivity extends AppCompatActivity
     implements Toolbar.OnMenuItemClickListener,

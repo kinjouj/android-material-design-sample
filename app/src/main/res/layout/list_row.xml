@@ -47,7 +47,7 @@
             android:layout_margin="10dp"
             android:textColor="@android:color/black" />
 
-        <sample.app.view.MediaGridView
+        <kinjouj.app.android.twitter.view.MediaGridView
             android:id="@+id/status_media_grid"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
