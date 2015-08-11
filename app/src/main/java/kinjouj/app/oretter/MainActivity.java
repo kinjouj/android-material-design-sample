@@ -19,18 +19,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.NavigationView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 import kinjouj.app.oretter.fragment.SearchRecyclerViewFragment;
 import kinjouj.app.oretter.fragment.StatusListRecyclerViewFragment;
-import kinjouj.app.oretter.view.DrawerHeaderView;
 
 public class MainActivity extends AppCompatActivity
     implements Toolbar.OnMenuItemClickListener,
-               NavigationView.OnNavigationItemSelectedListener,
                SearchView.OnQueryTextListener {
 
     private static final String TAG = MainActivity.class.getName();
@@ -44,9 +41,6 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.navigation_view)
-    NavigationView navigationView;
-
     private SearchView searchView;
 
     @Override
@@ -55,7 +49,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.main);
         ButterKnife.bind(this);
 
-        initNavigationView();
         initToolbar();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -124,20 +117,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
-        int id = menuItem.getItemId();
-
-        switch (id) {
-            default:
-                showToast("unknown");
-                break;
-
-        }
-
-        return false;
-    }
-
-    @Override
     public boolean onQueryTextChange(String newString) {
         return true;
     }
@@ -155,22 +134,17 @@ public class MainActivity extends AppCompatActivity
 
         FragmentManager manager = getSupportFragmentManager();
 
-        if (manager.findFragmentByTag("search_fragment") != null) {
+        if (manager.findFragmentByTag(SearchRecyclerViewFragment.FRAGMENT_TAG) != null) {
             manager.popBackStack();
         }
 
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.content, fragment, "search_fragment");
+        transaction.replace(R.id.content, fragment, SearchRecyclerViewFragment.FRAGMENT_TAG);
         transaction.addToBackStack(null);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.commit();
 
         return false;
-    }
-
-    private void initNavigationView() {
-        navigationView.addHeaderView(new DrawerHeaderView(this));
-        navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void initToolbar() {

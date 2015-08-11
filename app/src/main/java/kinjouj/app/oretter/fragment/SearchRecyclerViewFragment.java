@@ -11,6 +11,7 @@ import kinjouj.app.oretter.TwitterApi;
 
 public class SearchRecyclerViewFragment extends RecyclerViewFragment {
 
+    public static final String FRAGMENT_TAG = "fragment_search";
     public static final String EXTRA_QUERY = "extra_query";
     private Handler handler = new Handler();
 
