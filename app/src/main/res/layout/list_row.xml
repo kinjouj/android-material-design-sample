@@ -23,7 +23,8 @@
                 android:id="@+id/user_bg_image"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
-                android:scaleType="fitCenter" />
+                android:scaleType="centerCrop"
+                android:contentDescription="@null" />
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/user_icon_image"
@@ -33,7 +34,7 @@
                 android:layout_marginStart="@dimen/spacing_medium"
                 android:layout_marginLeft="@dimen/spacing_small"
                 android:layout_marginTop="136dp"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
                 app:riv_border_color="@android:color/transparent"
                 app:riv_border_width="3dp"
                 app:riv_corner_radius="8dp" />
@@ -47,7 +48,7 @@
             android:layout_margin="10dp"
             android:textColor="@android:color/black" />
 
-        <kinjouj.app.android.twitter.view.MediaGridView
+        <kinjouj.app.oretter.view.MediaGridView
             android:id="@+id/status_media_grid"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"

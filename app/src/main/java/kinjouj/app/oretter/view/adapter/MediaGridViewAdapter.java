@@ -1,4 +1,4 @@
-package kinjouj.app.android.twitter.view.adapter;
+package kinjouj.app.oretter.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package kinjouj.app.android.twitter.fragment;
+package kinjouj.app.oretter.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,9 +17,9 @@ import com.squareup.picasso.Picasso;
 import twitter4j.Status;
 import twitter4j.MediaEntity;
 
-import kinjouj.app.android.twitter.R;
-import kinjouj.app.android.twitter.fragment.StatusFragment;
-import kinjouj.app.android.twitter.view.adapter.MediaGridViewAdapter;
+import kinjouj.app.oretter.R;
+import kinjouj.app.oretter.fragment.StatusFragment;
+import kinjouj.app.oretter.view.adapter.MediaGridViewAdapter;
 
 public class StatusFragment extends Fragment {
 
@@ -44,15 +44,18 @@ public class StatusFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.detail, container, false);
         ButterKnife.bind(this, view);
+        bindView();
 
         return view;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.v(TAG, "onResume");
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
+    private void bindView() {
         Picasso pcs = Picasso.with(getActivity());
         Status status = getStatus();
         statusText.setText(status.getText());

@@ -1,4 +1,4 @@
-package kinjouj.app.android.twitter.view;
+package kinjouj.app.oretter.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,8 +12,8 @@ import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import twitter4j.User;
 
-import kinjouj.app.android.twitter.TwitterApi;
-import kinjouj.app.android.twitter.R;
+import kinjouj.app.oretter.TwitterApi;
+import kinjouj.app.oretter.R;
 
 public class DrawerHeaderView extends FrameLayout {
 

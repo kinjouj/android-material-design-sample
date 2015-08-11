@@ -1,15 +1,15 @@
-package kinjouj.app.android.twitter;
+package kinjouj.app.oretter;
 
 import java.util.List;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -24,8 +24,9 @@ import android.support.design.widget.NavigationView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import kinjouj.app.android.twitter.fragment.StatusListRecyclerViewFragment;
-import kinjouj.app.android.twitter.view.DrawerHeaderView;
+import kinjouj.app.oretter.fragment.SearchRecyclerViewFragment;
+import kinjouj.app.oretter.fragment.StatusListRecyclerViewFragment;
+import kinjouj.app.oretter.view.DrawerHeaderView;
 
 public class MainActivity extends AppCompatActivity
     implements Toolbar.OnMenuItemClickListener,
@@ -51,15 +52,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        Log.v(TAG, "onCreate");
         setContentView(R.layout.main);
-
         ButterKnife.bind(this);
 
         initNavigationView();
         initToolbar();
 
-        FragmentTransaction transaction = getSupportFragmentManager() .beginTransaction();
+        FragmentTransaction transaction = beginTransaction();
         transaction.replace(R.id.content, new StatusListRecyclerViewFragment());
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.commit();
@@ -73,7 +72,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        Log.v(TAG, "onCreateOptionsMenu");
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
 
         MenuItem searchMenuItem = menu.findItem(R.id.tb_menu_search);
@@ -88,9 +86,11 @@ public class MainActivity extends AppCompatActivity
         Log.v(TAG, "onBackPressed");
 
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            Log.v(TAG, "onBackPressed: closeDrawer");
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             if (searchView != null && !searchView.isIconified()) {
+                Log.v(TAG, "onBackPressed: SearchView.onActionViewCollapsed");
                 searchView.onActionViewCollapsed();
             } else {
                 super.onBackPressed();
@@ -143,7 +143,27 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        showToast("query: " + query);
+        searchView.clearFocus();
+        searchView.onActionViewCollapsed();
+
+        Bundle extras = new Bundle();
+        extras.putString(SearchRecyclerViewFragment.EXTRA_QUERY, query);
+
+        SearchRecyclerViewFragment fragment = new SearchRecyclerViewFragment();
+        fragment.setArguments(extras);
+
+        FragmentManager manager = getSupportFragmentManager();
+
+        if (manager.findFragmentByTag("search_fragment") != null) {
+            manager.popBackStack();
+        }
+
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.content, fragment, "search_fragment");
+        transaction.addToBackStack(null);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.commit();
+
         return false;
     }
 
@@ -176,6 +196,10 @@ public class MainActivity extends AppCompatActivity
         //drawerLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
+    }
+
+    private FragmentTransaction beginTransaction() {
+        return getSupportFragmentManager().beginTransaction();
     }
 
     private void showToast(String message) {

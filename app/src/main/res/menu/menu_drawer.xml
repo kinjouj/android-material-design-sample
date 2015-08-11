@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -7,15 +7,23 @@
 
         <item
             android:id="@+id/nav_menu_my_tweet"
-            android:title="マイツイ" />
+            android:title="@string/nav_menu_my_tweet" />
 
         <item
             android:id="@+id/nav_menu_mention"
-            android:title="レス" />
+            android:title="@string/nav_menu_mention" />
 
         <item
             android:id="@+id/nav_menu_favorite"
-            android:title="ふぁぼ" />
+            android:title="@string/nav_menu_favorite" />
 
     </group>
+
+    <!--
+    <item android:title="sub items">
+        <menu>
+            <item android:title="sub item1" />
+        </menu>
+    </item>
+    -->
 </menu>

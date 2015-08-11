@@ -1,4 +1,4 @@
-package kinjouj.app.android.twitter;
+package kinjouj.app.oretter;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import android.app.Activity;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import twitter4j.Paging;
+import twitter4j.Query;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
@@ -15,7 +16,7 @@ import twitter4j.User;
 import twitter4j.UserList;
 import twitter4j.auth.AccessToken;
 
-import kinjouj.app.android.twitter.R;
+import kinjouj.app.oretter.R;
 
 public class TwitterApi {
 
@@ -56,6 +57,10 @@ public class TwitterApi {
         User user = twitter.verifyCredentials();
 
         return twitter.getUserLists(user.getId());
+    }
+
+    public static List<Status> search(Activity activity, String query) throws Exception {
+        return new TwitterApi().getTwitter(activity).search(new Query(query)).getTweets();
     }
 
     public static User getCurrentUser(Activity activity) throws Exception {

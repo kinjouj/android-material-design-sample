@@ -18,8 +18,8 @@
                 android:id="@+id/detail_user_bg_image"
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
-                android:scaleType="fitCenter" />
-
+                android:scaleType="centerCrop"
+                android:contentDescription="@null" />
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/detail_user_image"
@@ -44,7 +44,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <kinjouj.app.android.twitter.view.MediaGridView
+            <kinjouj.app.oretter.view.MediaGridView
                 android:id="@+id/status_per_media_grid"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

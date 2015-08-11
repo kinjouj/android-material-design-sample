@@ -1,4 +1,4 @@
-package kinjouj.app.android.twitter.view.adapter;
+package kinjouj.app.oretter.view.adapter;
 
 import java.io.IOException;
 import java.util.List;
@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +26,9 @@ import com.squareup.picasso.Picasso;
 import twitter4j.Status;
 import twitter4j.User;
 
-import kinjouj.app.android.twitter.MainActivity;
-import kinjouj.app.android.twitter.R;
-import kinjouj.app.android.twitter.fragment.StatusFragment;
+import kinjouj.app.oretter.MainActivity;
+import kinjouj.app.oretter.R;
+import kinjouj.app.oretter.fragment.StatusFragment;
 
 public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.ViewHolder> {
 
@@ -58,6 +59,8 @@ public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.ViewHolder
         final Status status = _status;
 
         viewHolder.content.setText(status.getText());
+        Linkify.addLinks(viewHolder.content, Linkify.WEB_URLS);
+
         viewHolder.mediaGrid.setAdapter(
             new MediaGridViewAdapter(context, status.getExtendedMediaEntities())
         );
