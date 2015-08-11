@@ -30,13 +30,13 @@ import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.StatusFragment;
 
-public class SampleAdapter extends RecyclerView.Adapter<SampleAdapter.ViewHolder> {
+public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusListRecyclerViewAdapter.ViewHolder> {
 
     private SortedList<Status> statuses = new SortedList<>(Status.class, new SampleCallback());
     private Context context;
     private Picasso picasso;
 
-    public SampleAdapter(Context context) {
+    public StatusListRecyclerViewAdapter(Context context) {
         this.context = context;
         picasso = Picasso.with(context);
     }

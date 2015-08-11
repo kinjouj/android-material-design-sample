@@ -19,11 +19,4 @@
 
     </group>
 
-    <!--
-    <item android:title="sub items">
-        <menu>
-            <item android:title="sub item1" />
-        </menu>
-    </item>
-    -->
 </menu>

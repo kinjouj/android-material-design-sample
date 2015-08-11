@@ -17,15 +17,20 @@ public class SearchRecyclerViewFragment extends RecyclerViewFragment {
     @Override
     public void onResume() {
         super.onResume();
-        fetchTimeline();
+        fetchTimeline(null);
     }
 
     @Override
     public void onRefresh() {
-        swipeRefreshLayout.setRefreshing(false);
+        fetchTimeline(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
-    private void fetchTimeline() {
+    private void fetchTimeline(final Runnable callback) {
         new Thread() {
             @Override
             public void run() {
@@ -39,10 +44,18 @@ public class SearchRecyclerViewFragment extends RecyclerViewFragment {
                         @Override
                         public void run() {
                             adapter.addAll(statuses);
+
+                            if (callback != null) {
+                                callback.run();
+                            }
                         }
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
+
+                    if (callback != null) {
+                        callback.run();
+                    }
                 }
             }
         }.start();

@@ -68,10 +68,7 @@ public class StatusFragment extends Fragment {
             .into(userImage);
 
         mediaGrid.setAdapter(
-            new MediaGridViewAdapter(
-                getActivity(),
-                status.getExtendedMediaEntities()
-            )
+            new MediaGridViewAdapter(getActivity(), status.getExtendedMediaEntities())
         );
     }
 

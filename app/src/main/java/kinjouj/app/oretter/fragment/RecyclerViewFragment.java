@@ -21,7 +21,7 @@ import twitter4j.Status;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.TwitterApi;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.view.adapter.SampleAdapter;
+import kinjouj.app.oretter.view.adapter.StatusListRecyclerViewAdapter;
 
 public abstract class RecyclerViewFragment extends Fragment
     implements SwipeRefreshLayout.OnRefreshListener,
@@ -35,7 +35,7 @@ public abstract class RecyclerViewFragment extends Fragment
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    protected SampleAdapter adapter;
+    protected StatusListRecyclerViewAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -53,7 +53,7 @@ public abstract class RecyclerViewFragment extends Fragment
     public void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         Log.v(TAG, "onCreate");
-        adapter = new SampleAdapter(getActivity());
+        adapter = new StatusListRecyclerViewAdapter(getActivity());
     }
 
     @Override

@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity
         initNavigationView();
         initToolbar();
 
-        FragmentTransaction transaction = beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content, new StatusListRecyclerViewFragment());
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.commit();
@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity
         Log.v(TAG, "onSearchRequested");
 
         if (searchView != null && searchView.isIconified()) {
+            Log.v(TAG, "onSearchRequested: onActionViewExpanded");
             searchView.onActionViewExpanded();
         }
 
@@ -196,10 +197,6 @@ public class MainActivity extends AppCompatActivity
         //drawerLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
-    }
-
-    private FragmentTransaction beginTransaction() {
-        return getSupportFragmentManager().beginTransaction();
     }
 
     private void showToast(String message) {
