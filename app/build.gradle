@@ -28,6 +28,9 @@ android {
     }
 
     lintOptions {
+        disable 'InvalidPackage'
+        disable 'RtlEnabled'
+        disable 'RtlHardcoded'
     }
 
     buildTypes {

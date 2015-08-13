@@ -1,7 +1,9 @@
 package kinjouj.app.oretter.fragment;
 
+import java.util.Collections;
 import java.util.List;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
 
@@ -12,53 +14,33 @@ import kinjouj.app.oretter.TwitterApi;
 public class SearchRecyclerViewFragment extends RecyclerViewFragment {
 
     public static final String FRAGMENT_TAG = "fragment_search";
-    public static final String EXTRA_QUERY = "extra_query";
-    private Handler handler = new Handler();
+    private static final String EXTRA_QUERY = "extra_query";
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        fetchTimeline(null);
+    public List<Status> fetchTimeline() {
+        List<Status> statuses = null;
+
+        try {
+            statuses = TwitterApi.search(getActivity(), getQuery());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            statuses = Collections.<Status>emptyList();
+        }
+
+        return statuses;
     }
 
-    @Override
-    public void onRefresh() {
-        fetchTimeline(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+    private String getQuery() {
+        return getArguments().getString(EXTRA_QUERY);
     }
 
-    private void fetchTimeline(final Runnable callback) {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    final List<Status> statuses = TwitterApi.search(
-                        getActivity(),
-                        getArguments().getString(EXTRA_QUERY)
-                    );
+    public static SearchRecyclerViewFragment newInstance(String query) {
+        Bundle extras = new Bundle();
+        extras.putString(EXTRA_QUERY, query);
 
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.addAll(statuses);
+        SearchRecyclerViewFragment fragment = new SearchRecyclerViewFragment();
+        fragment.setArguments(extras);
 
-                            if (callback != null) {
-                                callback.run();
-                            }
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-
-                    if (callback != null) {
-                        callback.run();
-                    }
-                }
-            }
-        }.start();
+        return fragment;
     }
 }

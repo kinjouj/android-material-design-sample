@@ -3,6 +3,7 @@ package kinjouj.app.oretter.fragment;
 import java.util.List;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,7 @@ public abstract class RecyclerViewFragment extends Fragment
     implements SwipeRefreshLayout.OnRefreshListener,
                AppBarLayout.OnOffsetChangedListener {
 
-    private static final String TAG = StatusListRecyclerViewFragment.class.getName();
+    private static final String TAG = RecyclerViewFragment.class.getName();
 
     @Bind(R.id.refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -52,22 +53,31 @@ public abstract class RecyclerViewFragment extends Fragment
     @Override
     public void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
-        Log.v(TAG, "onCreate");
+        setRetainInstance(true);
         adapter = new StatusListRecyclerViewAdapter(getActivity());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume");
         ((MainActivity)getActivity()).addOnOffsetChangedListener(this);
+        load(null);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.v(TAG, "onPause");
         ((MainActivity)getActivity()).removeOnOffsetChangedListener(this);
+    }
+
+    @Override
+    public void onRefresh() {
+        load(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -78,4 +88,25 @@ public abstract class RecyclerViewFragment extends Fragment
     public RecyclerView.LayoutManager getLayoutManager() {
         return new LinearLayoutManager(getActivity());
     }
+
+    private void load(final Runnable callback) {
+        final Handler handler = new Handler();
+
+        new Thread() {
+            @Override
+            public void run() {
+                final List<Status> statuses = fetchTimeline();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.addAll(statuses);
+
+                        if (callback != null) callback.run();
+                    }
+                });
+            }
+        }.start();
+    }
+
+    abstract List<Status> fetchTimeline();
 }

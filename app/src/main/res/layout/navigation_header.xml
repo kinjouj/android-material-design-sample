@@ -1,14 +1,10 @@
 <?xml version="1.0" ?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:focusableInTouchMode="false">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/nav_user_bg"
@@ -43,6 +39,4 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-    </RelativeLayout>
-
-</LinearLayout>
+</RelativeLayout>

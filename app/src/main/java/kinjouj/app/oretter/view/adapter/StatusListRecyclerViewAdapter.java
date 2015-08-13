@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -23,14 +21,17 @@ import android.support.v7.widget.RecyclerView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
+import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.User;
 
-import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.StatusFragment;
+import kinjouj.app.oretter.view.UserIconImageView;
 
 public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusListRecyclerViewAdapter.ViewHolder> {
+
+    private static final String TAG = StatusListRecyclerViewAdapter.class.getName();
 
     private SortedList<Status> statuses = new SortedList<>(Status.class, new SampleCallback());
     private Context context;
@@ -43,7 +44,7 @@ public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusLi
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_row, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.list_row, viewGroup, false);
 
         return new ViewHolder(view);
     }
@@ -51,41 +52,25 @@ public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusLi
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
         Status _status = statuses.get(i);
+        final Status status = _status.isRetweet() ? _status.getRetweetedStatus() : _status;
 
-        if (_status.isRetweet()) {
-            _status = _status.getRetweetedStatus();
-        }
-
-        final Status status = _status;
-
-        viewHolder.content.setText(status.getText());
-        Linkify.addLinks(viewHolder.content, Linkify.WEB_URLS);
-
-        viewHolder.mediaGrid.setAdapter(
-            new MediaGridViewAdapter(context, status.getExtendedMediaEntities())
-        );
+        viewHolder.setContentText(status.getText());
+        viewHolder.setMediaEntities(status.getExtendedMediaEntities());
 
         User user = status.getUser();
+
+        viewHolder.userIcon.setUser(user);
         picasso.load(user.getProfileBackgroundImageURL())
                 .fit()
                 .into(viewHolder.userBg);
 
-        picasso.load(user.getProfileImageURL())
-                .into(viewHolder.userIcon);
 
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle extras = new Bundle();
-                extras.putSerializable(StatusFragment.EXTRA_STATUS, status);
+                StatusFragment fragment = StatusFragment.newInstance(status);
 
-                StatusFragment fragment = new StatusFragment();
-                fragment.setArguments(extras);
-
-                FragmentTransaction transaction = ((AppCompatActivity)context)
-                                                    .getSupportFragmentManager()
-                                                    .beginTransaction();
-
+                FragmentTransaction transaction = ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction();
                 transaction.addToBackStack(null);
                 transaction.replace(R.id.content, fragment);
                 transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -104,6 +89,10 @@ public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusLi
     }
 
     public void addAll(List<Status> statuses) {
+        if (statuses == null || statuses.size() < 1) {
+            return;
+        }
+
         this.statuses.beginBatchedUpdates();
 
         for (Status status : statuses) {
@@ -121,7 +110,7 @@ public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusLi
         ImageView userBg;
 
         @Bind(R.id.user_icon_image)
-        ImageView userIcon;
+        UserIconImageView userIcon;
 
         @Bind(R.id.status_text)
         TextView content;
@@ -133,6 +122,15 @@ public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusLi
             super(view);
             root = view;
             ButterKnife.bind(this, view);
+        }
+
+        public void setContentText(CharSequence text) {
+            content.setText(text);
+            Linkify.addLinks(content, Linkify.WEB_URLS);
+        }
+
+        public void setMediaEntities(MediaEntity[] entities) {
+            mediaGrid.setAdapter(new MediaGridViewAdapter(root.getContext(), entities));
         }
     }
 

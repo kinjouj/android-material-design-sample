@@ -3,12 +3,6 @@ package kinjouj.app.oretter;
 import java.util.List;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -19,12 +13,18 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.AppBarLayout;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import kinjouj.app.oretter.fragment.HomeStatusListRecyclerViewFragment;
 import kinjouj.app.oretter.fragment.SearchRecyclerViewFragment;
-import kinjouj.app.oretter.fragment.StatusListRecyclerViewFragment;
 
 public class MainActivity extends AppCompatActivity
     implements Toolbar.OnMenuItemClickListener,
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity
         initToolbar();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, new StatusListRecyclerViewFragment());
+        transaction.replace(R.id.content, new HomeStatusListRecyclerViewFragment());
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.commit();
     }
@@ -67,8 +67,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
 
-        MenuItem searchMenuItem = menu.findItem(R.id.tb_menu_search);
-        searchView = (SearchView)MenuItemCompat.getActionView(searchMenuItem);
+        searchView = (SearchView)MenuItemCompat.getActionView(menu.findItem(R.id.tb_menu_search));
         searchView.setOnQueryTextListener(this);
 
         return true;
@@ -76,8 +75,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        Log.v(TAG, "onBackPressed");
-
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             Log.v(TAG, "onBackPressed: closeDrawer");
             drawerLayout.closeDrawer(GravityCompat.START);
@@ -93,8 +90,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onSearchRequested() {
-        Log.v(TAG, "onSearchRequested");
-
         if (searchView != null && searchView.isIconified()) {
             Log.v(TAG, "onSearchRequested: onActionViewExpanded");
             searchView.onActionViewExpanded();
@@ -126,16 +121,11 @@ public class MainActivity extends AppCompatActivity
         searchView.clearFocus();
         searchView.onActionViewCollapsed();
 
-        Bundle extras = new Bundle();
-        extras.putString(SearchRecyclerViewFragment.EXTRA_QUERY, query);
-
-        SearchRecyclerViewFragment fragment = new SearchRecyclerViewFragment();
-        fragment.setArguments(extras);
-
+        SearchRecyclerViewFragment fragment = SearchRecyclerViewFragment.newInstance(query);
         FragmentManager manager = getSupportFragmentManager();
 
         if (manager.findFragmentByTag(SearchRecyclerViewFragment.FRAGMENT_TAG) != null) {
-            manager.popBackStack();
+            manager.popBackStack(SearchRecyclerViewFragment.FRAGMENT_TAG, 0);
         }
 
         FragmentTransaction transaction = manager.beginTransaction();

@@ -45,6 +45,7 @@
         android:name="kinjouj.app.oretter.fragment.NavigationViewFragment"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start" />
+        android:layout_gravity="start"
+        android:tag="fragment_navigation" />
 
 </android.support.v4.widget.DrawerLayout>

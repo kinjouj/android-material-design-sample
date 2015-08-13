@@ -52,6 +52,10 @@ public class TwitterApi {
         return new TwitterApi().getTwitter(activity).getHomeTimeline(new Paging(1, 30));
     }
 
+    public static List<Status> getUserTimeline(Activity activity, long userId) throws Exception {
+        return new TwitterApi().getTwitter(activity).getUserTimeline(userId);
+    }
+
     public static List<UserList> getUserLists(Activity activity) throws Exception {
         Twitter twitter = new TwitterApi().getTwitter(activity);
         User user = twitter.verifyCredentials();

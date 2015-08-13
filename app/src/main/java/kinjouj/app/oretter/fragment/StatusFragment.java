@@ -19,6 +19,7 @@ import twitter4j.MediaEntity;
 
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.StatusFragment;
+import kinjouj.app.oretter.view.UserIconImageView;
 import kinjouj.app.oretter.view.adapter.MediaGridViewAdapter;
 
 public class StatusFragment extends Fragment {
@@ -30,7 +31,7 @@ public class StatusFragment extends Fragment {
     ImageView userBgImage;
 
     @Bind(R.id.detail_user_image)
-    ImageView userImage;
+    UserIconImageView userImage;
 
     @Bind(R.id.status_per_text)
     TextView statusText;
@@ -44,7 +45,6 @@ public class StatusFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.detail, container, false);
         ButterKnife.bind(this, view);
-        bindView();
 
         return view;
     }
@@ -55,17 +55,21 @@ public class StatusFragment extends Fragment {
         setRetainInstance(true);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        bindView();
+    }
+
     private void bindView() {
         Picasso pcs = Picasso.with(getActivity());
         Status status = getStatus();
         statusText.setText(status.getText());
+        userImage.setUser(status.getUser());
 
         pcs.load(status.getUser().getProfileBackgroundImageURL())
             .fit()
             .into(userBgImage);
-
-        pcs.load(status.getUser().getProfileImageURL())
-            .into(userImage);
 
         mediaGrid.setAdapter(
             new MediaGridViewAdapter(getActivity(), status.getExtendedMediaEntities())
@@ -74,5 +78,15 @@ public class StatusFragment extends Fragment {
 
     private Status getStatus() {
         return (Status)getArguments().getSerializable(StatusFragment.EXTRA_STATUS);
+    }
+
+    public static StatusFragment newInstance(Status status) {
+        Bundle extras = new Bundle();
+        extras.putSerializable(EXTRA_STATUS, status);
+
+        StatusFragment fragment = new StatusFragment();
+        fragment.setArguments(extras);
+
+        return fragment;
     }
 }

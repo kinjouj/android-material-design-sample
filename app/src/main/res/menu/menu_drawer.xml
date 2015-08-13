@@ -17,6 +17,10 @@
             android:id="@+id/nav_menu_favorite"
             android:title="@string/nav_menu_favorite" />
 
+        <item
+            android:id="@+id/nav_menu_list"
+            android:title="@string/nav_menu_list" />
+
     </group>
 
 </menu>
