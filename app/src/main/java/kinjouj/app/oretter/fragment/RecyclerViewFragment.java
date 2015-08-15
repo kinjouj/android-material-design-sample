@@ -16,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.AppBarLayout;
 
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 import twitter4j.Status;
 
@@ -55,19 +56,24 @@ public abstract class RecyclerViewFragment extends Fragment
         super.onCreate(saveInstanceState);
         setRetainInstance(true);
         adapter = new StatusListRecyclerViewAdapter(getActivity());
+        load(null);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         ((MainActivity)getActivity()).addOnOffsetChangedListener(this);
-        load(null);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         ((MainActivity)getActivity()).removeOnOffsetChangedListener(this);
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
     }
 
     @Override

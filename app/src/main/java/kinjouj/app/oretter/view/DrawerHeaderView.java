@@ -26,9 +26,12 @@ public class DrawerHeaderView extends FrameLayout {
     @Bind(R.id.nav_user_name)
     TextView userName;
 
+    Picasso picasso;
+
     public DrawerHeaderView(Context context) {
         super(context);
         inflate(context, R.layout.navigation_header, this);
+        picasso = Picasso.with(context);
         ButterKnife.bind(this);
         init(context);
     }
@@ -41,18 +44,13 @@ public class DrawerHeaderView extends FrameLayout {
             public void run() {
                 try {
                     final User user = TwitterApi.getCurrentUser((Activity)context);
+
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Picasso pcs = Picasso.with(context);
-
                             userName.setText(user.getName());
-
-                            pcs.load(user.getProfileBackgroundImageURL())
-                                .fit()
-                                .into(userBg);
-
-                            pcs.load(user.getProfileImageURL()).into(userIcon);
+                            picasso.load(user.getProfileBackgroundImageURL()).fit().into(userBg);
+                            picasso.load(user.getProfileImageURL()).into(userIcon);
                         }
                     });
                 } catch (Exception e) {

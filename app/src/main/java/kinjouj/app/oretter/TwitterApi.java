@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.util.Log;
 
 import butterknife.BindString;
 import butterknife.ButterKnife;
@@ -34,7 +35,7 @@ public class TwitterApi {
 
     private static Twitter twitter;
 
-    private Twitter getTwitter(Activity activity) {
+    private synchronized Twitter getTwitter(Activity activity) {
         if (twitter == null) {
             ButterKnife.bind(this, activity);
 
@@ -49,7 +50,13 @@ public class TwitterApi {
     }
 
     public static List<Status> getHomeTimeline(Activity activity) throws Exception {
-        return new TwitterApi().getTwitter(activity).getHomeTimeline(new Paging(1, 30));
+        synchronized (TwitterApi.class) {
+            return new TwitterApi().getTwitter(activity).getHomeTimeline(new Paging(1, 30));
+        }
+    }
+
+    public static List<Status> getMentionsTimeline(Activity activity) throws Exception {
+        return new TwitterApi().getTwitter(activity).getMentionsTimeline();
     }
 
     public static List<Status> getUserTimeline(Activity activity, long userId) throws Exception {
@@ -63,11 +70,50 @@ public class TwitterApi {
         return twitter.getUserLists(user.getId());
     }
 
+    public static List<Status> getFavorites(Activity activity) throws Exception {
+        synchronized (TwitterApi.class) {
+            return new TwitterApi().getTwitter(activity).getFavorites();
+        }
+    }
+
     public static List<Status> search(Activity activity, String query) throws Exception {
         return new TwitterApi().getTwitter(activity).search(new Query(query)).getTweets();
     }
 
     public static User getCurrentUser(Activity activity) throws Exception {
-        return new TwitterApi().getTwitter(activity).verifyCredentials();
+        synchronized (TwitterApi.class) {
+            return new VerifyCredentialsAPI(new TwitterApi().getTwitter(activity)).call();
+        }
+    }
+
+    public static class VerifyCredentialsAPI {
+
+        private static final String TAG = VerifyCredentialsAPI.class.getName();
+
+        private Twitter twitter;
+        private int retryCount = 0;
+
+        public VerifyCredentialsAPI(Twitter twitter) {
+            this.twitter = twitter;
+        }
+
+        public User call() {
+            User user = null;
+
+            try {
+                user = twitter.verifyCredentials();
+                retryCount = 0;
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                if (retryCount < 3) {
+                    retryCount++;
+                    Log.v(TAG, "retry: " + retryCount);
+                    user = call();
+                }
+            }
+
+            return user;
+        }
     }
 }

@@ -48,7 +48,7 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
             return;
         }
 
-        UserStatusListRecyclerViewFragment fragment = UserStatusListRecyclerViewFragment.newInstance(user.getId());
+        UserStatusListRecyclerViewFragment fragment = UserStatusListRecyclerViewFragment.newInstance(user);
 
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.addToBackStack(null);

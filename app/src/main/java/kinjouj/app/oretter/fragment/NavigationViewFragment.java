@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -18,7 +21,6 @@ import kinjouj.app.oretter.view.DrawerHeaderView;
 public class NavigationViewFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = NavigationViewFragment.class.getName();
-
 
     @Bind(R.id.navigation_view)
     NavigationView navigationView;
@@ -40,7 +42,6 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
     @Override
     public void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume");
     }
 
     @Override
@@ -56,11 +57,42 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
         int id = menuItem.getItemId();
 
         switch (id) {
+            case R.id.nav_menu_mention:
+                addMentionFragment();
+                break;
+
+            case R.id.nav_menu_favorite:
+                addFavoriteFragment();
+                break;
+
             default:
                 break;
 
         }
 
-        return false;
+        return true;
+    }
+
+    private void addMentionFragment() {
+        FragmentManager manager = getFragmentManager();
+
+        if (manager.findFragmentByTag(MentionListFragment.FRAGMENT_TAG) != null) {
+            manager.popBackStack(MentionListFragment.FRAGMENT_TAG, 1);
+        }
+
+        replaceFragment(MentionListFragment.FRAGMENT_TAG, new MentionListFragment(), manager);
+    }
+
+    private void addFavoriteFragment() {
+        FragmentManager manager = getFragmentManager();
+        replaceFragment(FavoriteListFragment.FRAGMENT_TAG, new FavoriteListFragment(), manager);
+    }
+
+    private void replaceFragment(String fragmentTag, Fragment fragment, FragmentManager manager) {
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.addToBackStack(fragmentTag);
+        transaction.replace(R.id.content, fragment, fragmentTag);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        transaction.commitAllowingStateLoss();
     }
 }

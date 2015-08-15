@@ -18,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -63,6 +62,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
@@ -104,7 +108,6 @@ public class MainActivity extends AppCompatActivity
 
         switch (id) {
             default:
-                showToast("unknown");
                 break;
         }
 
@@ -121,16 +124,16 @@ public class MainActivity extends AppCompatActivity
         searchView.clearFocus();
         searchView.onActionViewCollapsed();
 
-        SearchRecyclerViewFragment fragment = SearchRecyclerViewFragment.newInstance(query);
         FragmentManager manager = getSupportFragmentManager();
 
         if (manager.findFragmentByTag(SearchRecyclerViewFragment.FRAGMENT_TAG) != null) {
-            manager.popBackStack(SearchRecyclerViewFragment.FRAGMENT_TAG, 0);
+            manager.popBackStack(SearchRecyclerViewFragment.FRAGMENT_TAG, 1);
         }
 
+        SearchRecyclerViewFragment fragment = SearchRecyclerViewFragment.newInstance(query);
         FragmentTransaction transaction = manager.beginTransaction();
+        transaction.addToBackStack(SearchRecyclerViewFragment.FRAGMENT_TAG);
         transaction.replace(R.id.content, fragment, SearchRecyclerViewFragment.FRAGMENT_TAG);
-        transaction.addToBackStack(null);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.commit();
 
@@ -138,11 +141,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initToolbar() {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         toolbar.setOnMenuItemClickListener(this);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +148,11 @@ public class MainActivity extends AppCompatActivity
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
             this,
@@ -161,10 +164,6 @@ public class MainActivity extends AppCompatActivity
         //drawerLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
-    }
-
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     public void addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener listener) {

@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/tb_menu_post"
+        android:icon="@drawable/ic_question_answer_white"
+        android:title="@string/tb_menu_post"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/tb_menu_search"
         android:icon="@drawable/ic_search_white"
         android:title="@string/tb_menu_search"

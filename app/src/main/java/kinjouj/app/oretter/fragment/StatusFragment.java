@@ -15,10 +15,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import twitter4j.Status;
-import twitter4j.MediaEntity;
 
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragment.StatusFragment;
 import kinjouj.app.oretter.view.UserIconImageView;
 import kinjouj.app.oretter.view.adapter.MediaGridViewAdapter;
 
@@ -39,10 +37,10 @@ public class StatusFragment extends Fragment {
     @Bind(R.id.status_per_media_grid)
     GridView mediaGrid;
 
+    private Picasso picasso;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.v(TAG, "onCreateView");
-
         View view = inflater.inflate(R.layout.detail, container, false);
         ButterKnife.bind(this, view);
 
@@ -53,6 +51,7 @@ public class StatusFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+        picasso = Picasso.with(getActivity());
     }
 
     @Override
@@ -62,18 +61,11 @@ public class StatusFragment extends Fragment {
     }
 
     private void bindView() {
-        Picasso pcs = Picasso.with(getActivity());
         Status status = getStatus();
         statusText.setText(status.getText());
         userImage.setUser(status.getUser());
-
-        pcs.load(status.getUser().getProfileBackgroundImageURL())
-            .fit()
-            .into(userBgImage);
-
-        mediaGrid.setAdapter(
-            new MediaGridViewAdapter(getActivity(), status.getExtendedMediaEntities())
-        );
+        mediaGrid.setAdapter(new MediaGridViewAdapter(getActivity(), status.getExtendedMediaEntities()));
+        picasso.load(status.getUser().getProfileBackgroundImageURL()).fit().into(userBgImage);
     }
 
     private Status getStatus() {

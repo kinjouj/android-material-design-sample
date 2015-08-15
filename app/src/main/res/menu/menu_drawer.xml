@@ -7,19 +7,34 @@
 
         <item
             android:id="@+id/nav_menu_my_tweet"
-            android:title="@string/nav_menu_my_tweet" />
+            android:title="@string/nav_menu_my_tweet"
+            android:icon="@drawable/ic_chat" />
+
+        <item
+            android:id="@+id/nav_menu_follow"
+            android:title="@string/nav_menu_follow"
+            android:icon="@drawable/ic_follow" />
+
+
+        <item
+            android:id="@+id/nav_menu_follower"
+            android:title="@string/nav_menu_follower"
+            android:icon="@drawable/ic_follower" />
 
         <item
             android:id="@+id/nav_menu_mention"
-            android:title="@string/nav_menu_mention" />
+            android:title="@string/nav_menu_mention"
+            android:icon="@drawable/ic_reply" />
 
         <item
             android:id="@+id/nav_menu_favorite"
-            android:title="@string/nav_menu_favorite" />
+            android:title="@string/nav_menu_favorite"
+            android:icon="@drawable/ic_grade" />
 
         <item
             android:id="@+id/nav_menu_list"
-            android:title="@string/nav_menu_list" />
+            android:title="@string/nav_menu_list"
+            android:icon="@drawable/ic_list" />
 
     </group>
 
