@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.view.DrawerHeaderView;
 
@@ -70,7 +71,7 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
 
         }
 
-        return true;
+        return false;
     }
 
     private void addMentionFragment() {
@@ -94,5 +95,7 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
         transaction.replace(R.id.content, fragment, fragmentTag);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.commitAllowingStateLoss();
+
+        ((MainActivity)getActivity()).closeDrawer();
     }
 }

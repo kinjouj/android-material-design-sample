@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             Log.v(TAG, "onBackPressed: closeDrawer");
-            drawerLayout.closeDrawer(GravityCompat.START);
+            closeDrawer();
         } else {
             if (searchView != null && !searchView.isIconified()) {
                 Log.v(TAG, "onBackPressed: SearchView.onActionViewCollapsed");
@@ -141,6 +141,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void initToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         toolbar.setOnMenuItemClickListener(this);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,11 +153,6 @@ public class MainActivity extends AppCompatActivity
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
             this,
@@ -172,5 +172,9 @@ public class MainActivity extends AppCompatActivity
 
     public void removeOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener listener) {
         appBarLayout.removeOnOffsetChangedListener(listener);
+    }
+
+    public void closeDrawer() {
+        drawerLayout.closeDrawer(GravityCompat.START);
     }
 }

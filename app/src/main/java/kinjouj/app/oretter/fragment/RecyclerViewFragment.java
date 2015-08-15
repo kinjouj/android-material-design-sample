@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.util.Log;
-import android.widget.Toast;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -72,11 +71,6 @@ public abstract class RecyclerViewFragment extends Fragment
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
     public void onRefresh() {
         load(new Runnable() {
             @Override
@@ -115,4 +109,5 @@ public abstract class RecyclerViewFragment extends Fragment
     }
 
     abstract List<Status> fetchTimeline();
+
 }

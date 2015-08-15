@@ -34,6 +34,7 @@ public class TwitterApi {
     String accessTokenSecret;
 
     private static Twitter twitter;
+    private static User currentUser;
 
     private synchronized Twitter getTwitter(Activity activity) {
         if (twitter == null) {
@@ -82,7 +83,11 @@ public class TwitterApi {
 
     public static User getCurrentUser(Activity activity) throws Exception {
         synchronized (TwitterApi.class) {
-            return new VerifyCredentialsAPI(new TwitterApi().getTwitter(activity)).call();
+            if (currentUser == null) {
+                currentUser = new VerifyCredentialsAPI(new TwitterApi().getTwitter(activity)).call();
+            }
+
+            return currentUser;
         }
     }
 
