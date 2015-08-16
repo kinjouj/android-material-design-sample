@@ -81,44 +81,31 @@ public class TwitterApi {
         return new TwitterApi().getTwitter(activity).search(new Query(query)).getTweets();
     }
 
-    public static User getCurrentUser(Activity activity) throws Exception {
+    public static List<User> getFollows(Activity activity) throws Exception {
         synchronized (TwitterApi.class) {
-            if (currentUser == null) {
-                currentUser = new VerifyCredentialsAPI(new TwitterApi().getTwitter(activity)).call();
-            }
-
-            return currentUser;
+            return new TwitterApi().getTwitter(activity).getFriendsList(
+                getCurrentUser(activity).getId(),
+                -1
+            );
         }
     }
 
-    public static class VerifyCredentialsAPI {
-
-        private static final String TAG = VerifyCredentialsAPI.class.getName();
-
-        private Twitter twitter;
-        private int retryCount = 0;
-
-        public VerifyCredentialsAPI(Twitter twitter) {
-            this.twitter = twitter;
+    public static List<User> getFollowers(Activity activity) throws Exception {
+        synchronized (TwitterApi.class) {
+            return new TwitterApi().getTwitter(activity).getFollowersList(
+                getCurrentUser(activity).getId(),
+                -1
+            );
         }
+    }
 
-        public User call() {
-            User user = null;
-
-            try {
-                user = twitter.verifyCredentials();
-                retryCount = 0;
-            } catch (Exception e) {
-                e.printStackTrace();
-
-                if (retryCount < 3) {
-                    retryCount++;
-                    Log.v(TAG, "retry: " + retryCount);
-                    user = call();
-                }
+    public static User getCurrentUser(Activity activity) throws Exception {
+        synchronized (TwitterApi.class) {
+            if (currentUser == null) {
+                currentUser = new TwitterApi().getTwitter(activity).verifyCredentials();
             }
 
-            return user;
+            return currentUser;
         }
     }
 }

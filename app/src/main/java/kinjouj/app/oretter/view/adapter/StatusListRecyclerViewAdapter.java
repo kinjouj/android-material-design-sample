@@ -26,10 +26,11 @@ import twitter4j.Status;
 import twitter4j.User;
 
 import kinjouj.app.oretter.R;
+import kinjouj.app.oretter.SortedListAdapter;
 import kinjouj.app.oretter.fragment.StatusFragment;
 import kinjouj.app.oretter.view.UserIconImageView;
 
-public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusListRecyclerViewAdapter.ViewHolder> {
+public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusListRecyclerViewAdapter.ViewHolder> implements SortedListAdapter<Status> {
 
     private static final String TAG = StatusListRecyclerViewAdapter.class.getName();
 
@@ -44,7 +45,7 @@ public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusLi
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list_row, viewGroup, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.status_list_row, viewGroup, false);
 
         return new ViewHolder(view);
     }
@@ -59,10 +60,10 @@ public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusLi
 
         User user = status.getUser();
 
-        viewHolder.userIcon.setUser(user);
+        viewHolder.icon.setUser(user);
         picasso.load(user.getProfileBackgroundImageURL())
                 .fit()
-                .into(viewHolder.userBg);
+                .into(viewHolder.bg);
 
 
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
@@ -106,11 +107,11 @@ public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusLi
 
         View root;
 
-        @Bind(R.id.user_bg_image)
-        ImageView userBg;
+        @Bind(R.id.status_bg_image)
+        ImageView bg;
 
-        @Bind(R.id.user_icon_image)
-        UserIconImageView userIcon;
+        @Bind(R.id.status_icon_image)
+        UserIconImageView icon;
 
         @Bind(R.id.status_text)
         TextView content;

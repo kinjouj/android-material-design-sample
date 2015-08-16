@@ -2,6 +2,7 @@ package kinjouj.app.oretter.fragment;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -17,14 +18,15 @@ import android.support.design.widget.AppBarLayout;
 import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
-import twitter4j.Status;
+import twitter4j.User;
 
 import kinjouj.app.oretter.MainActivity;
+import kinjouj.app.oretter.SortedListAdapter;
 import kinjouj.app.oretter.TwitterApi;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.view.adapter.StatusListRecyclerViewAdapter;
+import kinjouj.app.oretter.view.adapter.UserListRecyclerViewAdapter;
 
-public abstract class RecyclerViewFragment extends Fragment
+public abstract class RecyclerViewFragment<T> extends Fragment
     implements SwipeRefreshLayout.OnRefreshListener,
                AppBarLayout.OnOffsetChangedListener {
 
@@ -36,16 +38,19 @@ public abstract class RecyclerViewFragment extends Fragment
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    protected StatusListRecyclerViewAdapter adapter;
+    protected RecyclerView.Adapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         View view = inflater.inflate(R.layout.tweet_list, container, false);
         ButterKnife.bind(this, view);
 
+        adapter = getAdapter();
         swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.setLayoutManager(getLayoutManager());
         recyclerView.setAdapter(adapter);
+
+        load(null);
 
         return view;
     }
@@ -54,8 +59,6 @@ public abstract class RecyclerViewFragment extends Fragment
     public void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         setRetainInstance(true);
-        adapter = new StatusListRecyclerViewAdapter(getActivity());
-        load(null);
     }
 
     @Override
@@ -95,11 +98,11 @@ public abstract class RecyclerViewFragment extends Fragment
         new Thread() {
             @Override
             public void run() {
-                final List<Status> statuses = fetchTimeline();
+                final List<T> users = fetch();
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        adapter.addAll(statuses);
+                        ((SortedListAdapter)adapter).addAll(users);
 
                         if (callback != null) callback.run();
                     }
@@ -108,6 +111,7 @@ public abstract class RecyclerViewFragment extends Fragment
         }.start();
     }
 
-    abstract List<Status> fetchTimeline();
+    abstract RecyclerView.Adapter getAdapter();
+    abstract List<T> fetch();
 
 }

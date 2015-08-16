@@ -58,6 +58,14 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
         int id = menuItem.getItemId();
 
         switch (id) {
+            case R.id.nav_menu_follow:
+                addFollowFragment();
+                break;
+
+            case R.id.nav_menu_follower:
+                addFollowerFragment();
+                break;
+
             case R.id.nav_menu_mention:
                 addMentionFragment();
                 break;
@@ -74,11 +82,21 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
         return false;
     }
 
+    private void addFollowFragment() {
+        FragmentManager manager = getFragmentManager();
+        replaceFragment(FollowListFragment.FRAGMENT_TAG, new FollowListFragment(), manager);
+    }
+
+    private void addFollowerFragment() {
+        FragmentManager manager = getFragmentManager();
+        replaceFragment(FollowerListFragment.FRAGMENT_TAG, new FollowerListFragment(), manager);
+    }
+
     private void addMentionFragment() {
         FragmentManager manager = getFragmentManager();
 
         if (manager.findFragmentByTag(MentionListFragment.FRAGMENT_TAG) != null) {
-            manager.popBackStack(MentionListFragment.FRAGMENT_TAG, 1);
+            manager.popBackStack(MentionListFragment.FRAGMENT_TAG, 0);
         }
 
         replaceFragment(MentionListFragment.FRAGMENT_TAG, new MentionListFragment(), manager);

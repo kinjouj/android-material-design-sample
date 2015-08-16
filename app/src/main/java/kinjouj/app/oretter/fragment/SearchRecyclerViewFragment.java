@@ -4,17 +4,20 @@ import java.util.Collections;
 import java.util.List;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 
 import twitter4j.Status;
 
 import kinjouj.app.oretter.TwitterApi;
+import kinjouj.app.oretter.view.adapter.StatusListRecyclerViewAdapter;
 
-public class SearchRecyclerViewFragment extends RecyclerViewFragment {
+public class SearchRecyclerViewFragment extends RecyclerViewFragment<Status> {
 
     public static final String FRAGMENT_TAG = "fragment_search";
     private static final String EXTRA_QUERY = "extra_query";
 
-    public List<Status> fetchTimeline() {
+    @Override
+    public List<Status> fetch() {
         List<Status> statuses = null;
 
         try {
@@ -26,6 +29,11 @@ public class SearchRecyclerViewFragment extends RecyclerViewFragment {
         }
 
         return statuses;
+    }
+
+    @Override
+    public RecyclerView.Adapter getAdapter() {
+        return new StatusListRecyclerViewAdapter(getActivity());
     }
 
     private String getQuery() {

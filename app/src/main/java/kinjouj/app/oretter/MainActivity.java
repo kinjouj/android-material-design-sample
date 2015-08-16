@@ -3,6 +3,7 @@ package kinjouj.app.oretter;
 import java.util.List;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -124,17 +125,14 @@ public class MainActivity extends AppCompatActivity
         searchView.clearFocus();
         searchView.onActionViewCollapsed();
 
-        FragmentManager manager = getSupportFragmentManager();
+        Fragment foundFragment = getSupportFragmentManager()
+                                    .findFragmentByTag(SearchRecyclerViewFragment.FRAGMENT_TAG);
 
-        if (manager.findFragmentByTag(SearchRecyclerViewFragment.FRAGMENT_TAG) != null) {
-            manager.popBackStack(SearchRecyclerViewFragment.FRAGMENT_TAG, 1);
-        }
-
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         SearchRecyclerViewFragment fragment = SearchRecyclerViewFragment.newInstance(query);
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.addToBackStack(SearchRecyclerViewFragment.FRAGMENT_TAG);
         transaction.replace(R.id.content, fragment, SearchRecyclerViewFragment.FRAGMENT_TAG);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        //transaction.addToBackStack(SearchRecyclerViewFragment.FRAGMENT_TAG);
         transaction.commit();
 
         return false;
@@ -146,6 +144,7 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        toolbar.setNavigationIcon(R.drawable.ic_launcher);
         toolbar.setOnMenuItemClickListener(this);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
