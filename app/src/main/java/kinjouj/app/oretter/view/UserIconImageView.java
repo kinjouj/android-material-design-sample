@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -26,12 +25,12 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
 
     public UserIconImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setOnClickListener(this);
         this.context = context;
     }
 
     public void setUser(User user) {
         this.user = user;
+        setOnClickListener(this);
         Picasso.with(context).load(user.getProfileImageURL()).into(this);
     }
 
@@ -42,16 +41,12 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
 
         String tag = "fragment_user_list_" + user.getId();
 
-        FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
-        if(manager.findFragmentByTag(tag) != null) {
-            Toast.makeText(view.getContext(), "already exists", Toast.LENGTH_LONG).show();
-            return;
-        }
-
         UserStatusListRecyclerViewFragment fragment = UserStatusListRecyclerViewFragment.newInstance(user);
 
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.addToBackStack(null);
+        FragmentTransaction transaction = ((AppCompatActivity)context)
+                                            .getSupportFragmentManager()
+                                            .beginTransaction();
+
         transaction.replace(R.id.content, fragment, tag);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.commit();

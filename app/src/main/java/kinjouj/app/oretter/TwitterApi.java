@@ -15,7 +15,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.UserList;
-import twitter4j.auth.AccessToken;
+import twitter4j.conf.ConfigurationBuilder;
 
 import kinjouj.app.oretter.R;
 
@@ -33,18 +33,20 @@ public class TwitterApi {
     @BindString(R.string.access_token_secret)
     String accessTokenSecret;
 
-    private static Twitter twitter;
+    static Twitter twitter;
     private static User currentUser;
 
-    private synchronized Twitter getTwitter(Activity activity) {
+    Twitter getTwitter(Activity activity) {
         if (twitter == null) {
             ButterKnife.bind(this, activity);
 
-            twitter = TwitterFactory.getSingleton();
-            twitter.setOAuthConsumer(consumerKey, consumerSecret);
-            twitter.setOAuthAccessToken(
-                new AccessToken(accessToken, accessTokenSecret)
-            );
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            builder.setOAuthConsumerKey(consumerKey)
+                    .setOAuthConsumerSecret(consumerSecret)
+                    .setOAuthAccessToken(accessToken)
+                    .setOAuthAccessTokenSecret(accessTokenSecret);
+
+            twitter = new TwitterFactory(builder.build()).getInstance();
         }
 
         return twitter;

@@ -22,9 +22,7 @@ import twitter4j.User;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.SortedListAdapter;
-import kinjouj.app.oretter.TwitterApi;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.view.adapter.UserListRecyclerViewAdapter;
 
 public abstract class RecyclerViewFragment<T> extends Fragment
     implements SwipeRefreshLayout.OnRefreshListener,
@@ -102,7 +100,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        ((SortedListAdapter)adapter).addAll(users);
+                        ((SortedListAdapter<T>)adapter).addAll(users);
 
                         if (callback != null) callback.run();
                     }

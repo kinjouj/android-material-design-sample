@@ -17,8 +17,6 @@ import android.support.design.widget.AppBarLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -86,6 +84,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             if (searchView != null && !searchView.isIconified()) {
                 Log.v(TAG, "onBackPressed: SearchView.onActionViewCollapsed");
+                searchView.clearFocus();
                 searchView.onActionViewCollapsed();
             } else {
                 super.onBackPressed();
@@ -125,14 +124,10 @@ public class MainActivity extends AppCompatActivity
         searchView.clearFocus();
         searchView.onActionViewCollapsed();
 
-        Fragment foundFragment = getSupportFragmentManager()
-                                    .findFragmentByTag(SearchRecyclerViewFragment.FRAGMENT_TAG);
-
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         SearchRecyclerViewFragment fragment = SearchRecyclerViewFragment.newInstance(query);
         transaction.replace(R.id.content, fragment, SearchRecyclerViewFragment.FRAGMENT_TAG);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        //transaction.addToBackStack(SearchRecyclerViewFragment.FRAGMENT_TAG);
         transaction.commit();
 
         return false;
@@ -143,24 +138,17 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         toolbar.setNavigationIcon(R.drawable.ic_launcher);
         toolbar.setOnMenuItemClickListener(this);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
 
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
             this,
             drawerLayout,
+            toolbar,
             R.drawable.ic_drawer,
             R.drawable.ic_drawer
         );
         drawerLayout.setDrawerListener(drawerToggle);
-        //drawerLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
     }

@@ -90,7 +90,7 @@ public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusLi
     }
 
     public void addAll(List<Status> statuses) {
-        if (statuses == null || statuses.size() < 1) {
+        if (statuses == null || statuses.size() <= 0) {
             return;
         }
 
