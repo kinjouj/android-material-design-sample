@@ -1,0 +1,65 @@
+<?xml version="1.0" ?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layout_margin="10dp"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="0dp">
+    <!--app:cardPreventCornerOverlap="false">-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/status_bg_image"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:scaleType="centerCrop"
+                android:contentDescription="@null" />
+
+            <kinjouj.app.oretter.view.UserIconImageView
+                android:id="@+id/status_icon_image"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="@dimen/spacing_medium"
+                android:layout_marginLeft="@dimen/spacing_small"
+                android:layout_marginTop="136dp"
+                android:scaleType="centerCrop"
+                app:riv_border_color="@android:color/transparent"
+                app:riv_border_width="3dp"
+                app:riv_corner_radius="8dp" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/status_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textColor="@android:color/black" />
+
+        <kinjouj.app.oretter.view.MediaGridView
+            android:id="@+id/status_media_grid"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="10dp"
+            android:columnWidth="130dp"
+            android:numColumns="auto_fit"
+            android:horizontalSpacing="3dp"
+            android:verticalSpacing="10dp"
+            android:stretchMode="spacingWidthUniform" />
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

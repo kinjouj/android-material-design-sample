@@ -59,18 +59,24 @@ public class TwitterApi {
     }
 
     public static List<Status> getMentionsTimeline(Activity activity) throws Exception {
-        return new TwitterApi().getTwitter(activity).getMentionsTimeline();
+        synchronized (TwitterApi.class) {
+            return new TwitterApi().getTwitter(activity).getMentionsTimeline();
+        }
     }
 
     public static List<Status> getUserTimeline(Activity activity, long userId) throws Exception {
-        return new TwitterApi().getTwitter(activity).getUserTimeline(userId);
+        synchronized (TwitterApi.class) {
+            return new TwitterApi().getTwitter(activity).getUserTimeline(userId);
+        }
     }
 
     public static List<UserList> getUserLists(Activity activity) throws Exception {
-        Twitter twitter = new TwitterApi().getTwitter(activity);
-        User user = twitter.verifyCredentials();
+        synchronized (TwitterApi.class) {
+            Twitter twitter = new TwitterApi().getTwitter(activity);
+            User user = twitter.verifyCredentials();
 
-        return twitter.getUserLists(user.getId());
+            return twitter.getUserLists(user.getId());
+        }
     }
 
     public static List<Status> getFavorites(Activity activity) throws Exception {

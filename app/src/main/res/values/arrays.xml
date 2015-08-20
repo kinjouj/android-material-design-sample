@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<resources>
+    <string-array name="tab_labels">
+        <item>@string/nav_menu_home</item>
+    </string-array>
+</resources>

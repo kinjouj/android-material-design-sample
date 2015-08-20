@@ -40,7 +40,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-        View view = inflater.inflate(R.layout.tweet_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_tweet_list, container, false);
         ButterKnife.bind(this, view);
 
         adapter = getAdapter();
@@ -98,6 +98,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
             public void run() {
                 final List<T> users = fetch();
                 handler.post(new Runnable() {
+                    @SuppressWarnings("unchecked")
                     @Override
                     public void run() {
                         ((SortedListAdapter<T>)adapter).addAll(users);

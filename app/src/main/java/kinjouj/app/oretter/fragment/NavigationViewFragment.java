@@ -28,7 +28,7 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-        View view = inflater.inflate(R.layout.navigation_view, container, false);
+        View view = inflater.inflate(R.layout.fragment_navigation_view, container, false);
         ButterKnife.bind(this, view);
 
         return view;
@@ -58,6 +58,10 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
         int id = menuItem.getItemId();
 
         switch (id) {
+            case R.id.nav_menu_home:
+                addHomeFragment();
+                break;
+
             case R.id.nav_menu_follow:
                 addFollowFragment();
                 break;
@@ -82,37 +86,33 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
         return false;
     }
 
+    private void addHomeFragment() {
+        replaceFragment(HomeStatusListFragment.FRAGMENT_TAG, new HomeStatusListFragment());
+    }
+
     private void addFollowFragment() {
-        FragmentManager manager = getFragmentManager();
-        replaceFragment(FollowListFragment.FRAGMENT_TAG, new FollowListFragment(), manager);
+        replaceFragment(FollowListFragment.FRAGMENT_TAG, new FollowListFragment());
     }
 
     private void addFollowerFragment() {
-        FragmentManager manager = getFragmentManager();
-        replaceFragment(FollowerListFragment.FRAGMENT_TAG, new FollowerListFragment(), manager);
+        replaceFragment(FollowerListFragment.FRAGMENT_TAG, new FollowerListFragment());
     }
 
     private void addMentionFragment() {
-        FragmentManager manager = getFragmentManager();
-
-        if (manager.findFragmentByTag(MentionListFragment.FRAGMENT_TAG) != null) {
-            manager.popBackStack(MentionListFragment.FRAGMENT_TAG, 0);
-        }
-
-        replaceFragment(MentionListFragment.FRAGMENT_TAG, new MentionListFragment(), manager);
+        replaceFragment(MentionListFragment.FRAGMENT_TAG, new MentionListFragment());
     }
 
     private void addFavoriteFragment() {
-        FragmentManager manager = getFragmentManager();
-        replaceFragment(FavoriteListFragment.FRAGMENT_TAG, new FavoriteListFragment(), manager);
+        replaceFragment(FavoriteListFragment.FRAGMENT_TAG, new FavoriteListFragment());
     }
 
-    private void replaceFragment(String fragmentTag, Fragment fragment, FragmentManager manager) {
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.addToBackStack(fragmentTag);
+    private void replaceFragment(String fragmentTag, Fragment fragment) {
+        /*
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.content, fragment, fragmentTag);
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        transaction.commitAllowingStateLoss();
+        transaction.commit();
+        */
 
         ((MainActivity)getActivity()).closeDrawer();
     }

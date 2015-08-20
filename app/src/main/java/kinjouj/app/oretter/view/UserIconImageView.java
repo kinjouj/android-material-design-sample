@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 import twitter4j.User;
 
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragment.UserStatusListRecyclerViewFragment;
+import kinjouj.app.oretter.fragment.UserStatusListFragment;
 
 public class UserIconImageView extends RoundedImageView implements View.OnClickListener {
 
@@ -39,16 +39,15 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
             return;
         }
 
-        String tag = "fragment_user_list_" + user.getId();
-
-        UserStatusListRecyclerViewFragment fragment = UserStatusListRecyclerViewFragment.newInstance(user);
-
+        UserStatusListFragment fragment = UserStatusListFragment.newInstance(user);
+        /*
         FragmentTransaction transaction = ((AppCompatActivity)context)
                                             .getSupportFragmentManager()
                                             .beginTransaction();
 
-        transaction.replace(R.id.content, fragment, tag);
+        transaction.replace(R.id.content, fragment, "fragment_user_list_" + user.getId());
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         transaction.commit();
+        */
     }
 }
