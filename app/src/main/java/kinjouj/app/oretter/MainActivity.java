@@ -22,13 +22,20 @@ import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
+import kinjouj.app.oretter.fragment.FavoriteListFragment;
+import kinjouj.app.oretter.fragment.FollowListFragment;
+import kinjouj.app.oretter.fragment.FollowerListFragment;
 import kinjouj.app.oretter.fragment.HomeStatusListFragment;
+import kinjouj.app.oretter.fragment.MentionListFragment;
 import kinjouj.app.oretter.fragment.SearchFragment;
 
 public class MainActivity extends AppCompatActivity
-    implements TabLayout.OnTabSelectedListener, SearchView.OnQueryTextListener {
+    implements  AppInterfaces.NavigateTabListener,
+                SearchView.OnQueryTextListener,
+                TabLayout.OnTabSelectedListener {
 
     private static final String TAG = MainActivity.class.getName();
+    private static final String FRAGMENT_TAG = "current_fragment";
 
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
@@ -105,11 +112,38 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTabReselected(TabLayout.Tab tab) {
+    public void onTabSelected(TabLayout.Tab tab) {
+        Object tag = tab.getTag();
+        int tagId = tag != null ? (int)tag : -1;
+
+        switch (tagId) {
+            case R.id.tab_menu_home:
+                setContentFragment(new HomeStatusListFragment());
+                break;
+
+            case R.id.tab_menu_mention:
+                setContentFragment(new MentionListFragment());
+                break;
+
+            case R.id.tab_menu_favorite:
+                setContentFragment(new FavoriteListFragment());
+                break;
+
+            case R.id.tab_menu_follow:
+                setContentFragment(new FollowListFragment());
+                break;
+
+            case R.id.tab_menu_follower:
+                setContentFragment(new FollowerListFragment());
+                break;
+
+            default:
+                break;
+        }
     }
 
     @Override
-    public void onTabSelected(TabLayout.Tab tab) {
+    public void onTabReselected(TabLayout.Tab tab) {
     }
 
     @Override
@@ -124,15 +158,40 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextSubmit(String query) {
         collapseSearchView();
-        TabLayout.Tab tab = tabLayout.newTab().setText("検索: " + query).setIcon(R.drawable.ic_search);
-        tabLayout.addTab(tab, true);
-        //tab.select();
+        final TabLayout.Tab tab = createTab(
+            "検索 " + query,
+            R.drawable.ic_search,
+            R.id.tab_menu_search
+        );
+        tabLayout.addTab(tab);
         setContentFragment(SearchFragment.newInstance(query));
+
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(300);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            tab.select();
+                        }
+                    });
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
 
         return false;
     }
 
-    private void initToolbar() {
+    @Override
+    public void navigateTab(int position) {
+        tabLayout.getTabAt(position).select();
+    }
+
+    void initToolbar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -151,50 +210,51 @@ public class MainActivity extends AppCompatActivity
         drawerToggle.syncState();
     }
 
-    private void initTabLayout() {
+    void initTabLayout() {
         tabLayout.setOnTabSelectedListener(this);
 
         tabLayout.addTab(
-            tabLayout.newTab()
-                    .setText(navHomeTitle)
-                    .setIcon(R.drawable.ic_home)
+            createTab("マイツイ", R.drawable.ic_home, R.id.tab_menu_my)
         );
 
         tabLayout.addTab(
-            tabLayout.newTab()
-                    .setText(navMentionTitle)
-                    .setIcon(R.drawable.ic_reply)
+            createTab(navHomeTitle, R.drawable.ic_home, R.id.tab_menu_home),
+            true
         );
 
         tabLayout.addTab(
-            tabLayout.newTab()
-                    .setText(navFavoriteTitle)
-                    .setIcon(R.drawable.ic_grade)
+            createTab(navMentionTitle, R.drawable.ic_reply, R.id.tab_menu_mention)
         );
 
         tabLayout.addTab(
-            tabLayout.newTab()
-                    .setText(navFollowTitle)
-                    .setIcon(R.drawable.ic_follow)
+            createTab(navFavoriteTitle, R.drawable.ic_grade, R.id.tab_menu_favorite)
         );
 
         tabLayout.addTab(
-            tabLayout.newTab()
-                    .setText(navFollowerTitle)
-                    .setIcon(R.drawable.ic_follower)
+            createTab(navFollowTitle, R.drawable.ic_follow, R.id.tab_menu_follow)
+        );
+
+        tabLayout.addTab(
+            createTab(navFollowerTitle, R.drawable.ic_follower, R.id.tab_menu_follower)
         );
     }
 
-    private void collapseSearchView() {
+    TabLayout.Tab createTab(String text, int drawableResId, int tagResId) {
+        return tabLayout.newTab().setText(text).setIcon(drawableResId).setTag(tagResId);
+    }
+
+    void collapseSearchView() {
         if (searchView != null && !searchView.isIconified()) {
             searchView.clearFocus();
             searchView.onActionViewCollapsed();
         }
     }
 
-    public void setContentFragment(Fragment fragment) {
-        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.content, fragment);
+    void setContentFragment(Fragment fragment) {
+        FragmentManager fm = getSupportFragmentManager();
+
+        FragmentTransaction tx = fm.beginTransaction();
+        tx.replace(R.id.content, fragment, FRAGMENT_TAG);
         tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         tx.commit();
     }

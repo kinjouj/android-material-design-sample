@@ -16,17 +16,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.AppBarLayout;
 
 import butterknife.Bind;
-import butterknife.BindString;
 import butterknife.ButterKnife;
-import twitter4j.User;
 
 import kinjouj.app.oretter.MainActivity;
-import kinjouj.app.oretter.SortedListAdapter;
+import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.R;
 
 public abstract class RecyclerViewFragment<T> extends Fragment
-    implements SwipeRefreshLayout.OnRefreshListener,
-               AppBarLayout.OnOffsetChangedListener {
+    implements SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
 
     private static final String TAG = RecyclerViewFragment.class.getName();
 
@@ -101,7 +98,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
                     @SuppressWarnings("unchecked")
                     @Override
                     public void run() {
-                        ((SortedListAdapter<T>)adapter).addAll(users);
+                        ((AppInterfaces.SortedListAdapter<T>)adapter).addAll(users);
 
                         if (callback != null) callback.run();
                     }

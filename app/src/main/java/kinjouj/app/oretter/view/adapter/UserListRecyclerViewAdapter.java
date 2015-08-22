@@ -22,16 +22,19 @@ import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import twitter4j.User;
 
+import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.SortedListAdapter;
 import kinjouj.app.oretter.fragment.StatusFragment;
 import kinjouj.app.oretter.view.UserIconImageView;
 
-public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRecyclerViewAdapter.ViewHolder> implements SortedListAdapter<User> {
+public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRecyclerViewAdapter.ViewHolder> implements AppInterfaces.SortedListAdapter<User> {
 
     private static final String TAG = UserListRecyclerViewAdapter.class.getName();
 
-    private SortedList<User> users = new SortedList<>(User.class, new SampleCallback());
+    private SortedList<User> users = new SortedList<>(
+        User.class,
+        new UserSortedListCallback()
+    );
     private Context context;
     private Picasso picasso;
 
@@ -51,7 +54,7 @@ public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRe
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
         final User user = users.get(i);
         viewHolder.userIcon.setUser(user);
-        viewHolder.content.setText(user.getDescription());
+        viewHolder.setContentText(user.getDescription());
         picasso.load(user.getProfileBackgroundImageURL()).fit().into(viewHolder.userBg);
     }
 
@@ -103,9 +106,9 @@ public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRe
         }
     }
 
-    private class SampleCallback extends SortedList.Callback<User> {
+    private class UserSortedListCallback extends SortedList.Callback<User> {
 
-        private final String TAG = SampleCallback.class.getName();
+        private final String TAG = UserSortedListCallback.class.getName();
 
         @Override
         public boolean areItemsTheSame(User item1, User item2) {
@@ -119,7 +122,7 @@ public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRe
 
         @Override
         public int compare(User o1, User o2) {
-            return Long.valueOf(o2.getId()).compareTo(o1.getId());
+            return -1;
         }
 
         @Override

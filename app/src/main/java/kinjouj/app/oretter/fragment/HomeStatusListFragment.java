@@ -13,7 +13,6 @@ import kinjouj.app.oretter.view.adapter.StatusListRecyclerViewAdapter;
 
 public class HomeStatusListFragment extends RecyclerViewFragment<Status> {
 
-    public static final String FRAGMENT_TAG = "fragment_home_list";
     private static final String TAG = HomeStatusListFragment.class.getName();
 
     @Override

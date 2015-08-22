@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<resources>
+    <item name="tab_menu_my" type="id" />
+    <item name="tab_menu_home" type="id" />
+    <item name="tab_menu_mention" type="id" />
+    <item name="tab_menu_favorite" type="id" />
+    <item name="tab_menu_follow" type="id" />
+    <item name="tab_menu_follower" type="id" />
+    <item name="tab_menu_search" type="id" />
+</resources>

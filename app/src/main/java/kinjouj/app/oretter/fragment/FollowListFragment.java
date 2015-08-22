@@ -12,8 +12,6 @@ import kinjouj.app.oretter.view.adapter.UserListRecyclerViewAdapter;
 
 public class FollowListFragment extends RecyclerViewFragment<User> {
 
-    public static final String FRAGMENT_TAG = "fragemnt_follow_list";
-
     @Override
     public List<User> fetch() {
         List<User> users = null;

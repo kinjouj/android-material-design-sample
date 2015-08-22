@@ -12,8 +12,7 @@ import kinjouj.app.oretter.view.adapter.StatusListRecyclerViewAdapter;
 
 public class MentionListFragment extends RecyclerViewFragment<Status> {
 
-    public static final String FRAGMENT_TAG = "fragment_mention_list";
-
+    @Override
     public List<Status> fetch() {
         List<Status> statuses = null;
 

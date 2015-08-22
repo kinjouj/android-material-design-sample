@@ -31,7 +31,7 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
     public void setUser(User user) {
         this.user = user;
         setOnClickListener(this);
-        Picasso.with(context).load(user.getProfileImageURL()).into(this);
+        Picasso.with(context).load(user.getProfileImageURL()).fit().into(this);
     }
 
     public void onClick(View view) {

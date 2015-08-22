@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.GridView;
-import android.widget.ListAdapter;
 
 public class MediaGridView extends GridView {
 
@@ -25,21 +24,12 @@ public class MediaGridView extends GridView {
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        Log.v(TAG, "onMeasure: " + widthMeasureSpec + "," + heightMeasureSpec);
-
-        int expandSpec = MeasureSpec.makeMeasureSpec(
-            MEASURED_SIZE_MASK,
+        int expandSpec = MeasureSpec.makeMeasureSpec(MEASURED_SIZE_MASK,
             MeasureSpec.AT_MOST
         );
         super.onMeasure(widthMeasureSpec, expandSpec);
 
         ViewGroup.LayoutParams params = getLayoutParams();
         params.height = getMeasuredHeight();
-    }
-
-    @Override
-    public void setAdapter(ListAdapter adapter) {
-        Log.v(TAG, "setAdapter");
-        super.setAdapter(adapter);
     }
 }

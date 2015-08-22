@@ -12,8 +12,6 @@ import kinjouj.app.oretter.view.adapter.StatusListRecyclerViewAdapter;
 
 public class FavoriteListFragment extends RecyclerViewFragment<Status> {
 
-    public static final String FRAGMENT_TAG = "fragment_favorite_list";
-
     @Override
     public List<Status> fetch() {
         List<Status> statuses = null;

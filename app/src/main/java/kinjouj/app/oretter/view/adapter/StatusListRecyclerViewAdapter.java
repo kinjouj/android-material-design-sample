@@ -25,16 +25,19 @@ import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.User;
 
+import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.SortedListAdapter;
 import kinjouj.app.oretter.fragment.StatusFragment;
 import kinjouj.app.oretter.view.UserIconImageView;
 
-public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusListRecyclerViewAdapter.ViewHolder> implements SortedListAdapter<Status> {
+public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusListRecyclerViewAdapter.ViewHolder> implements AppInterfaces.SortedListAdapter<Status> {
 
     private static final String TAG = StatusListRecyclerViewAdapter.class.getName();
 
-    private SortedList<Status> statuses = new SortedList<>(Status.class, new SampleCallback());
+    private SortedList<Status> statuses = new SortedList<>(
+        Status.class,
+        new StatusSortedListCallback()
+    );
     private Context context;
     private Picasso picasso;
 
@@ -54,16 +57,12 @@ public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusLi
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
         Status _status = statuses.get(i);
         final Status status = _status.isRetweet() ? _status.getRetweetedStatus() : _status;
-
         viewHolder.setContentText(status.getText());
         viewHolder.setMediaEntities(status.getExtendedMediaEntities());
 
         User user = status.getUser();
-
         viewHolder.icon.setUser(user);
-        picasso.load(user.getProfileBackgroundImageURL())
-                .fit()
-                .into(viewHolder.bg);
+        picasso.load(user.getProfileBackgroundImageURL()).fit().into(viewHolder.bg);
 
 
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
@@ -137,9 +136,9 @@ public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusLi
         }
     }
 
-    private class SampleCallback extends SortedList.Callback<Status> {
+    private class StatusSortedListCallback extends SortedList.Callback<Status> {
 
-        private final String TAG = SampleCallback.class.getName();
+        private final String TAG = StatusSortedListCallback.class.getName();
 
         @Override
         public boolean areItemsTheSame(Status item1, Status item2) {

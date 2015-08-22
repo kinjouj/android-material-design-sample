@@ -13,7 +13,6 @@ import kinjouj.app.oretter.view.adapter.StatusListRecyclerViewAdapter;
 
 public class SearchFragment extends RecyclerViewFragment<Status> {
 
-    public static final String FRAGMENT_TAG = "fragment_search";
     private static final String EXTRA_QUERY = "extra_query";
 
     @Override

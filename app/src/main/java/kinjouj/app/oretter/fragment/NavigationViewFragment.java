@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.view.DrawerHeaderView;
@@ -59,23 +60,23 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
 
         switch (id) {
             case R.id.nav_menu_home:
-                addHomeFragment();
-                break;
-
-            case R.id.nav_menu_follow:
-                addFollowFragment();
-                break;
-
-            case R.id.nav_menu_follower:
-                addFollowerFragment();
+                ((AppInterfaces.NavigateTabListener)getActivity()).navigateTab(1);
                 break;
 
             case R.id.nav_menu_mention:
-                addMentionFragment();
+                ((AppInterfaces.NavigateTabListener)getActivity()).navigateTab(2);
                 break;
 
             case R.id.nav_menu_favorite:
-                addFavoriteFragment();
+                ((AppInterfaces.NavigateTabListener)getActivity()).navigateTab(3);
+                break;
+
+            case R.id.nav_menu_follow:
+                ((AppInterfaces.NavigateTabListener)getActivity()).navigateTab(4);
+                break;
+
+            case R.id.nav_menu_follower:
+                ((AppInterfaces.NavigateTabListener)getActivity()).navigateTab(5);
                 break;
 
             default:
@@ -83,37 +84,8 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
 
         }
 
-        return false;
-    }
-
-    private void addHomeFragment() {
-        replaceFragment(HomeStatusListFragment.FRAGMENT_TAG, new HomeStatusListFragment());
-    }
-
-    private void addFollowFragment() {
-        replaceFragment(FollowListFragment.FRAGMENT_TAG, new FollowListFragment());
-    }
-
-    private void addFollowerFragment() {
-        replaceFragment(FollowerListFragment.FRAGMENT_TAG, new FollowerListFragment());
-    }
-
-    private void addMentionFragment() {
-        replaceFragment(MentionListFragment.FRAGMENT_TAG, new MentionListFragment());
-    }
-
-    private void addFavoriteFragment() {
-        replaceFragment(FavoriteListFragment.FRAGMENT_TAG, new FavoriteListFragment());
-    }
-
-    private void replaceFragment(String fragmentTag, Fragment fragment) {
-        /*
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.content, fragment, fragmentTag);
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        transaction.commit();
-        */
-
         ((MainActivity)getActivity()).closeDrawer();
+
+        return false;
     }
 }

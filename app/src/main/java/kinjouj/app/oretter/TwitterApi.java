@@ -108,12 +108,12 @@ public class TwitterApi {
     }
 
     public static User getCurrentUser(Activity activity) throws Exception {
-        synchronized (TwitterApi.class) {
+//        synchronized (TwitterApi.class) {
             if (currentUser == null) {
                 currentUser = new TwitterApi().getTwitter(activity).verifyCredentials();
             }
 
             return currentUser;
-        }
+//        }
     }
 }
