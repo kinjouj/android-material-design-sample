@@ -18,6 +18,10 @@ public class TabLayoutManager implements TabLayout.OnTabSelectedListener {
     public TabLayoutManager(Context context, TabLayout tabLayout) {
         this.context = context;
         this.tabLayout = tabLayout;
+        init();
+    }
+
+    private void init() {
         tabLayout.setOnTabSelectedListener(this);
     }
 
@@ -56,31 +60,31 @@ public class TabLayoutManager implements TabLayout.OnTabSelectedListener {
 
         switch (tagId) {
             case R.id.tab_menu_home:
-                ((AppInterfaces.ContentFragmentHandler)context).setContentFragment(
+                ((MainActivity)context).setContentFragment(
                     new HomeStatusListFragment()
                 );
                 break;
 
             case R.id.tab_menu_mention:
-                ((AppInterfaces.ContentFragmentHandler)context).setContentFragment(
+                ((MainActivity)context).setContentFragment(
                     new MentionListFragment()
                 );
                 break;
 
             case R.id.tab_menu_favorite:
-                ((AppInterfaces.ContentFragmentHandler)context).setContentFragment(
+                ((MainActivity)context).setContentFragment(
                     new FavoriteListFragment()
                 );
                 break;
 
             case R.id.tab_menu_follow:
-                ((AppInterfaces.ContentFragmentHandler)context).setContentFragment(
+                ((MainActivity)context).setContentFragment(
                     new FollowListFragment()
                 );
                 break;
 
             case R.id.tab_menu_follower:
-                ((AppInterfaces.ContentFragmentHandler)context).setContentFragment(
+                ((MainActivity)context).setContentFragment(
                     new FollowerListFragment()
                 );
                 break;

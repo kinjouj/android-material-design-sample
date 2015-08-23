@@ -84,7 +84,7 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
 
         }
 
-        ((MainActivity)getActivity()).closeDrawer();
+        ((MainActivity)getActivity()).getDrawerLayoutManager().close();
 
         return false;
     }

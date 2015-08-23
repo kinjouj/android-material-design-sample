@@ -36,6 +36,11 @@ public class TwitterApiTest {
         TwitterApi.twitter = null;
     }
 
+    @After
+    public void tearDown() {
+        System.setProperty("twitetr4j.restBaseURL", "https://api.twitter.com/1.1/");
+    }
+
     @Test
     public void test_getTwitter() throws Exception {
         Activity activity = Robolectric.setupActivity(Activity.class);

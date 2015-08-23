@@ -5,10 +5,6 @@ import android.support.v4.app.Fragment;
 
 public interface AppInterfaces {
 
-    public static interface ContentFragmentHandler {
-        void setContentFragment(Fragment fragment);
-    }
-
     public static interface ReloadableFragment {
         void reload();
     }

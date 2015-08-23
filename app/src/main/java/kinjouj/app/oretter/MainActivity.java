@@ -6,11 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.AppBarLayout;
@@ -25,20 +23,19 @@ import butterknife.ButterKnife;
 import kinjouj.app.oretter.fragment.HomeStatusListFragment;
 import kinjouj.app.oretter.listeners.ToolbarOnItemClickListener;
 
-public class MainActivity extends AppCompatActivity
-    implements  AppInterfaces.ContentFragmentHandler {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
     private static final String FRAGMENT_TAG = "current_fragment";
-
-    @Bind(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
 
     @Bind(R.id.appbar_layout)
     AppBarLayout appBarLayout;
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
+    @BindString(R.string.nav_menu_my)
+    String navMyTweetTitle;
 
     @BindString(R.string.nav_menu_home)
     String navHomeTitle;
@@ -55,18 +52,17 @@ public class MainActivity extends AppCompatActivity
     @BindString(R.string.nav_menu_follower)
     String navFollowerTitle;
 
-    private TabLayoutManager tabLayoutManager;
+    private DrawerLayoutManager drawerLayoutManager;
     private SearchViewManager searchViewManager;
+    private TabLayoutManager tabLayoutManager;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        tabLayoutManager = new TabLayoutManager(
-            this,
-            (TabLayout)ButterKnife.findById(this, R.id.tab_layout)
-        );
+        drawerLayoutManager = new DrawerLayoutManager(this, (DrawerLayout)findViewById(R.id.drawer_layout));
+        tabLayoutManager = new TabLayoutManager(this, (TabLayout)findViewById(R.id.tab_layout));
         initToolbar();
         initTabLayout();
         setContentFragment(new HomeStatusListFragment());
@@ -86,44 +82,33 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+        if (drawerLayoutManager.isOpen()) {
             Log.v(TAG, "onBackPressed: closeDrawer");
-            closeDrawer();
+            drawerLayoutManager.close();
         } else {
             if (!searchViewManager.isIconified()) {
                 Log.v(TAG, "onBackPressed: SearchView.onActionViewCollapsed");
                 searchViewManager.collapse();
             } else {
                 super.onBackPressed();
+                FragmentManager fm = getSupportFragmentManager();
+                System.out.println(fm.findFragmentByTag(FRAGMENT_TAG));
             }
         }
     }
 
     @Override
     public boolean onSearchRequested() {
-        if (searchViewManager.isIconified()) {
-            Log.v(TAG, "onSearchRequested: onActionViewExpanded");
-            searchViewManager.expand();
-        }
+        Log.v(TAG, "onSearchRequested: onActionViewExpanded");
+        searchViewManager.expand();
 
         return false;
     }
 
-    /*
-    @Override
-    public void navigateTab(int position) {
-        TabLayout.Tab tab = tabLayoutManager.get(position);
-
-        if (tab != null) {
-            tab.select();
-        }
-    }
-    */
-
-    @Override
     public void setContentFragment(Fragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction tx = fm.beginTransaction();
+        tx.addToBackStack(null);
         tx.replace(R.id.content, fragment, FRAGMENT_TAG);
         tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         tx.commit();
@@ -137,12 +122,16 @@ public class MainActivity extends AppCompatActivity
         appBarLayout.removeOnOffsetChangedListener(listener);
     }
 
-    public void closeDrawer() {
-        drawerLayout.closeDrawer(GravityCompat.START);
+    public DrawerLayoutManager getDrawerLayoutManager() {
+        return drawerLayoutManager;
     }
 
     public TabLayoutManager getTabLayoutManager() {
         return tabLayoutManager;
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
     }
 
     void initToolbar() {
@@ -151,21 +140,10 @@ public class MainActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setOnMenuItemClickListener(new ToolbarOnItemClickListener(this));
-
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
-            this,
-            drawerLayout,
-            toolbar,
-            R.drawable.ic_drawer,
-            R.drawable.ic_drawer
-        );
-        drawerLayout.setDrawerListener(drawerToggle);
-        drawerToggle.setDrawerIndicatorEnabled(true);
-        drawerToggle.syncState();
     }
 
     void initTabLayout() {
-        tabLayoutManager.addTab("マイツイ", R.drawable.ic_home, R.id.tab_menu_my);
+        tabLayoutManager.addTab(navMyTweetTitle, R.drawable.ic_home, R.id.tab_menu_my);
         tabLayoutManager.addTab(navHomeTitle, R.drawable.ic_home, R.id.tab_menu_home, true);
         tabLayoutManager.addTab(navMentionTitle, R.drawable.ic_reply, R.id.tab_menu_mention);
         tabLayoutManager.addTab(navFavoriteTitle, R.drawable.ic_grade, R.id.tab_menu_favorite);

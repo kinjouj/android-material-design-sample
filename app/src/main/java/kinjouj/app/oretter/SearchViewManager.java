@@ -14,6 +14,10 @@ public class SearchViewManager implements SearchView.OnQueryTextListener {
     public SearchViewManager(Context context, SearchView searchView) {
         this.context = context;
         this.searchView = searchView;
+        init();
+    }
+
+    private void init() {
         searchView.setOnQueryTextListener(this);
     }
 
@@ -56,7 +60,9 @@ public class SearchViewManager implements SearchView.OnQueryTextListener {
     }
 
     public void expand() {
-        searchView.onActionViewExpanded();
+        if (searchView != null && isIconified()) {
+            searchView.onActionViewExpanded();
+        }
     }
 
     public void collapse() {
