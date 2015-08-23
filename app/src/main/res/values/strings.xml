@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<resources>
+    <string name="app_name">oretter</string>
+
+    <!-- navigation view -->
+    <string name="nav_menu_home">ホーム</string>
+    <string name="nav_menu_follow">フォロー</string>
+    <string name="nav_menu_follower">フォロワー</string>
+    <string name="nav_menu_mention">レス</string>
+    <string name="nav_menu_favorite">ふぁぼ</string>
+    <string name="nav_menu_list">リスト</string>
+
+    <!-- toolbar -->
+    <string name="tb_menu_post">ツイート</string>
+    <string name="tb_menu_search">search</string>
+</resources>

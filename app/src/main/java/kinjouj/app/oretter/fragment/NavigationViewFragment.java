@@ -60,23 +60,23 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
 
         switch (id) {
             case R.id.nav_menu_home:
-                ((AppInterfaces.NavigateTabListener)getActivity()).navigateTab(1);
+                navigateTab(1);
                 break;
 
             case R.id.nav_menu_mention:
-                ((AppInterfaces.NavigateTabListener)getActivity()).navigateTab(2);
+                navigateTab(2);
                 break;
 
             case R.id.nav_menu_favorite:
-                ((AppInterfaces.NavigateTabListener)getActivity()).navigateTab(3);
+                navigateTab(3);
                 break;
 
             case R.id.nav_menu_follow:
-                ((AppInterfaces.NavigateTabListener)getActivity()).navigateTab(4);
+                navigateTab(4);
                 break;
 
             case R.id.nav_menu_follower:
-                ((AppInterfaces.NavigateTabListener)getActivity()).navigateTab(5);
+                navigateTab(5);
                 break;
 
             default:
@@ -87,5 +87,9 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
         ((MainActivity)getActivity()).closeDrawer();
 
         return false;
+    }
+
+    private void navigateTab(int position) {
+        ((MainActivity)getActivity()).getTabLayoutManager().get(position).select();
     }
 }
