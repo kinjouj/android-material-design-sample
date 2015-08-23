@@ -5,12 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.TabLayout;
 import android.util.Log;
 import android.view.Menu;
 
@@ -23,10 +19,7 @@ import kinjouj.app.oretter.fragment.HomeStatusListFragment;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
-    private static final String FRAGMENT_TAG = "current_fragment";
-
-    @Bind(R.id.appbar_layout)
-    AppBarLayout appBarLayout;
+    public static final String FRAGMENT_TAG = "current_fragment";
 
     @BindString(R.string.nav_menu_my)
     String navMyTweetTitle;
@@ -46,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     @BindString(R.string.nav_menu_follower)
     String navFollowerTitle;
 
+    private AppBarLayoutManager appBarLayoutManager;
     private DrawerLayoutManager drawerLayoutManager;
     private SearchViewManager searchViewManager;
     private TabLayoutManager tabLayoutManager;
@@ -56,9 +50,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        toolbarManager = new ToolbarManager(this, (Toolbar)findViewById(R.id.toolbar));
-        drawerLayoutManager = new DrawerLayoutManager(this, (DrawerLayout)findViewById(R.id.drawer_layout));
-        tabLayoutManager = new TabLayoutManager(this, (TabLayout)findViewById(R.id.tab_layout));
+        appBarLayoutManager = new AppBarLayoutManager(this);
+        toolbarManager      = new ToolbarManager(this);
+        drawerLayoutManager = new DrawerLayoutManager(this);
+        tabLayoutManager    = new TabLayoutManager(this);
         initToolbar();
         initTabLayout();
         setContentFragment(new HomeStatusListFragment());
@@ -87,10 +82,6 @@ public class MainActivity extends AppCompatActivity {
                 searchViewManager.collapse();
             } else {
                 super.onBackPressed();
-                /*
-                FragmentManager fm = getSupportFragmentManager();
-                System.out.println(fm.findFragmentByTag(FRAGMENT_TAG));
-                */
             }
         }
     }
@@ -106,18 +97,13 @@ public class MainActivity extends AppCompatActivity {
     public void setContentFragment(Fragment fragment) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction tx = fm.beginTransaction();
-        tx.addToBackStack(null);
         tx.replace(R.id.content, fragment, FRAGMENT_TAG);
         tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         tx.commit();
     }
 
-    public void addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener listener) {
-        appBarLayout.addOnOffsetChangedListener(listener);
-    }
-
-    public void removeOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener listener) {
-        appBarLayout.removeOnOffsetChangedListener(listener);
+    public AppBarLayoutManager getAppBarLayoutManager() {
+        return appBarLayoutManager;
     }
 
     public DrawerLayoutManager getDrawerLayoutManager() {
@@ -133,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void initToolbar() {
-        setSupportActionBar(getToolbarManager().getToolbar());
+        setSupportActionBar(toolbarManager.getToolbar());
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);

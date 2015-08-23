@@ -8,6 +8,8 @@ import android.util.Log;
 
 import twitter4j.Status;
 
+import kinjouj.app.oretter.AppInterfaces;
+import kinjouj.app.oretter.TabLayoutManager;
 import kinjouj.app.oretter.TwitterApi;
 import kinjouj.app.oretter.view.adapter.StatusListRecyclerViewAdapter;
 

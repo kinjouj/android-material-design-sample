@@ -5,14 +5,19 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class DrawerLayoutManager {
 
     Activity activity;
+
+    @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
-    public DrawerLayoutManager(Activity activity, DrawerLayout drawerLayout) {
+    public DrawerLayoutManager(Activity activity) {
         this.activity = activity;
-        this.drawerLayout = drawerLayout;
+        ButterKnife.bind(this, activity);
         init();
     }
 

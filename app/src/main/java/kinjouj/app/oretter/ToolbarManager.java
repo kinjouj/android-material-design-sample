@@ -4,14 +4,19 @@ import android.view.MenuItem;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class ToolbarManager implements Toolbar.OnMenuItemClickListener {
 
-    private AppCompatActivity activity;
-    private Toolbar toolbar;
+    AppCompatActivity activity;
 
-    public ToolbarManager(AppCompatActivity activity, Toolbar toolbar) {
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
+    public ToolbarManager(AppCompatActivity activity) {
         this.activity = activity;
-        this.toolbar = toolbar;
+        ButterKnife.bind(this, activity);
         init();
     }
 

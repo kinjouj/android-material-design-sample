@@ -18,12 +18,14 @@ import android.support.design.widget.AppBarLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.AppInterfaces;
+import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 
 public abstract class RecyclerViewFragment<T> extends Fragment
-    implements SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
+    implements SwipeRefreshLayout.OnRefreshListener,
+                AppBarLayout.OnOffsetChangedListener,
+                AppInterfaces.ReloadableFragment {
 
     private static final String TAG = RecyclerViewFragment.class.getName();
 
@@ -59,17 +61,18 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        ((MainActivity)getActivity()).addOnOffsetChangedListener(this);
+        ((MainActivity)getActivity()).getAppBarLayoutManager().addOnOffsetChangedListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        ((MainActivity)getActivity()).removeOnOffsetChangedListener(this);
+        ((MainActivity)getActivity()).getAppBarLayoutManager().removeOnOffsetChangedListener(this);
     }
 
     @Override
     public void onRefresh() {
+        Log.v(TAG, "onRefresh");
         load(new Runnable() {
             @Override
             public void run() {
@@ -81,6 +84,12 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     @Override
     public void onOffsetChanged(AppBarLayout appBar, int verticalOffset) {
         swipeRefreshLayout.setEnabled(verticalOffset == 0);
+    }
+
+    @Override
+    public void reload() {
+        swipeRefreshLayout.setRefreshing(true);
+        onRefresh();
     }
 
     public RecyclerView.LayoutManager getLayoutManager() {

@@ -2,6 +2,7 @@ package kinjouj.app.oretter;
 
 import android.app.Activity;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 
 import kinjouj.app.oretter.fragment.FavoriteListFragment;
 import kinjouj.app.oretter.fragment.FollowListFragment;
@@ -10,14 +11,19 @@ import kinjouj.app.oretter.fragment.HomeStatusListFragment;
 import kinjouj.app.oretter.fragment.MentionListFragment;
 import kinjouj.app.oretter.fragment.SearchFragment;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class TabLayoutManager implements TabLayout.OnTabSelectedListener {
 
     Activity activity;
+
+    @Bind(R.id.tab_layout)
     TabLayout tabLayout;
 
-    public TabLayoutManager(Activity activity, TabLayout tabLayout) {
+    public TabLayoutManager(Activity activity) {
         this.activity = activity;
-        this.tabLayout = tabLayout;
+        ButterKnife.bind(this, activity);
         init();
     }
 
@@ -53,6 +59,10 @@ public class TabLayoutManager implements TabLayout.OnTabSelectedListener {
         return tabLayout.newTab().setText(title).setIcon(iconRes).setTag(tagRes);
     }
 
+    public int getCurrentPosition() {
+        return tabLayout.getSelectedTabPosition();
+    }
+
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         Object tag = tab.getTag();
@@ -85,6 +95,9 @@ public class TabLayoutManager implements TabLayout.OnTabSelectedListener {
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
+        Fragment fragment = ((MainActivity)activity).getSupportFragmentManager().findFragmentByTag(MainActivity.FRAGMENT_TAG);
+        System.out.println(fragment);
+        ((AppInterfaces.ReloadableFragment)fragment).reload();
     }
 
     @Override
