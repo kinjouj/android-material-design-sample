@@ -1,7 +1,5 @@
 package kinjouj.app.oretter;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,7 +19,6 @@ import butterknife.BindString;
 import butterknife.ButterKnife;
 
 import kinjouj.app.oretter.fragment.HomeStatusListFragment;
-import kinjouj.app.oretter.listeners.ToolbarOnItemClickListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,9 +27,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.appbar_layout)
     AppBarLayout appBarLayout;
-
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
 
     @BindString(R.string.nav_menu_my)
     String navMyTweetTitle;
@@ -55,12 +49,14 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayoutManager drawerLayoutManager;
     private SearchViewManager searchViewManager;
     private TabLayoutManager tabLayoutManager;
+    private ToolbarManager toolbarManager;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        toolbarManager = new ToolbarManager(this, (Toolbar)findViewById(R.id.toolbar));
         drawerLayoutManager = new DrawerLayoutManager(this, (DrawerLayout)findViewById(R.id.drawer_layout));
         tabLayoutManager = new TabLayoutManager(this, (TabLayout)findViewById(R.id.tab_layout));
         initToolbar();
@@ -91,8 +87,10 @@ public class MainActivity extends AppCompatActivity {
                 searchViewManager.collapse();
             } else {
                 super.onBackPressed();
+                /*
                 FragmentManager fm = getSupportFragmentManager();
                 System.out.println(fm.findFragmentByTag(FRAGMENT_TAG));
+                */
             }
         }
     }
@@ -130,16 +128,15 @@ public class MainActivity extends AppCompatActivity {
         return tabLayoutManager;
     }
 
-    public Toolbar getToolbar() {
-        return toolbar;
+    public ToolbarManager getToolbarManager() {
+        return toolbarManager;
     }
 
     void initToolbar() {
-        setSupportActionBar(toolbar);
+        setSupportActionBar(getToolbarManager().getToolbar());
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        toolbar.setOnMenuItemClickListener(new ToolbarOnItemClickListener(this));
     }
 
     void initTabLayout() {

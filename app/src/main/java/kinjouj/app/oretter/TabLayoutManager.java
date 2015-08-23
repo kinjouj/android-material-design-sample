@@ -1,6 +1,6 @@
 package kinjouj.app.oretter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.design.widget.TabLayout;
 
 import kinjouj.app.oretter.fragment.FavoriteListFragment;
@@ -12,11 +12,11 @@ import kinjouj.app.oretter.fragment.SearchFragment;
 
 public class TabLayoutManager implements TabLayout.OnTabSelectedListener {
 
-    private Context context;
-    private TabLayout tabLayout;
+    Activity activity;
+    TabLayout tabLayout;
 
-    public TabLayoutManager(Context context, TabLayout tabLayout) {
-        this.context = context;
+    public TabLayoutManager(Activity activity, TabLayout tabLayout) {
+        this.activity = activity;
         this.tabLayout = tabLayout;
         init();
     }
@@ -60,33 +60,23 @@ public class TabLayoutManager implements TabLayout.OnTabSelectedListener {
 
         switch (tagId) {
             case R.id.tab_menu_home:
-                ((MainActivity)context).setContentFragment(
-                    new HomeStatusListFragment()
-                );
+                ((MainActivity)activity).setContentFragment(new HomeStatusListFragment());
                 break;
 
             case R.id.tab_menu_mention:
-                ((MainActivity)context).setContentFragment(
-                    new MentionListFragment()
-                );
+                ((MainActivity)activity).setContentFragment(new MentionListFragment());
                 break;
 
             case R.id.tab_menu_favorite:
-                ((MainActivity)context).setContentFragment(
-                    new FavoriteListFragment()
-                );
+                ((MainActivity)activity).setContentFragment(new FavoriteListFragment());
                 break;
 
             case R.id.tab_menu_follow:
-                ((MainActivity)context).setContentFragment(
-                    new FollowListFragment()
-                );
+                ((MainActivity)activity).setContentFragment(new FollowListFragment());
                 break;
 
             case R.id.tab_menu_follower:
-                ((MainActivity)context).setContentFragment(
-                    new FollowerListFragment()
-                );
+                ((MainActivity)activity).setContentFragment(new FollowerListFragment());
                 break;
 
             default:

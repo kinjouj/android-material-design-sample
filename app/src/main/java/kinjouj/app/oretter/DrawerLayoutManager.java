@@ -1,28 +1,26 @@
 package kinjouj.app.oretter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 
 public class DrawerLayoutManager {
 
-    Context context;
+    Activity activity;
     DrawerLayout drawerLayout;
 
-    public DrawerLayoutManager(Context context, DrawerLayout drawerLayout) {
-        this.context = context;
+    public DrawerLayoutManager(Activity activity, DrawerLayout drawerLayout) {
+        this.activity = activity;
         this.drawerLayout = drawerLayout;
         init();
     }
 
     private void init() {
-        MainActivity activity = (MainActivity)context;
-
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
             activity,
             drawerLayout,
-            activity.getToolbar(),
+            ((MainActivity)activity).getToolbarManager().getToolbar(),
             R.drawable.ic_drawer,
             R.drawable.ic_drawer
         );

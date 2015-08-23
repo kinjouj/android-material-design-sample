@@ -1,6 +1,6 @@
 package kinjouj.app.oretter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.SearchView;
 
@@ -8,11 +8,11 @@ import kinjouj.app.oretter.fragment.SearchFragment;
 
 public class SearchViewManager implements SearchView.OnQueryTextListener {
 
-    Context context;
+    Activity activity;
     SearchView searchView;
 
-    public SearchViewManager(Context context, SearchView searchView) {
-        this.context = context;
+    public SearchViewManager(Activity activity, SearchView searchView) {
+        this.activity = activity;
         this.searchView = searchView;
         init();
     }
@@ -28,12 +28,15 @@ public class SearchViewManager implements SearchView.OnQueryTextListener {
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        final MainActivity activity = (MainActivity)context;
+        collapse();
+        ((MainActivity)activity).setContentFragment(SearchFragment.newInstance(query));
 
-        TabLayoutManager tabLayoutManager = activity.getTabLayoutManager();
-        final TabLayout.Tab tab = tabLayoutManager.addTab("検索 " + query, R.drawable.ic_search, R.id.tab_menu_search);
-
-        activity.setContentFragment(SearchFragment.newInstance(query));
+        TabLayoutManager tabLayoutManager = ((MainActivity)activity).getTabLayoutManager();
+        final TabLayout.Tab tab = tabLayoutManager.addTab(
+            "検索 " + query,
+            R.drawable.ic_search,
+            R.id.tab_menu_search
+        );
 
         new Thread() {
             @Override
