@@ -4,31 +4,26 @@ import android.app.Activity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-
 import butterknife.Bind;
-import butterknife.ButterKnife;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 
-public class DrawerLayoutManager {
-
-    Activity activity;
+public class DrawerLayoutManager extends ViewManager<MainActivity> {
 
     @Bind(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
     public DrawerLayoutManager(Activity activity) {
-        this.activity = activity;
-        ButterKnife.bind(this, activity);
+        super(activity);
         init();
     }
 
     private void init() {
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
-            activity,
+            getActivity(),
             drawerLayout,
-            ((MainActivity)activity).getToolbarManager().getToolbar(),
+            ((MainActivity)getActivity()).getToolbarManager().getToolbar(),
             R.drawable.ic_drawer,
             R.drawable.ic_drawer
         );

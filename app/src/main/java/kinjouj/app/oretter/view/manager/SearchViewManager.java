@@ -8,13 +8,12 @@ import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.SearchFragment;
 
-public class SearchViewManager implements SearchView.OnQueryTextListener {
+public class SearchViewManager extends ViewManager<MainActivity> implements SearchView.OnQueryTextListener {
 
-    Activity activity;
     SearchView searchView;
 
     public SearchViewManager(Activity activity, SearchView searchView) {
-        this.activity = activity;
+        super(activity);
         this.searchView = searchView;
         init();
     }
@@ -31,9 +30,9 @@ public class SearchViewManager implements SearchView.OnQueryTextListener {
     @Override
     public boolean onQueryTextSubmit(String query) {
         collapse();
-        ((MainActivity)activity).setContentFragment(SearchFragment.newInstance(query));
+        getActivity().setContentFragment(SearchFragment.newInstance(query));
 
-        TabLayoutManager tabLayoutManager = ((MainActivity)activity).getTabLayoutManager();
+        TabLayoutManager tabLayoutManager = getActivity().getTabLayoutManager();
         final TabLayout.Tab tab = tabLayoutManager.addTab(
             "検索 " + query,
             R.drawable.ic_search,
@@ -45,7 +44,7 @@ public class SearchViewManager implements SearchView.OnQueryTextListener {
             public void run() {
                 try {
                     Thread.sleep(300);
-                    activity.runOnUiThread(new Runnable() {
+                    getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             tab.select();

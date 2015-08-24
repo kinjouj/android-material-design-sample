@@ -2,7 +2,6 @@ package kinjouj.app.oretter;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +9,6 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 
-import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
@@ -95,13 +93,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSearchRequested() {
         Log.v(TAG, "onSearchRequested: onActionViewExpanded");
         searchViewManager.expand();
-
         return false;
     }
 
     public void setContentFragment(Fragment fragment) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction tx = fm.beginTransaction();
+        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
         tx.replace(R.id.content, fragment, FRAGMENT_TAG);
         tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         tx.commit();

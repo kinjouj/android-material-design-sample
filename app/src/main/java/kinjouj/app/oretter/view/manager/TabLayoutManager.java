@@ -17,16 +17,13 @@ import kinjouj.app.oretter.fragment.SearchFragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class TabLayoutManager implements TabLayout.OnTabSelectedListener {
-
-    Activity activity;
+public class TabLayoutManager extends ViewManager<MainActivity> implements TabLayout.OnTabSelectedListener {
 
     @Bind(R.id.tab_layout)
     TabLayout tabLayout;
 
     public TabLayoutManager(Activity activity) {
-        this.activity = activity;
-        ButterKnife.bind(this, activity);
+        super(activity);
         init();
     }
 
@@ -69,27 +66,32 @@ public class TabLayoutManager implements TabLayout.OnTabSelectedListener {
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         Object tag = tab.getTag();
-        int tagId = tag != null ? (int)tag : -1;
+        int tagId = -1;
+
+        if (tag != null) {
+            System.out.println(tag instanceof Integer);
+            tagId = (int)tag;
+        }
 
         switch (tagId) {
             case R.id.tab_menu_home:
-                ((MainActivity)activity).setContentFragment(new HomeStatusListFragment());
+                getActivity().setContentFragment(new HomeStatusListFragment());
                 break;
 
             case R.id.tab_menu_mention:
-                ((MainActivity)activity).setContentFragment(new MentionListFragment());
+                getActivity().setContentFragment(new MentionListFragment());
                 break;
 
             case R.id.tab_menu_favorite:
-                ((MainActivity)activity).setContentFragment(new FavoriteListFragment());
+                getActivity().setContentFragment(new FavoriteListFragment());
                 break;
 
             case R.id.tab_menu_follow:
-                ((MainActivity)activity).setContentFragment(new FollowListFragment());
+                getActivity().setContentFragment(new FollowListFragment());
                 break;
 
             case R.id.tab_menu_follower:
-                ((MainActivity)activity).setContentFragment(new FollowerListFragment());
+                getActivity().setContentFragment(new FollowerListFragment());
                 break;
 
             default:
@@ -98,8 +100,7 @@ public class TabLayoutManager implements TabLayout.OnTabSelectedListener {
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-        Fragment fragment = ((MainActivity)activity).getSupportFragmentManager().findFragmentByTag(MainActivity.FRAGMENT_TAG);
-        System.out.println(fragment);
+        Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.FRAGMENT_TAG);
         ((AppInterfaces.ReloadableFragment)fragment).reload();
     }
 
