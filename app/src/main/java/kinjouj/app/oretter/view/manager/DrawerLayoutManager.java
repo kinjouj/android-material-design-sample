@@ -1,4 +1,4 @@
-package kinjouj.app.oretter;
+package kinjouj.app.oretter.view.manager;
 
 import android.app.Activity;
 import android.support.v4.view.GravityCompat;
@@ -7,6 +7,9 @@ import android.support.v7.app.ActionBarDrawerToggle;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import kinjouj.app.oretter.MainActivity;
+import kinjouj.app.oretter.R;
 
 public class DrawerLayoutManager {
 

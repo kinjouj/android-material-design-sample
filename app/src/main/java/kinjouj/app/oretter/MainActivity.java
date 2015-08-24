@@ -15,6 +15,11 @@ import butterknife.BindString;
 import butterknife.ButterKnife;
 
 import kinjouj.app.oretter.fragment.HomeStatusListFragment;
+import kinjouj.app.oretter.view.manager.AppBarLayoutManager;
+import kinjouj.app.oretter.view.manager.DrawerLayoutManager;
+import kinjouj.app.oretter.view.manager.SearchViewManager;
+import kinjouj.app.oretter.view.manager.TabLayoutManager;
+import kinjouj.app.oretter.view.manager.ToolbarManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,11 +54,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
         appBarLayoutManager = new AppBarLayoutManager(this);
         toolbarManager      = new ToolbarManager(this);
         drawerLayoutManager = new DrawerLayoutManager(this);
         tabLayoutManager    = new TabLayoutManager(this);
+        ButterKnife.bind(this);
         initToolbar();
         initTabLayout();
         setContentFragment(new HomeStatusListFragment());

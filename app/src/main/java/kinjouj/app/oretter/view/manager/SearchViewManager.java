@@ -1,9 +1,11 @@
-package kinjouj.app.oretter;
+package kinjouj.app.oretter.view.manager;
 
 import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.SearchView;
 
+import kinjouj.app.oretter.MainActivity;
+import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.SearchFragment;
 
 public class SearchViewManager implements SearchView.OnQueryTextListener {

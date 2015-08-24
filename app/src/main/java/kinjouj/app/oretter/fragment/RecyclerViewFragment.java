@@ -83,13 +83,18 @@ public abstract class RecyclerViewFragment<T> extends Fragment
 
     @Override
     public void onOffsetChanged(AppBarLayout appBar, int verticalOffset) {
+        Log.v(TAG, "onOffsetChanged: " + verticalOffset);
         swipeRefreshLayout.setEnabled(verticalOffset == 0);
     }
 
     @Override
     public void reload() {
-        swipeRefreshLayout.setRefreshing(true);
-        onRefresh();
+        if (recyclerView.computeVerticalScrollOffset() == 0) {
+            swipeRefreshLayout.setRefreshing(true);
+            onRefresh();
+        } else {
+            recyclerView.scrollToPosition(0);
+        }
     }
 
     public RecyclerView.LayoutManager getLayoutManager() {

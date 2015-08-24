@@ -31,16 +31,11 @@ public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRe
 
     private static final String TAG = UserListRecyclerViewAdapter.class.getName();
 
-    private SortedList<User> users = new SortedList<>(
-        User.class,
-        new UserSortedListCallback()
-    );
+    private SortedList<User> users = new SortedList<>(User.class, new UserSortedListCallback());
     private Context context;
-    private Picasso picasso;
 
     public UserListRecyclerViewAdapter(Context context) {
         this.context = context;
-        picasso = Picasso.with(context);
     }
 
     @Override
@@ -55,7 +50,10 @@ public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRe
         final User user = users.get(i);
         viewHolder.userIcon.setUser(user);
         viewHolder.setContentText(user.getDescription());
-        picasso.load(user.getProfileBackgroundImageURL()).fit().into(viewHolder.userBg);
+        Picasso.with(context)
+                .load(user.getProfileBackgroundImageURL())
+                .fit()
+                .into(viewHolder.userBg);
     }
 
     @Override

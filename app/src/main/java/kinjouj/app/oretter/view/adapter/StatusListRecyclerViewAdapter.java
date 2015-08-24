@@ -34,16 +34,11 @@ public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusLi
 
     private static final String TAG = StatusListRecyclerViewAdapter.class.getName();
 
-    private SortedList<Status> statuses = new SortedList<>(
-        Status.class,
-        new StatusSortedListCallback()
-    );
+    private SortedList<Status> statuses = new SortedList<>(Status.class, new StatusSortedListCallback());
     private Context context;
-    private Picasso picasso;
 
     public StatusListRecyclerViewAdapter(Context context) {
         this.context = context;
-        picasso = Picasso.with(context);
     }
 
     @Override
@@ -62,8 +57,7 @@ public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusLi
 
         User user = status.getUser();
         viewHolder.icon.setUser(user);
-        picasso.load(user.getProfileBackgroundImageURL()).fit().into(viewHolder.bg);
-
+        Picasso.with(context).load(user.getProfileBackgroundImageURL()).fit().into(viewHolder.bg);
 
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override

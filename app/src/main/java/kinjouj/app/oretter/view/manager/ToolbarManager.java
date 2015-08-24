@@ -1,4 +1,4 @@
-package kinjouj.app.oretter;
+package kinjouj.app.oretter.view.manager;
 
 import android.view.MenuItem;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,9 @@ import android.support.v7.widget.Toolbar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import kinjouj.app.oretter.MainActivity;
+import kinjouj.app.oretter.R;
 
 public class ToolbarManager implements Toolbar.OnMenuItemClickListener {
 

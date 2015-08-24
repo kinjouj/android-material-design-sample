@@ -1,9 +1,12 @@
-package kinjouj.app.oretter;
+package kinjouj.app.oretter.view.manager;
 
 import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 
+import kinjouj.app.oretter.AppInterfaces;
+import kinjouj.app.oretter.MainActivity;
+import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.FavoriteListFragment;
 import kinjouj.app.oretter.fragment.FollowListFragment;
 import kinjouj.app.oretter.fragment.FollowerListFragment;

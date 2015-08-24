@@ -1,10 +1,12 @@
-package kinjouj.app.oretter;
+package kinjouj.app.oretter.view.manager;
 
 import android.app.Activity;
 import android.support.design.widget.AppBarLayout;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import kinjouj.app.oretter.R;
 
 public class AppBarLayoutManager {
 
