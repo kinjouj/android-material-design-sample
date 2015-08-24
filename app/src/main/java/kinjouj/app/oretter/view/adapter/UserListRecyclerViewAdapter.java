@@ -22,12 +22,12 @@ import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import twitter4j.User;
 
-import kinjouj.app.oretter.AppInterfaces;
+import kinjouj.app.oretter.ApplicationInterfaces;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.StatusFragment;
 import kinjouj.app.oretter.view.UserIconImageView;
 
-public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRecyclerViewAdapter.ViewHolder> implements AppInterfaces.SortedListAdapter<User> {
+public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRecyclerViewAdapter.ViewHolder> implements ApplicationInterfaces.SortedListAdapter<User> {
 
     private static final String TAG = UserListRecyclerViewAdapter.class.getName();
 

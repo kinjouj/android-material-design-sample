@@ -15,7 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import kinjouj.app.oretter.AppInterfaces;
+import kinjouj.app.oretter.ApplicationInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.view.DrawerHeaderView;

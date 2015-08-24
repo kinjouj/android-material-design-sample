@@ -18,14 +18,13 @@ import android.support.design.widget.AppBarLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import kinjouj.app.oretter.AppInterfaces;
+import kinjouj.app.oretter.ApplicationInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 
 public abstract class RecyclerViewFragment<T> extends Fragment
-    implements SwipeRefreshLayout.OnRefreshListener,
-                AppBarLayout.OnOffsetChangedListener,
-                AppInterfaces.ReloadableFragment {
+    implements SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener,
+                ApplicationInterfaces.ReloadableFragment {
 
     private static final String TAG = RecyclerViewFragment.class.getName();
 
@@ -112,7 +111,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
                     @SuppressWarnings("unchecked")
                     @Override
                     public void run() {
-                        ((AppInterfaces.SortedListAdapter<T>)adapter).addAll(users);
+                        ((ApplicationInterfaces.SortedListAdapter<T>)adapter).addAll(users);
 
                         if (callback != null) callback.run();
                     }

@@ -5,7 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import butterknife.Bind;
 
-import kinjouj.app.oretter.AppInterfaces;
+import kinjouj.app.oretter.ApplicationInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.FavoriteListFragment;
@@ -99,7 +99,7 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
         Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.FRAGMENT_TAG);
-        ((AppInterfaces.ReloadableFragment)fragment).reload();
+        ((ApplicationInterfaces.ReloadableFragment)fragment).reload();
     }
 
     @Override

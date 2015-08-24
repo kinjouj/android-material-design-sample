@@ -92,7 +92,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSearchRequested() {
         Log.v(TAG, "onSearchRequested: onActionViewExpanded");
-        searchViewManager.expand();
+
+        if (!drawerLayoutManager.isOpen()) {
+            searchViewManager.expand();
+        }
+
         return false;
     }
 

@@ -2,7 +2,7 @@ package kinjouj.app.oretter;
 
 import java.util.List;
 
-public interface AppInterfaces {
+public interface ApplicationInterfaces {
 
     public static interface ReloadableFragment {
         void reload();
@@ -12,4 +12,5 @@ public interface AppInterfaces {
         void add(T value);
         void addAll(List<T> values);
     }
+
 }

@@ -25,12 +25,12 @@ import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.User;
 
-import kinjouj.app.oretter.AppInterfaces;
+import kinjouj.app.oretter.ApplicationInterfaces;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.StatusFragment;
 import kinjouj.app.oretter.view.UserIconImageView;
 
-public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusListRecyclerViewAdapter.ViewHolder> implements AppInterfaces.SortedListAdapter<Status> {
+public class StatusListRecyclerViewAdapter extends RecyclerView.Adapter<StatusListRecyclerViewAdapter.ViewHolder> implements ApplicationInterfaces.SortedListAdapter<Status> {
 
     private static final String TAG = StatusListRecyclerViewAdapter.class.getName();
 
