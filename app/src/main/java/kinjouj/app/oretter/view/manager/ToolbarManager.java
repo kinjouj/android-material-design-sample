@@ -3,9 +3,7 @@ package kinjouj.app.oretter.view.manager;
 import android.app.Activity;
 import android.view.MenuItem;
 import android.support.v7.widget.Toolbar;
-
 import butterknife.Bind;
-import butterknife.ButterKnife;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;

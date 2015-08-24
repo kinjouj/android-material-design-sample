@@ -13,6 +13,7 @@ public abstract class ViewManager<T extends AppCompatActivity> {
         ButterKnife.bind(this, activity);
     }
 
+    @SuppressWarnings("unchecked")
     protected T getActivity() {
         return (T)activity;
     }

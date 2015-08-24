@@ -3,6 +3,7 @@ package kinjouj.app.oretter.view.manager;
 import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import butterknife.Bind;
 
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
@@ -13,9 +14,6 @@ import kinjouj.app.oretter.fragment.FollowerListFragment;
 import kinjouj.app.oretter.fragment.HomeStatusListFragment;
 import kinjouj.app.oretter.fragment.MentionListFragment;
 import kinjouj.app.oretter.fragment.SearchFragment;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class TabLayoutManager extends ViewManager<MainActivity> implements TabLayout.OnTabSelectedListener {
 
