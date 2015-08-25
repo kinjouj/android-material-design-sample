@@ -88,6 +88,8 @@ public abstract class RecyclerViewFragment<T> extends Fragment
 
     @Override
     public void reload() {
+        Log.v(TAG, "computeVerticalScrollOffset" + recyclerView.computeVerticalScrollOffset());
+
         if (recyclerView.computeVerticalScrollOffset() == 0) {
             swipeRefreshLayout.setRefreshing(true);
             onRefresh();

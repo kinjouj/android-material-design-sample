@@ -9,7 +9,7 @@ import android.util.Log;
 import twitter4j.Status;
 
 import kinjouj.app.oretter.TwitterApi;
-import kinjouj.app.oretter.view.adapter.StatusListRecyclerViewAdapter;
+import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
 
 public class HomeStatusListFragment extends RecyclerViewFragment<Status> {
 
@@ -31,6 +31,6 @@ public class HomeStatusListFragment extends RecyclerViewFragment<Status> {
 
     @Override
     public RecyclerView.Adapter getAdapter() {
-        return new StatusListRecyclerViewAdapter(getActivity());
+        return new StatusRecyclerViewAdapter(getActivity());
     }
 }

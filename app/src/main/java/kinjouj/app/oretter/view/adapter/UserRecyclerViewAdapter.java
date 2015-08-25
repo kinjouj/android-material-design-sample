@@ -1,6 +1,5 @@
 package kinjouj.app.oretter.view.adapter;
 
-import java.io.IOException;
 import java.util.List;
 
 import android.content.Context;
@@ -27,14 +26,14 @@ import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.StatusFragment;
 import kinjouj.app.oretter.view.UserIconImageView;
 
-public class UserListRecyclerViewAdapter extends RecyclerView.Adapter<UserListRecyclerViewAdapter.ViewHolder> implements ApplicationInterfaces.SortedListAdapter<User> {
+public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> implements ApplicationInterfaces.SortedListAdapter<User> {
 
-    private static final String TAG = UserListRecyclerViewAdapter.class.getName();
+    private static final String TAG = UserRecyclerViewAdapter.class.getName();
 
     private SortedList<User> users = new SortedList<>(User.class, new UserSortedListCallback());
     private Context context;
 
-    public UserListRecyclerViewAdapter(Context context) {
+    public UserRecyclerViewAdapter(Context context) {
         this.context = context;
     }
 

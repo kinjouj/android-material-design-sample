@@ -3,11 +3,12 @@ package kinjouj.app.oretter.fragment;
 import java.util.List;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 
 import twitter4j.User;
 
 import kinjouj.app.oretter.TwitterApi;
-import kinjouj.app.oretter.view.adapter.UserListRecyclerViewAdapter;
+import kinjouj.app.oretter.view.adapter.UserRecyclerViewAdapter;
 
 public class FollowerListFragment extends RecyclerViewFragment<User> {
 
@@ -26,6 +27,11 @@ public class FollowerListFragment extends RecyclerViewFragment<User> {
 
     @Override
     public RecyclerView.Adapter getAdapter() {
-        return new UserListRecyclerViewAdapter(getActivity());
+        return new UserRecyclerViewAdapter(getActivity());
+    }
+
+    @Override
+    public RecyclerView.LayoutManager getLayoutManager() {
+        return new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
     }
 }

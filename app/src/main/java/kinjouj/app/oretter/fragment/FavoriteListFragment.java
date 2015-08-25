@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import twitter4j.Status;
 
 import kinjouj.app.oretter.TwitterApi;
-import kinjouj.app.oretter.view.adapter.StatusListRecyclerViewAdapter;
+import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
 
 public class FavoriteListFragment extends RecyclerViewFragment<Status> {
 
@@ -27,6 +27,6 @@ public class FavoriteListFragment extends RecyclerViewFragment<Status> {
 
     @Override
     public RecyclerView.Adapter getAdapter() {
-        return new StatusListRecyclerViewAdapter(getActivity());
+        return new StatusRecyclerViewAdapter(getActivity());
     }
 }

@@ -60,23 +60,23 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
 
         switch (id) {
             case R.id.nav_menu_home:
-                navigateTab(1);
+                navigateTab(0);
                 break;
 
             case R.id.nav_menu_mention:
-                navigateTab(2);
+                navigateTab(1);
                 break;
 
             case R.id.nav_menu_favorite:
-                navigateTab(3);
+                navigateTab(2);
                 break;
 
             case R.id.nav_menu_follow:
-                navigateTab(4);
+                navigateTab(3);
                 break;
 
             case R.id.nav_menu_follower:
-                navigateTab(5);
+                navigateTab(4);
                 break;
 
             default:

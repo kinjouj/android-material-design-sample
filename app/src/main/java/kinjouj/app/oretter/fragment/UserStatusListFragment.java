@@ -10,7 +10,7 @@ import twitter4j.Status;
 import twitter4j.User;
 
 import kinjouj.app.oretter.TwitterApi;
-import kinjouj.app.oretter.view.adapter.StatusListRecyclerViewAdapter;
+import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
 
 public class UserStatusListFragment extends RecyclerViewFragment<Status> {
 
@@ -32,7 +32,7 @@ public class UserStatusListFragment extends RecyclerViewFragment<Status> {
 
     @Override
     public RecyclerView.Adapter getAdapter() {
-        return new StatusListRecyclerViewAdapter(getActivity());
+        return new StatusRecyclerViewAdapter(getActivity());
     }
 
     private User getUser() {
