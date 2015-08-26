@@ -23,7 +23,7 @@ import twitter4j.User;
 
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragment.StatusFragment;
+import kinjouj.app.oretter.fragments.StatusFragment;
 import kinjouj.app.oretter.view.UserIconImageView;
 
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> implements AppInterfaces.SortedListAdapter<User> {

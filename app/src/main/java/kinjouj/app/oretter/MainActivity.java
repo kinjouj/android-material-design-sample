@@ -9,7 +9,6 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 
-import kinjouj.app.oretter.fragment.HomeStatusListFragment;
 import kinjouj.app.oretter.view.manager.AppBarLayoutManager;
 import kinjouj.app.oretter.view.manager.DrawerLayoutManager;
 import kinjouj.app.oretter.view.manager.SearchViewManager;
@@ -35,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
         toolbarManager      = new ToolbarManager(this);
         drawerLayoutManager = new DrawerLayoutManager(this);
         tabLayoutManager    = new TabLayoutManager(this);
-        //setContentFragment(new HomeStatusListFragment());
     }
 
     @Override

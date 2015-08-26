@@ -5,19 +5,18 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.BindString;
 
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragment.FavoriteListFragment;
-import kinjouj.app.oretter.fragment.FollowListFragment;
-import kinjouj.app.oretter.fragment.FollowerListFragment;
-import kinjouj.app.oretter.fragment.HomeStatusListFragment;
-import kinjouj.app.oretter.fragment.MentionListFragment;
-import kinjouj.app.oretter.fragment.SearchFragment;
+import kinjouj.app.oretter.fragments.FavoriteListFragment;
+import kinjouj.app.oretter.fragments.FollowListFragment;
+import kinjouj.app.oretter.fragments.FollowerListFragment;
+import kinjouj.app.oretter.fragments.HomeStatusListFragment;
+import kinjouj.app.oretter.fragments.MentionListFragment;
+import kinjouj.app.oretter.fragments.SearchFragment;
 
 public class TabLayoutManager extends ViewManager<MainActivity> implements TabLayout.OnTabSelectedListener {
 

@@ -6,7 +6,7 @@ import android.support.v7.widget.SearchView;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragment.SearchFragment;
+import kinjouj.app.oretter.fragments.SearchFragment;
 
 public class SearchViewManager extends ViewManager<MainActivity> implements SearchView.OnQueryTextListener {
 

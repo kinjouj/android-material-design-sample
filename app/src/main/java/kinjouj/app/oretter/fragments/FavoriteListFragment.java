@@ -1,26 +1,22 @@
-package kinjouj.app.oretter.fragment;
+package kinjouj.app.oretter.fragments;
 
 import java.util.Collections;
 import java.util.List;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-
 import twitter4j.Status;
 
 import kinjouj.app.oretter.TwitterApi;
 import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
 
-public class HomeStatusListFragment extends RecyclerViewFragment<Status> {
-
-    private static final String TAG = HomeStatusListFragment.class.getName();
+public class FavoriteListFragment extends RecyclerViewFragment<Status> {
 
     @Override
     public List<Status> fetch() {
         List<Status> statuses = null;
 
         try {
-            statuses = TwitterApi.getHomeTimeline(getActivity());
+            statuses = TwitterApi.getFavorites(getActivity());
         } catch (Exception e) {
             e.printStackTrace();
             statuses = Collections.<Status>emptyList();

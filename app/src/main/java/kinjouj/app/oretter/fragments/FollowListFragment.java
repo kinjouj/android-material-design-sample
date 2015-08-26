@@ -1,4 +1,4 @@
-package kinjouj.app.oretter.fragment;
+package kinjouj.app.oretter.fragments;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,14 +10,14 @@ import twitter4j.User;
 import kinjouj.app.oretter.TwitterApi;
 import kinjouj.app.oretter.view.adapter.UserRecyclerViewAdapter;
 
-public class FollowerListFragment extends RecyclerViewFragment<User> {
+public class FollowListFragment extends RecyclerViewFragment<User> {
 
     @Override
     public List<User> fetch() {
         List<User> users = null;
 
         try {
-            users = TwitterApi.getFollowers(getActivity());
+            users = TwitterApi.getFollows(getActivity());
         } catch (Exception e) {
             e.printStackTrace();
             users = Collections.<User>emptyList();

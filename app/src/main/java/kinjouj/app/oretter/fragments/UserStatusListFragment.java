@@ -1,4 +1,4 @@
-package kinjouj.app.oretter.fragment;
+package kinjouj.app.oretter.fragments;
 
 import java.util.Collections;
 import java.util.List;

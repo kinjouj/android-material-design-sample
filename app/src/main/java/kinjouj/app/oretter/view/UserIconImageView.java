@@ -14,7 +14,7 @@ import twitter4j.User;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragment.UserStatusListFragment;
+import kinjouj.app.oretter.fragments.UserStatusListFragment;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class UserIconImageView extends RoundedImageView implements View.OnClickListener {
