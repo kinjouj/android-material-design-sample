@@ -2,7 +2,7 @@ package kinjouj.app.oretter;
 
 import java.util.List;
 
-public interface ApplicationInterfaces {
+public interface AppInterfaces {
 
     public static interface ReloadableFragment {
         void reload();

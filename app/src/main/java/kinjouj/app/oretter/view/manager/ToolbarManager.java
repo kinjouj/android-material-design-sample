@@ -20,6 +20,11 @@ public class ToolbarManager extends ViewManager<MainActivity> implements Toolbar
 
     public void init() {
         toolbar.setOnMenuItemClickListener(this);
+        MainActivity activity = getActivity();
+        activity.setSupportActionBar(toolbar);
+        activity.getSupportActionBar().setHomeButtonEnabled(true);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        activity.getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     public Toolbar getToolbar() {

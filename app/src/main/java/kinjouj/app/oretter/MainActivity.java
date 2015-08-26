@@ -35,8 +35,7 @@ public class MainActivity extends AppCompatActivity {
         toolbarManager      = new ToolbarManager(this);
         drawerLayoutManager = new DrawerLayoutManager(this);
         tabLayoutManager    = new TabLayoutManager(this);
-        initToolbar();
-        setContentFragment(new HomeStatusListFragment());
+        //setContentFragment(new HomeStatusListFragment());
     }
 
     @Override
@@ -68,9 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSearchRequested() {
-        Log.v(TAG, "onSearchRequested: onActionViewExpanded");
-
         if (!drawerLayoutManager.isOpen()) {
+            Log.v(TAG, "onSearchRequested: onActionViewExpanded");
             searchViewManager.expand();
         }
 
@@ -98,12 +96,5 @@ public class MainActivity extends AppCompatActivity {
 
     public ToolbarManager getToolbarManager() {
         return toolbarManager;
-    }
-
-    void initToolbar() {
-        setSupportActionBar(toolbarManager.getToolbar());
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 }

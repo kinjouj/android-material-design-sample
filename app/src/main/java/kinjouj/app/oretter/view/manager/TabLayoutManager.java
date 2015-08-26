@@ -3,10 +3,13 @@ package kinjouj.app.oretter.view.manager;
 import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.BindString;
 
-import kinjouj.app.oretter.ApplicationInterfaces;
+import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.FavoriteListFragment;
@@ -20,9 +23,6 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
 
     @Bind(R.id.tab_layout)
     TabLayout tabLayout;
-
-    @BindString(R.string.nav_menu_my)
-    String navMyTweetTitle;
 
     @BindString(R.string.nav_menu_home)
     String navHomeTitle;
@@ -49,10 +49,13 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
     }
 
     public TabLayout.Tab addTab(String title, int iconRes, Fragment tagFragment, boolean isSelected) {
-        TabLayout.Tab tab = createTab(title, iconRes, tagFragment);
-        addTab(tab, isSelected);
+        TabLayout.Tab tab = tabLayout.newTab()
+                                    .setText(title)
+                                    .setIcon(iconRes)
+                                    .setTag(tagFragment)
+                                    .setCustomView(createTabView());
 
-        return tab;
+        return addTab(tab, isSelected);
     }
 
     public TabLayout.Tab addTab(TabLayout.Tab tab, boolean isSelected) {
@@ -62,18 +65,6 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
 
     public TabLayout.Tab get(int position) {
         return tabLayout.getTabAt(position);
-    }
-
-    public TabLayout.Tab createTab(String title, int iconRes, Fragment tagFragment) {
-        return tabLayout.newTab()
-                        .setText(title)
-                        .setIcon(iconRes)
-                        .setCustomView(R.layout.tab)
-                        .setTag(tagFragment);
-    }
-
-    public void select(TabLayout.Tab tab) {
-        select(tab, 300);
     }
 
     public void select(final TabLayout.Tab tab, final int interval) {
@@ -110,10 +101,10 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-        Fragment fragment = getActivity().getSupportFragmentManager().findFragmentByTag(MainActivity.FRAGMENT_TAG);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MainActivity.FRAGMENT_TAG);
 
-        if (fragment != null) {
-            ((ApplicationInterfaces.ReloadableFragment)fragment).reload();
+        if (fragment != null && fragment instanceof AppInterfaces.ReloadableFragment) {
+            ((AppInterfaces.ReloadableFragment)fragment).reload();
         }
     }
 
@@ -134,11 +125,16 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
 
     void init() {
         tabLayout.setOnTabSelectedListener(this);
-        //addTab(navMyTweetTitle, R.drawable.ic_home, R.id.tab_menu_my);
         addTab(navHomeTitle, R.drawable.ic_home, new HomeStatusListFragment(), true);
         addTab(navMentionTitle, R.drawable.ic_reply, new MentionListFragment());
         addTab(navFavoriteTitle, R.drawable.ic_grade, new FavoriteListFragment());
         addTab(navFollowTitle, R.drawable.ic_follow, new FollowListFragment());
         addTab(navFollowerTitle, R.drawable.ic_follower, new FollowerListFragment());
+    }
+
+    View createTabView() {
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.tab, null);
+
+        return view;
     }
 }

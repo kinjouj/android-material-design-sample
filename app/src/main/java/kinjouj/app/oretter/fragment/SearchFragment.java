@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-
 import twitter4j.Status;
 
 import kinjouj.app.oretter.TwitterApi;

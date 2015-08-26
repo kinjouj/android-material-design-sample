@@ -8,14 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import kinjouj.app.oretter.ApplicationInterfaces;
+import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.view.DrawerHeaderView;
@@ -49,13 +45,13 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.v(TAG, "onActivityCreated");
         navigationView.addHeaderView(new DrawerHeaderView(getActivity()));
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
+        ((MainActivity)getActivity()).getDrawerLayoutManager().close();
         int id = menuItem.getItemId();
 
         switch (id) {
@@ -83,8 +79,6 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
                 break;
 
         }
-
-        ((MainActivity)getActivity()).getDrawerLayoutManager().close();
 
         return false;
     }

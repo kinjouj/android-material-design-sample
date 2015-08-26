@@ -1,10 +1,10 @@
 package kinjouj.app.oretter.fragment;
 
+import java.util.Collections;
 import java.util.List;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-
 import twitter4j.User;
 
 import kinjouj.app.oretter.TwitterApi;
@@ -20,6 +20,7 @@ public class FollowListFragment extends RecyclerViewFragment<User> {
             users = TwitterApi.getFollows(getActivity());
         } catch (Exception e) {
             e.printStackTrace();
+            users = Collections.<User>emptyList();
         }
 
         return users;

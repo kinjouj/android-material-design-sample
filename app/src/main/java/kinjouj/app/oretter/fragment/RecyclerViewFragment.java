@@ -14,17 +14,17 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.design.widget.AppBarLayout;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import kinjouj.app.oretter.ApplicationInterfaces;
+import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 
 public abstract class RecyclerViewFragment<T> extends Fragment
-    implements SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener,
-                ApplicationInterfaces.ReloadableFragment {
+    implements SwipeRefreshLayout.OnRefreshListener,
+                AppBarLayout.OnOffsetChangedListener,
+                AppInterfaces.ReloadableFragment {
 
     private static final String TAG = RecyclerViewFragment.class.getName();
 
@@ -45,7 +45,6 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.setLayoutManager(getLayoutManager());
         recyclerView.setAdapter(adapter);
-
         load(null);
 
         return view;
@@ -88,8 +87,6 @@ public abstract class RecyclerViewFragment<T> extends Fragment
 
     @Override
     public void reload() {
-        Log.v(TAG, "computeVerticalScrollOffset" + recyclerView.computeVerticalScrollOffset());
-
         if (recyclerView.computeVerticalScrollOffset() == 0) {
             swipeRefreshLayout.setRefreshing(true);
             onRefresh();
@@ -113,9 +110,11 @@ public abstract class RecyclerViewFragment<T> extends Fragment
                     @SuppressWarnings("unchecked")
                     @Override
                     public void run() {
-                        ((ApplicationInterfaces.SortedListAdapter<T>)adapter).addAll(users);
+                        ((AppInterfaces.SortedListAdapter<T>)adapter).addAll(users);
 
-                        if (callback != null) callback.run();
+                        if (callback != null) {
+                            callback.run();
+                        }
                     }
                 });
             }

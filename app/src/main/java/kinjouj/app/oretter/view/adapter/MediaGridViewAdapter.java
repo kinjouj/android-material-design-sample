@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-
 import com.squareup.picasso.Picasso;
 import twitter4j.MediaEntity;
 
@@ -53,7 +52,6 @@ public class MediaGridViewAdapter extends BaseAdapter {
 
         final MediaEntity entity = (MediaEntity)getItem(position);
         Picasso.with(context).load(entity.getMediaURL()).fit().into(imageView);
-
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

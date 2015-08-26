@@ -21,12 +21,12 @@ import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import twitter4j.User;
 
-import kinjouj.app.oretter.ApplicationInterfaces;
+import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.StatusFragment;
 import kinjouj.app.oretter.view.UserIconImageView;
 
-public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> implements ApplicationInterfaces.SortedListAdapter<User> {
+public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> implements AppInterfaces.SortedListAdapter<User> {
 
     private static final String TAG = UserRecyclerViewAdapter.class.getName();
 
@@ -45,7 +45,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(ViewHolder viewHolder, int i) {
         final User user = users.get(i);
         viewHolder.userIcon.setUser(user);
         viewHolder.setContentText(user.getDescription());

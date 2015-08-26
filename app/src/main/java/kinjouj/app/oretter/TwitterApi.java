@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.util.Log;
-
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import twitter4j.Paging;

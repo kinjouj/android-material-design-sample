@@ -3,7 +3,6 @@ package kinjouj.app.oretter.view.adapter;
 import java.util.List;
 
 import android.content.Context;
-import android.os.Handler;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,11 +11,9 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.TabLayout;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
@@ -24,12 +21,16 @@ import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.User;
 
-import kinjouj.app.oretter.ApplicationInterfaces;
+import kinjouj.app.oretter.AppInterfaces;
+import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.StatusFragment;
 import kinjouj.app.oretter.view.UserIconImageView;
+import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
-public class StatusRecyclerViewAdapter extends RecyclerView.Adapter<StatusRecyclerViewAdapter.ViewHolder> implements ApplicationInterfaces.SortedListAdapter<Status> {
+public class StatusRecyclerViewAdapter
+    extends RecyclerView.Adapter<StatusRecyclerViewAdapter.ViewHolder>
+    implements AppInterfaces.SortedListAdapter<Status> {
 
     private static final String TAG = StatusRecyclerViewAdapter.class.getName();
 
@@ -43,33 +44,28 @@ public class StatusRecyclerViewAdapter extends RecyclerView.Adapter<StatusRecycl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.list_item_status, viewGroup, false);
-
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
         Status _status = statuses.get(i);
         final Status status = _status.isRetweet() ? _status.getRetweetedStatus() : _status;
         viewHolder.setContentText(status.getText());
         viewHolder.setMediaEntities(status.getExtendedMediaEntities());
 
-        User user = status.getUser();
+        final User user = status.getUser();
         viewHolder.icon.setUser(user);
-        Picasso.with(context).load(user.getProfileBackgroundImageURL()).fit().into(viewHolder.bg);
-
+        viewHolder.setBackground(user.getProfileBackgroundImageURL());
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String title = String.format("%s @%s", user.getName(), user.getScreenName());
                 StatusFragment fragment = StatusFragment.newInstance(status);
 
-                /*
-                FragmentTransaction transaction = ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction();
-                transaction.addToBackStack(null);
-                transaction.replace(R.id.content, fragment);
-                transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                transaction.commit();
-                */
+                TabLayoutManager tm = ((MainActivity)context).getTabLayoutManager();
+                TabLayout.Tab tab = tm.addTab(title, R.drawable.ic_person, fragment);
+                tm.select(tab, 300);
             }
         });
     }
@@ -119,7 +115,11 @@ public class StatusRecyclerViewAdapter extends RecyclerView.Adapter<StatusRecycl
             ButterKnife.bind(this, view);
         }
 
-        public void setContentText(CharSequence text) {
+        public void setBackground(String url) {
+            Picasso.with(root.getContext()).load(url).fit().into(bg);
+        }
+
+        public void setContentText(String text) {
             content.setText(text);
             Linkify.addLinks(content, Linkify.WEB_URLS);
         }

@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import android.support.v7.widget.RecyclerView;
-
 import twitter4j.Status;
 
 import kinjouj.app.oretter.TwitterApi;
@@ -20,6 +19,7 @@ public class FavoriteListFragment extends RecyclerViewFragment<Status> {
             statuses = TwitterApi.getFavorites(getActivity());
         } catch (Exception e) {
             e.printStackTrace();
+            statuses = Collections.<Status>emptyList();
         }
 
         return statuses;

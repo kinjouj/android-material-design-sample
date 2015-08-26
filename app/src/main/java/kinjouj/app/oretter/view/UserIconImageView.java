@@ -5,16 +5,17 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 import twitter4j.User;
 
+import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragment.UserStatusListFragment;
+import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class UserIconImageView extends RoundedImageView implements View.OnClickListener {
 
@@ -39,15 +40,10 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
             return;
         }
 
+        String title = String.format("%s @%s", user.getName(), user.getScreenName());
         UserStatusListFragment fragment = UserStatusListFragment.newInstance(user);
-        /*
-        FragmentTransaction transaction = ((AppCompatActivity)context)
-                                            .getSupportFragmentManager()
-                                            .beginTransaction();
-
-        transaction.replace(R.id.content, fragment, "fragment_user_list_" + user.getId());
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        transaction.commit();
-        */
+        TabLayoutManager tabManager = ((MainActivity)context).getTabLayoutManager();
+        TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_person, fragment);
+        tabManager.select(tab, 300);
     }
 }

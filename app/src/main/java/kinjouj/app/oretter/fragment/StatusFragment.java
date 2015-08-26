@@ -10,7 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
@@ -37,8 +36,6 @@ public class StatusFragment extends Fragment {
     @Bind(R.id.status_per_media_grid)
     GridView mediaGrid;
 
-    private Picasso picasso;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.detail, container, false);
@@ -51,7 +48,6 @@ public class StatusFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        picasso = Picasso.with(getActivity());
     }
 
     @Override
@@ -65,7 +61,11 @@ public class StatusFragment extends Fragment {
         statusText.setText(status.getText());
         userImage.setUser(status.getUser());
         mediaGrid.setAdapter(new MediaGridViewAdapter(getActivity(), status.getExtendedMediaEntities()));
-        picasso.load(status.getUser().getProfileBackgroundImageURL()).fit().into(userBgImage);
+        Picasso.with(getActivity())
+                .load(status.getUser()
+                .getProfileBackgroundImageURL())
+                .fit()
+                .into(userBgImage);
     }
 
     private Status getStatus() {

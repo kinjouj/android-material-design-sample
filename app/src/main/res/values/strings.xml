@@ -3,7 +3,6 @@
     <string name="app_name">oretter</string>
 
     <!-- navigation view -->
-    <string name="nav_menu_my">マイツイ</string>
     <string name="nav_menu_home">ホーム</string>
     <string name="nav_menu_follow">フォロー</string>
     <string name="nav_menu_follower">フォロワー</string>
@@ -14,4 +13,5 @@
     <!-- toolbar -->
     <string name="tb_menu_post">ツイート</string>
     <string name="tb_menu_search">search</string>
+
 </resources>

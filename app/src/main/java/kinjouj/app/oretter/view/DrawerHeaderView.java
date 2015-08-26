@@ -6,14 +6,13 @@ import android.os.Handler;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import twitter4j.User;
 
-import kinjouj.app.oretter.TwitterApi;
 import kinjouj.app.oretter.R;
+import kinjouj.app.oretter.TwitterApi;
 
 public class DrawerHeaderView extends FrameLayout {
 

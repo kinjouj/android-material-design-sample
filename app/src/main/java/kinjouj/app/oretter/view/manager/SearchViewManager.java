@@ -26,30 +26,11 @@ public class SearchViewManager extends ViewManager<MainActivity> implements Sear
     @Override
     public boolean onQueryTextSubmit(String query) {
         collapse();
-        TabLayoutManager tabLayoutManager = getActivity().getTabLayoutManager();
-        final TabLayout.Tab tab = tabLayoutManager.addTab(
-            "検索 " + query,
-            R.drawable.ic_search,
-            SearchFragment.newInstance(query)
-        );
-        tabLayoutManager.select(tab);
-
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(300);
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            tab.select();
-                        }
-                    });
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
+        String title = "検索: " + query;
+        SearchFragment fragment = SearchFragment.newInstance(query);
+        TabLayoutManager tabManager = getActivity().getTabLayoutManager();
+        TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_search, fragment);
+        tabManager.select(tab, 300);
 
         return false;
     }

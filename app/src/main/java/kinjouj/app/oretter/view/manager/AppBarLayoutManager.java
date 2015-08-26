@@ -12,15 +12,23 @@ public class AppBarLayoutManager extends ViewManager<MainActivity> {
     @Bind(R.id.appbar_layout)
     AppBarLayout appBarLayout;
 
+    private AppBarLayout.OnOffsetChangedListener listener;
+
     public AppBarLayoutManager(Activity activity) {
         super(activity);
     }
 
     public void addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener listener) {
-        appBarLayout.addOnOffsetChangedListener(listener);
+        if (this.listener == null) {
+            appBarLayout.addOnOffsetChangedListener(listener);
+            this.listener = listener;
+        }
     }
 
     public void removeOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener listener) {
-        appBarLayout.removeOnOffsetChangedListener(listener);
+        if (this.listener != null) {
+            appBarLayout.removeOnOffsetChangedListener(listener);
+            this.listener = null;
+        }
     }
 }

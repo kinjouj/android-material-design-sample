@@ -24,9 +24,7 @@ public class MediaGridView extends GridView {
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int expandSpec = MeasureSpec.makeMeasureSpec(MEASURED_SIZE_MASK,
-            MeasureSpec.AT_MOST
-        );
+        int expandSpec = MeasureSpec.makeMeasureSpec(MEASURED_SIZE_MASK, MeasureSpec.AT_MOST);
         super.onMeasure(widthMeasureSpec, expandSpec);
 
         ViewGroup.LayoutParams params = getLayoutParams();
