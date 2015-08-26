@@ -9,10 +9,10 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
+import twitter4j.TwitterFactory;
 import twitter4j.User;
 
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.TwitterApi;
 
 public class DrawerHeaderView extends FrameLayout {
 
@@ -39,7 +39,7 @@ public class DrawerHeaderView extends FrameLayout {
             @Override
             public void run() {
                 try {
-                    final User user = TwitterApi.getCurrentUser(context);
+                    final User user = TwitterFactory.getSingleton().verifyCredentials();
 
                     handler.post(new Runnable() {
                         @Override

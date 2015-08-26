@@ -6,7 +6,6 @@ import java.util.List;
 import android.support.v7.widget.RecyclerView;
 import twitter4j.Status;
 
-import kinjouj.app.oretter.TwitterApi;
 import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
 
 public class MentionListFragment extends RecyclerViewFragment<Status> {
@@ -16,7 +15,7 @@ public class MentionListFragment extends RecyclerViewFragment<Status> {
         List<Status> statuses = null;
 
         try {
-            statuses = TwitterApi.getMentionsTimeline(getActivity());
+            statuses = getTwitter().getMentionsTimeline();
         } catch (Exception e) {
             e.printStackTrace();
             statuses = Collections.<Status>emptyList();

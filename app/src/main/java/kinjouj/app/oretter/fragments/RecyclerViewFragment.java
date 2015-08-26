@@ -18,6 +18,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
 
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
@@ -105,6 +107,10 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         } else {
             return new LinearLayoutManager(getActivity());
         }
+    }
+
+    public Twitter getTwitter() {
+        return TwitterFactory.getSingleton();
     }
 
     private void load(final Runnable callback) {

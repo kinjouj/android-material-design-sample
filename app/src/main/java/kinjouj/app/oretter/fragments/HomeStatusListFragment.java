@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import twitter4j.Status;
 
-import kinjouj.app.oretter.TwitterApi;
 import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
 
 public class HomeStatusListFragment extends RecyclerViewFragment<Status> {
@@ -19,7 +18,7 @@ public class HomeStatusListFragment extends RecyclerViewFragment<Status> {
         List<Status> statuses = null;
 
         try {
-            statuses = TwitterApi.getHomeTimeline(getActivity());
+            statuses = getTwitter().getHomeTimeline();
         } catch (Exception e) {
             e.printStackTrace();
             statuses = Collections.<Status>emptyList();

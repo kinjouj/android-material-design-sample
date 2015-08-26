@@ -5,9 +5,9 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import twitter4j.Query;
 import twitter4j.Status;
 
-import kinjouj.app.oretter.TwitterApi;
 import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
 
 public class SearchFragment extends RecyclerViewFragment<Status> {
@@ -19,7 +19,7 @@ public class SearchFragment extends RecyclerViewFragment<Status> {
         List<Status> statuses = null;
 
         try {
-            statuses = TwitterApi.search(getActivity(), getQuery());
+            statuses = getTwitter().search(new Query(getQuery())).getTweets();
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,4 +1,4 @@
 .gradle
 build
 local.properties
-oauth.xml
+twitter4j.properties
