@@ -3,13 +3,12 @@ package kinjouj.app.oretter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 
 import kinjouj.app.oretter.view.manager.AppBarLayoutManager;
+import kinjouj.app.oretter.view.manager.ContentFragmentManager;
 import kinjouj.app.oretter.view.manager.DrawerLayoutManager;
 import kinjouj.app.oretter.view.manager.SearchViewManager;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
@@ -18,22 +17,23 @@ import kinjouj.app.oretter.view.manager.ToolbarManager;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
-    public static final String FRAGMENT_TAG = "current_fragment";
 
     private AppBarLayoutManager appBarLayoutManager;
+    private ContentFragmentManager contentFragmentManager;
     private DrawerLayoutManager drawerLayoutManager;
-    private SearchViewManager   searchViewManager;
-    private TabLayoutManager    tabLayoutManager;
-    private ToolbarManager      toolbarManager;
+    private SearchViewManager searchViewManager;
+    private TabLayoutManager tabLayoutManager;
+    private ToolbarManager toolbarManager;
 
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
-        appBarLayoutManager = new AppBarLayoutManager(this);
-        toolbarManager      = new ToolbarManager(this);
-        drawerLayoutManager = new DrawerLayoutManager(this);
-        tabLayoutManager    = new TabLayoutManager(this);
+        appBarLayoutManager     = new AppBarLayoutManager(this);
+        contentFragmentManager  = new ContentFragmentManager(this);
+        toolbarManager          = new ToolbarManager(this);
+        drawerLayoutManager     = new DrawerLayoutManager(this);
+        tabLayoutManager        = new TabLayoutManager(this);
     }
 
     @Override
@@ -73,15 +73,12 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    public void setContentFragment(Fragment fragment) {
-        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.content, fragment, FRAGMENT_TAG);
-        tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        tx.commit();
-    }
-
     public AppBarLayoutManager getAppBarLayoutManager() {
         return appBarLayoutManager;
+    }
+
+    public ContentFragmentManager getContentFragmentManager() {
+        return contentFragmentManager;
     }
 
     public DrawerLayoutManager getDrawerLayoutManager() {

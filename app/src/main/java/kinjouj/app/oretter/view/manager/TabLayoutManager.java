@@ -94,13 +94,13 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
         Fragment fragment = getTagFragment(tab.getTag());
 
         if (fragment != null) {
-            getActivity().setContentFragment(fragment);
+            getActivity().getContentFragmentManager().render(fragment);
         }
     }
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MainActivity.FRAGMENT_TAG);
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ContentFragmentManager.FRAGMENT_TAG);
 
         if (fragment != null && fragment instanceof AppInterfaces.ReloadableFragment) {
             ((AppInterfaces.ReloadableFragment)fragment).reload();
