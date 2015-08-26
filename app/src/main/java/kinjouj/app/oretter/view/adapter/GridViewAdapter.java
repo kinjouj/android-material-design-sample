@@ -12,14 +12,14 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import twitter4j.MediaEntity;
 
-public class MediaGridViewAdapter extends BaseAdapter {
+public class GridViewAdapter extends BaseAdapter {
 
-    private static final String TAG = MediaGridViewAdapter.class.getName();
+    private static final String TAG = GridViewAdapter.class.getName();
 
     private Context context;
     private MediaEntity[] entities;
 
-    public MediaGridViewAdapter(Context context, MediaEntity[] entities) {
+    public GridViewAdapter(Context context, MediaEntity[] entities) {
         this.context  = context;
         this.entities = entities;
     }

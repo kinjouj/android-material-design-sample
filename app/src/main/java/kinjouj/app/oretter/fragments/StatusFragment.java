@@ -1,15 +1,14 @@
 package kinjouj.app.oretter.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.support.v4.app.Fragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
@@ -17,7 +16,7 @@ import twitter4j.Status;
 
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.view.UserIconImageView;
-import kinjouj.app.oretter.view.adapter.MediaGridViewAdapter;
+import kinjouj.app.oretter.view.adapter.GridViewAdapter;
 
 public class StatusFragment extends Fragment {
 
@@ -60,7 +59,7 @@ public class StatusFragment extends Fragment {
         Status status = getStatus();
         statusText.setText(status.getText());
         userImage.setUser(status.getUser());
-        mediaGrid.setAdapter(new MediaGridViewAdapter(getActivity(), status.getExtendedMediaEntities()));
+        mediaGrid.setAdapter(new GridViewAdapter(getActivity(), status.getExtendedMediaEntities()));
         Picasso.with(getActivity())
                 .load(status.getUser()
                 .getProfileBackgroundImageURL())

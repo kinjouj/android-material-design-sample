@@ -39,7 +39,7 @@ public class DrawerHeaderView extends FrameLayout {
             @Override
             public void run() {
                 try {
-                    final User user = TwitterApi.getCurrentUser((Activity)context);
+                    final User user = TwitterApi.getCurrentUser(context);
 
                     handler.post(new Runnable() {
                         @Override

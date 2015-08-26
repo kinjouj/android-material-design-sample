@@ -125,7 +125,7 @@ public class StatusRecyclerViewAdapter
         }
 
         public void setMediaEntities(MediaEntity[] entities) {
-            mediaGrid.setAdapter(new MediaGridViewAdapter(root.getContext(), entities));
+            mediaGrid.setAdapter(new GridViewAdapter(root.getContext(), entities));
         }
     }
 

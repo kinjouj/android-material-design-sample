@@ -3,17 +3,19 @@ package kinjouj.app.oretter.fragments;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.util.Log;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.design.widget.AppBarLayout;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -96,7 +98,13 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     }
 
     public RecyclerView.LayoutManager getLayoutManager() {
-        return new LinearLayoutManager(getActivity());
+        Configuration config = getResources().getConfiguration();
+
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        } else {
+            return new LinearLayoutManager(getActivity());
+        }
     }
 
     private void load(final Runnable callback) {

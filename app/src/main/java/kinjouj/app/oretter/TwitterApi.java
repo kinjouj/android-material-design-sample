@@ -4,9 +4,11 @@ import java.util.List;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import butterknife.BindString;
 import butterknife.ButterKnife;
+import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.Paging;
 import twitter4j.Query;
 import twitter4j.Status;
@@ -14,11 +16,12 @@ import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.UserList;
-import twitter4j.conf.ConfigurationBuilder;
 
 import kinjouj.app.oretter.R;
 
 public class TwitterApi {
+
+    private static final String TAG = TwitterApi.class.getName();
 
     @BindString(R.string.consumer_key)
     String consumerKey;
@@ -35,9 +38,10 @@ public class TwitterApi {
     static Twitter twitter;
     private static User currentUser;
 
-    Twitter getTwitter(Activity activity) {
+    Twitter getTwitter(Context context) {
         if (twitter == null) {
-            ButterKnife.bind(this, activity);
+            Log.v(TAG, "getTwitter: " + context);
+            ButterKnife.bind(this, (Activity)context);
 
             ConfigurationBuilder builder = new ConfigurationBuilder();
             builder.setOAuthConsumerKey(consumerKey)
@@ -51,65 +55,65 @@ public class TwitterApi {
         return twitter;
     }
 
-    public static List<Status> getHomeTimeline(Activity activity) throws Exception {
+    public static List<Status> getHomeTimeline(Context context) throws Exception {
         synchronized (TwitterApi.class) {
-            return new TwitterApi().getTwitter(activity).getHomeTimeline(new Paging(1, 30));
+            return new TwitterApi().getTwitter(context).getHomeTimeline(new Paging(1, 30));
         }
     }
 
-    public static List<Status> getMentionsTimeline(Activity activity) throws Exception {
+    public static List<Status> getMentionsTimeline(Context context) throws Exception {
         synchronized (TwitterApi.class) {
-            return new TwitterApi().getTwitter(activity).getMentionsTimeline();
+            return new TwitterApi().getTwitter(context).getMentionsTimeline();
         }
     }
 
-    public static List<Status> getUserTimeline(Activity activity, long userId) throws Exception {
+    public static List<Status> getUserTimeline(Context context, long userId) throws Exception {
         synchronized (TwitterApi.class) {
-            return new TwitterApi().getTwitter(activity).getUserTimeline(userId);
+            return new TwitterApi().getTwitter(context).getUserTimeline(userId);
         }
     }
 
-    public static List<UserList> getUserLists(Activity activity) throws Exception {
+    public static List<UserList> getUserLists(Context context) throws Exception {
         synchronized (TwitterApi.class) {
-            Twitter twitter = new TwitterApi().getTwitter(activity);
+            Twitter twitter = new TwitterApi().getTwitter(context);
             User user = twitter.verifyCredentials();
 
             return twitter.getUserLists(user.getId());
         }
     }
 
-    public static List<Status> getFavorites(Activity activity) throws Exception {
+    public static List<Status> getFavorites(Context context) throws Exception {
         synchronized (TwitterApi.class) {
-            return new TwitterApi().getTwitter(activity).getFavorites();
+            return new TwitterApi().getTwitter(context).getFavorites();
         }
     }
 
-    public static List<Status> search(Activity activity, String query) throws Exception {
-        return new TwitterApi().getTwitter(activity).search(new Query(query)).getTweets();
+    public static List<Status> search(Context context, String query) throws Exception {
+        return new TwitterApi().getTwitter(context).search(new Query(query)).getTweets();
     }
 
-    public static List<User> getFollows(Activity activity) throws Exception {
+    public static List<User> getFollows(Context context) throws Exception {
         synchronized (TwitterApi.class) {
-            return new TwitterApi().getTwitter(activity).getFriendsList(
-                getCurrentUser(activity).getId(),
+            return new TwitterApi().getTwitter(context).getFriendsList(
+                getCurrentUser(context).getId(),
                 -1
             );
         }
     }
 
-    public static List<User> getFollowers(Activity activity) throws Exception {
+    public static List<User> getFollowers(Context context) throws Exception {
         synchronized (TwitterApi.class) {
-            return new TwitterApi().getTwitter(activity).getFollowersList(
-                getCurrentUser(activity).getId(),
+            return new TwitterApi().getTwitter(context).getFollowersList(
+                getCurrentUser(context).getId(),
                 -1
             );
         }
     }
 
-    public static User getCurrentUser(Activity activity) throws Exception {
+    public static User getCurrentUser(Context context) throws Exception {
         synchronized (TwitterApi.class) {
             if (currentUser == null) {
-                currentUser = new TwitterApi().getTwitter(activity).verifyCredentials();
+                currentUser = new TwitterApi().getTwitter(context).verifyCredentials();
             }
 
             return currentUser;

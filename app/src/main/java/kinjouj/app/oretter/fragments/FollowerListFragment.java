@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import twitter4j.User;
 
 import kinjouj.app.oretter.TwitterApi;
@@ -29,10 +28,5 @@ public class FollowerListFragment extends RecyclerViewFragment<User> {
     @Override
     public RecyclerView.Adapter getAdapter() {
         return new UserRecyclerViewAdapter(getActivity());
-    }
-
-    @Override
-    public RecyclerView.LayoutManager getLayoutManager() {
-        return new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
     }
 }

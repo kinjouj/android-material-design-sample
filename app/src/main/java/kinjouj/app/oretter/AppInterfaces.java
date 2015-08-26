@@ -12,5 +12,4 @@ public interface AppInterfaces {
         void add(T value);
         void addAll(List<T> values);
     }
-
 }
