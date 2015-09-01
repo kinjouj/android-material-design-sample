@@ -24,6 +24,7 @@ import twitter4j.User;
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragments.StatusFragment;
+import kinjouj.app.oretter.view.TweetTextView;
 import kinjouj.app.oretter.view.UserIconImageView;
 
 public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> implements AppInterfaces.SortedListAdapter<User> {
@@ -89,7 +90,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         UserIconImageView userIcon;
 
         @Bind(R.id.user_text)
-        TextView content;
+        TweetTextView content;
 
         public ViewHolder(View view) {
             super(view);
@@ -99,7 +100,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
 
         public void setContentText(CharSequence text) {
             content.setText(text);
-            Linkify.addLinks(content, Linkify.WEB_URLS);
+            content.linkify();
         }
     }
 

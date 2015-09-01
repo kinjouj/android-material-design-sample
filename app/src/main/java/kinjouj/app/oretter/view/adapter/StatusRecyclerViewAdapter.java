@@ -25,6 +25,7 @@ import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragments.StatusFragment;
+import kinjouj.app.oretter.view.TweetTextView;
 import kinjouj.app.oretter.view.UserIconImageView;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
@@ -56,7 +57,6 @@ public class StatusRecyclerViewAdapter
 
         final User user = status.getUser();
         viewHolder.icon.setUser(user);
-        viewHolder.setBackground(user.getProfileBackgroundImageURL());
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,14 +97,11 @@ public class StatusRecyclerViewAdapter
 
         View root;
 
-        @Bind(R.id.status_bg_image)
-        ImageView bg;
-
         @Bind(R.id.status_icon_image)
         UserIconImageView icon;
 
         @Bind(R.id.status_text)
-        TextView content;
+        TweetTextView content;
 
         @Bind(R.id.status_media_grid)
         GridView mediaGrid;
@@ -115,13 +112,9 @@ public class StatusRecyclerViewAdapter
             ButterKnife.bind(this, view);
         }
 
-        public void setBackground(String url) {
-            Picasso.with(root.getContext()).load(url).fit().into(bg);
-        }
-
         public void setContentText(String text) {
             content.setText(text);
-            Linkify.addLinks(content, Linkify.WEB_URLS);
+            content.linkify();
         }
 
         public void setMediaEntities(MediaEntity[] entities) {

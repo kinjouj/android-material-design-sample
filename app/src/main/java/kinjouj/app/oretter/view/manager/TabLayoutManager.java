@@ -1,12 +1,15 @@
 package kinjouj.app.oretter.view.manager;
 
+import java.util.List;
+import java.util.LinkedList;
+
 import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import butterknife.Bind;
-import butterknife.BindString;
 
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
@@ -20,27 +23,16 @@ import kinjouj.app.oretter.fragments.SearchFragment;
 
 public class TabLayoutManager extends ViewManager<MainActivity> implements TabLayout.OnTabSelectedListener {
 
+    private static final String TAG = TabLayoutManager.class.getName();
+    private static LinkedList<TabLayout.Tab> backStackTabs = new LinkedList<TabLayout.Tab>();
+    private boolean backStackState = false;
+
     @Bind(R.id.tab_layout)
     TabLayout tabLayout;
 
-    @BindString(R.string.nav_menu_home)
-    String navHomeTitle;
-
-    @BindString(R.string.nav_menu_mention)
-    String navMentionTitle;
-
-    @BindString(R.string.nav_menu_favorite)
-    String navFavoriteTitle;
-
-    @BindString(R.string.nav_menu_follow)
-    String navFollowTitle;
-
-    @BindString(R.string.nav_menu_follower)
-    String navFollowerTitle;
-
     public TabLayoutManager(Activity activity) {
         super(activity);
-        init();
+        tabLayout.setOnTabSelectedListener(this);
     }
 
     public TabLayout.Tab addTab(String title, int iconRes, Fragment tagFragment) {
@@ -89,6 +81,24 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
         return tabLayout.getSelectedTabPosition();
     }
 
+    public TabLayout.Tab getCurrentTab() {
+        return get(getCurrentPosition());
+    }
+
+    public int getBackStackTabEntryCount() {
+        return backStackTabs.size();
+    }
+
+    public void addToBackStackTab(TabLayout.Tab tab) {
+        backStackTabs.add(tab);
+    }
+
+    public void popBackStackTab() {
+        TabLayout.Tab tab = backStackTabs.removeLast();
+        backStackState = true;
+        select(tab, 300);
+    }
+
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         Fragment fragment = getTagFragment(tab.getTag());
@@ -109,7 +119,17 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
-        // noop
+        if (!backStackState) {
+            addToBackStackTab(tab);
+        } else {
+            backStackState = false;
+        }
+    }
+
+    @Override
+    public void unbind() {
+        //tabLayout.removeAllTabs();
+        super.unbind();
     }
 
     Fragment getTagFragment(Object o) {
@@ -122,18 +142,8 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
         return fragment;
     }
 
-    void init() {
-        tabLayout.setOnTabSelectedListener(this);
-        addTab(navHomeTitle, R.drawable.ic_home, new HomeStatusListFragment(), true);
-        addTab(navMentionTitle, R.drawable.ic_reply, new MentionListFragment());
-        addTab(navFavoriteTitle, R.drawable.ic_grade, new FavoriteListFragment());
-        addTab(navFollowTitle, R.drawable.ic_follow, new FollowListFragment());
-        addTab(navFollowerTitle, R.drawable.ic_follower, new FollowerListFragment());
-    }
-
     View createTabView() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.tab, null);
-
         return view;
     }
 }

@@ -15,3 +15,15 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# for Butter Knife (see http://jakewharton.github.io/butterknife/#proguard)
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewBinder { *; }
+
+-keep class twitter4j.**
+-dontwarn twitter4j.*
+-dontwarn twitter4j.management.**
+-dontwarn twitter4j.TwitterAPIMonitor
+
+-dontwarn com.squareup.okhttp.**

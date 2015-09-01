@@ -25,10 +25,10 @@ public class AppBarLayoutManager extends ViewManager<MainActivity> {
         }
     }
 
-    public void removeOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener listener) {
-        if (this.listener != null) {
+    public void removeOnOffsetChangedListener() {
+        if (listener != null) {
             appBarLayout.removeOnOffsetChangedListener(listener);
-            this.listener = null;
+            listener = null;
         }
     }
 }

@@ -3,6 +3,7 @@ package kinjouj.app.oretter.fragments;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,8 +27,7 @@ import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 
 public abstract class RecyclerViewFragment<T> extends Fragment
-    implements SwipeRefreshLayout.OnRefreshListener,
-                AppBarLayout.OnOffsetChangedListener,
+    implements SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener,
                 AppInterfaces.ReloadableFragment {
 
     private static final String TAG = RecyclerViewFragment.class.getName();
@@ -38,15 +38,15 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    protected RecyclerView.Adapter adapter;
+    private RecyclerView.Adapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
+        Log.v(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_tweet_list, container, false);
         ButterKnife.bind(this, view);
-
-        adapter = getAdapter();
         swipeRefreshLayout.setOnRefreshListener(this);
+        adapter = getAdapter();
         recyclerView.setLayoutManager(getLayoutManager());
         recyclerView.setAdapter(adapter);
         load(null);
@@ -55,21 +55,32 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        Log.v(TAG, "onDetach");
+        ButterKnife.unbind(this);
+        adapter = null;
+    }
+
+    @Override
     public void onCreate(Bundle saveInstanceState) {
+        Log.v(TAG, "onCreate");
         super.onCreate(saveInstanceState);
         setRetainInstance(true);
     }
 
     @Override
     public void onResume() {
+        Log.v(TAG, "onResume");
         super.onResume();
         ((MainActivity)getActivity()).getAppBarLayoutManager().addOnOffsetChangedListener(this);
     }
 
     @Override
     public void onPause() {
+        Log.v(TAG, "onPause");
         super.onPause();
-        ((MainActivity)getActivity()).getAppBarLayoutManager().removeOnOffsetChangedListener(this);
+        ((MainActivity)getActivity()).getAppBarLayoutManager().removeOnOffsetChangedListener();
     }
 
     @Override
@@ -92,8 +103,10 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     @Override
     public void reload() {
         if (recyclerView.computeVerticalScrollOffset() == 0) {
-            swipeRefreshLayout.setRefreshing(true);
-            onRefresh();
+            if (!swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(true);
+                onRefresh();
+            }
         } else {
             recyclerView.scrollToPosition(0);
         }
@@ -114,23 +127,25 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     }
 
     private void load(final Runnable callback) {
-        final Handler handler = new Handler();
-
         new Thread() {
             @Override
             public void run() {
                 final List<T> users = fetch();
-                handler.post(new Runnable() {
-                    @SuppressWarnings("unchecked")
-                    @Override
-                    public void run() {
-                        ((AppInterfaces.SortedListAdapter<T>)adapter).addAll(users);
+                Activity activity = getActivity();
 
-                        if (callback != null) {
-                            callback.run();
+                if (activity != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void run() {
+                            ((AppInterfaces.SortedListAdapter<T>)adapter).addAll(users);
+
+                            if (callback != null) {
+                                callback.run();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }.start();
     }

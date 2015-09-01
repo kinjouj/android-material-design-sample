@@ -1,0 +1,77 @@
+package kinjouj.app.oretter.view;
+
+import java.util.regex.Pattern;
+
+import android.content.Context;
+import android.text.Layout;
+import android.text.Spannable;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.text.style.URLSpan;
+import android.text.util.Linkify;
+import android.util.AttributeSet;
+import android.util.Patterns;
+import android.view.MotionEvent;
+import android.widget.TextView;
+import android.widget.Toast;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+
+import kinjouj.app.oretter.MainActivity;
+
+public class TweetTextView extends TextView {
+
+    private static final Pattern HASHTAG_PATTERN = Pattern.compile("#([^\\s]+)");
+    private static final Pattern MENTION_PATTERN = Pattern.compile("@([^\\s]+)");
+
+    public TweetTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public void linkify() {
+        Linkify.addLinks(this, MENTION_PATTERN, null);
+        Linkify.addLinks(this, HASHTAG_PATTERN, null);
+        Linkify.addLinks(this, Patterns.WEB_URL, null);
+        setMovementMethod(new TweetMovementMethod());
+    }
+
+    public void onTouchLinkify(String text) {
+        if (text.startsWith("#")) {
+            ((MainActivity)getContext()).getSearchViewManager().search(text);
+        } else if (text.startsWith("@")){
+            Twitter twitter = TwitterFactory.getInstance();
+            User user = twitter.showUser(text.substring(1));
+        } else {
+            Toast.makeText(getContext(), text, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public class TweetMovementMethod extends LinkMovementMethod {
+
+        @Override
+        public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                int x = (int)event.getX();
+                int y = (int)event.getY();
+                x -= widget.getTotalPaddingLeft();
+                y -= widget.getTotalPaddingTop();
+                x += widget.getScrollX();
+                y += widget.getScrollY();
+
+                Layout layout   = widget.getLayout();
+                int line        = layout.getLineForVertical(y);
+                int off         = layout.getOffsetForHorizontal(line, x);
+                URLSpan[] links = buffer.getSpans(off, off, URLSpan.class);
+
+                if (links.length != 0) {
+                    String url = links[0].getURL();
+                    onTouchLinkify(url);
+
+                    return true;
+                }
+            }
+
+            return super.onTouchEvent(widget, buffer, event);
+        }
+    }
+}
