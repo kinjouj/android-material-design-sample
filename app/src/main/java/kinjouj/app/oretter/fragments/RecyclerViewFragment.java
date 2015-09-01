@@ -84,6 +84,13 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     }
 
     @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        Log.v(TAG, "onConfigurationChanged");
+        super.onConfigurationChanged(newConfig);
+        recyclerView.setLayoutManager(getLayoutManager());
+    }
+
+    @Override
     public void onRefresh() {
         Log.v(TAG, "onRefresh");
         load(new Runnable() {
