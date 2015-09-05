@@ -1,6 +1,5 @@
 package kinjouj.app.oretter.fragments;
 
-import java.util.Collections;
 import java.util.List;
 
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +11,7 @@ import kinjouj.app.oretter.view.adapter.UserRecyclerViewAdapter;
 
 public class FollowerListFragment extends RecyclerViewFragment<User> {
 
-    private PagableResponseList<User> users;
+    long cursor = -1;
 
     @Override
     public RecyclerView.Adapter getAdapter() {
@@ -21,22 +20,13 @@ public class FollowerListFragment extends RecyclerViewFragment<User> {
 
     @Override
     public List<User> fetch(int currentPage) {
-        List<User> findUsers = null;
+        PagableResponseList<User> users = null;
 
         try {
             Twitter twitter = getTwitter();
-            long cursor = -1;
-
-            if (users != null) {
-                if (users.hasNext()) {
-                    cursor = users.getNextCursor();
-                } else {
-                    cursor = 0;
-                }
-            }
-
             User user = twitter.verifyCredentials();
             users = twitter.getFollowersList(user.getId(), cursor);
+            cursor = users.hasNext() ? users.getNextCursor() : 0;
         } catch (Exception e) {
             e.printStackTrace();
         }

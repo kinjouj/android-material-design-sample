@@ -163,7 +163,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
             public void run() {
                 final List<T> users = fetch(currentPage);
 
-                if (getActivity() == null) {
+                if (users == null || getActivity() == null) {
                     return;
                 }
 
