@@ -35,6 +35,11 @@
             android:title="@string/nav_menu_list"
             android:icon="@drawable/ic_list" />
 
+        <item
+            android:id="@+id/nav_menu_exit"
+            android:title="@string/nav_menu_exit"
+            android:icon="@drawable/ic_exit" />
+
     </group>
 
 </menu>

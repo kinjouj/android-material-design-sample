@@ -15,7 +15,7 @@ import android.util.Patterns;
 import android.view.MotionEvent;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.twitter.Regex;
+//import com.twitter.Regex;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
@@ -27,7 +27,7 @@ import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class TweetTextView extends TextView {
 
-    private static final Pattern MENTION_PATTERN = Pattern.compile("@[A-Za-z0-9]{1,15}");
+    private static final Pattern MENTION_PATTERN = Pattern.compile("@[A-Za-z0-9_]{1,15}");
 
     public TweetTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -35,7 +35,7 @@ public class TweetTextView extends TextView {
 
     public void linkify() {
         Linkify.addLinks(this, MENTION_PATTERN, null);
-        Linkify.addLinks(this, Regex.VALID_HASHTAG, null);
+        //Linkify.addLinks(this, Regex.VALID_HASHTAG, null);
         Linkify.addLinks(this, Patterns.WEB_URL, null);
         setMovementMethod(new TweetMovementMethod());
     }

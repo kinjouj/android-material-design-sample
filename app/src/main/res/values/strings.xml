@@ -9,6 +9,7 @@
     <string name="nav_menu_mention">レス</string>
     <string name="nav_menu_favorite">ふぁぼ</string>
     <string name="nav_menu_list">リスト</string>
+    <string name="nav_menu_exit">終了</string>
 
     <!-- toolbar -->
     <string name="tb_menu_post">ツイート</string>

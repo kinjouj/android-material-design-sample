@@ -92,12 +92,20 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
         select(tab, 300);
     }
 
+    public void clearBackStack() {
+        backStackTabs.clear();
+    }
+
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         Fragment fragment = getTagFragment(tab.getTag());
 
         if (fragment != null) {
-            getActivity().getContentFragmentManager().render(fragment);
+            MainActivity activity = getActivity();
+
+            if (activity != null) {
+                activity.getContentFragmentManager().render(fragment);
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,6 +28,8 @@ import kinjouj.app.oretter.EndlessScrollListener;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 
+import static kinjouj.app.oretter.AppInterfaces.SortedListAdapter;
+
 public abstract class RecyclerViewFragment<T> extends Fragment
     implements SwipeRefreshLayout.OnRefreshListener,
                 AppBarLayout.OnOffsetChangedListener {
@@ -44,7 +47,6 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         @Override
         public void onLoadMore(int currentPage) {
             load(currentPage, null);
-            //RecyclerViewFragment.this.onLoadMore(currentPage);
         }
     };
 
@@ -158,21 +160,19 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     }
 
     private void load(final int currentPage, final Runnable callback) {
+        final Handler handler = new Handler();
+
         new Thread() {
             @Override
             public void run() {
                 final List<T> users = fetch(currentPage);
 
-                if (users == null || getActivity() == null) {
-                    return;
-                }
-
-                getActivity().runOnUiThread(new Runnable() {
+                handler.post(new Runnable() {
                     @SuppressWarnings("unchecked")
                     @Override
                     public void run() {
-                        if (adapter != null) {
-                            ((AppInterfaces.SortedListAdapter<T>)adapter).addAll(users);
+                        if (users != null && adapter != null) {
+                            ((SortedListAdapter<T>)adapter).addAll(users);
                         }
 
                         if (callback != null) {
