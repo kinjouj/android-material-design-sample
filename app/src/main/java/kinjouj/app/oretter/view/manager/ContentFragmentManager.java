@@ -24,18 +24,4 @@ public class ContentFragmentManager extends ViewManager<MainActivity> {
         tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         tx.commit();
     }
-
-    /*
-    public void detach() {
-        Fragment fragment = getCurrentContentFragment();
-
-        if (fragment != null) {
-            getSupportFragmentManager().beginTransaction().detach(fragment).commit();
-        }
-    }
-
-    public Fragment getCurrentContentFragment() {
-        return getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
-    }
-    */
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import twitter4j.Paging;
 import twitter4j.Status;
 import twitter4j.User;
 
@@ -15,22 +16,23 @@ public class UserStatusListFragment extends RecyclerViewFragment<Status> {
     public static final String EXTRA_USER = "extra_user";
 
     @Override
-    public List<Status> fetch() {
+    public RecyclerView.Adapter getAdapter() {
+        return new StatusRecyclerViewAdapter(getActivity());
+    }
+
+    @Override
+    public List<Status> fetch(int currentPage) {
         List<Status> statuses = null;
 
         try {
-            statuses = getTwitter().getUserTimeline(getUser().getId());
+            User user = getUser();
+            statuses = getTwitter().getUserTimeline(user.getId(), new Paging(currentPage));
         } catch (Exception e) {
             e.printStackTrace();
             statuses = Collections.<Status>emptyList();
         }
 
         return statuses;
-    }
-
-    @Override
-    public RecyclerView.Adapter getAdapter() {
-        return new StatusRecyclerViewAdapter(getActivity());
     }
 
     private User getUser() {

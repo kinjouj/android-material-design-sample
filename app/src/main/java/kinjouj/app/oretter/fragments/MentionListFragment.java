@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import android.support.v7.widget.RecyclerView;
+import twitter4j.Paging;
 import twitter4j.Status;
 
 import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
@@ -11,21 +12,21 @@ import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
 public class MentionListFragment extends RecyclerViewFragment<Status> {
 
     @Override
-    public List<Status> fetch() {
+    public RecyclerView.Adapter getAdapter() {
+        return new StatusRecyclerViewAdapter(getActivity());
+    }
+
+    @Override
+    public List<Status> fetch(int currentPage) {
         List<Status> statuses = null;
 
         try {
-            statuses = getTwitter().getMentionsTimeline();
+            statuses = getTwitter().getMentionsTimeline(new Paging(currentPage));
         } catch (Exception e) {
             e.printStackTrace();
             statuses = Collections.<Status>emptyList();
         }
 
         return statuses;
-    }
-
-    @Override
-    public RecyclerView.Adapter getAdapter() {
-        return new StatusRecyclerViewAdapter(getActivity());
     }
 }

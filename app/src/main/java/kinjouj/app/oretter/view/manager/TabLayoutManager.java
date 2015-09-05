@@ -11,15 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import butterknife.Bind;
 
-import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.FavoriteListFragment;
-import kinjouj.app.oretter.fragments.FollowListFragment;
-import kinjouj.app.oretter.fragments.FollowerListFragment;
-import kinjouj.app.oretter.fragments.HomeStatusListFragment;
-import kinjouj.app.oretter.fragments.MentionListFragment;
-import kinjouj.app.oretter.fragments.SearchFragment;
 
 public class TabLayoutManager extends ViewManager<MainActivity> implements TabLayout.OnTabSelectedListener {
 
@@ -110,11 +103,6 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(ContentFragmentManager.FRAGMENT_TAG);
-
-        if (fragment != null && fragment instanceof AppInterfaces.ReloadableFragment) {
-            ((AppInterfaces.ReloadableFragment)fragment).reload();
-        }
     }
 
     @Override

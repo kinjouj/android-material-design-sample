@@ -27,3 +27,6 @@
 -dontwarn twitter4j.TwitterAPIMonitor
 
 -dontwarn com.squareup.okhttp.**
+
+-keep class org.yaml.snakeyaml.** { public protected private *; }
+-dontwarn org.yaml.snakeyaml.**

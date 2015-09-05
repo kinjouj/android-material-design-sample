@@ -6,6 +6,7 @@ import java.util.List;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import twitter4j.Query;
+import twitter4j.QueryResult;
 import twitter4j.Status;
 
 import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
@@ -13,13 +14,27 @@ import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
 public class SearchFragment extends RecyclerViewFragment<Status> {
 
     private static final String EXTRA_QUERY = "extra_query";
+    private QueryResult queryResult;
 
     @Override
-    public List<Status> fetch() {
+    public RecyclerView.Adapter getAdapter() {
+        return new StatusRecyclerViewAdapter(getActivity());
+    }
+
+    @Override
+    public List<Status> fetch(int currentPage) {
         List<Status> statuses = null;
 
         try {
-            statuses = getTwitter().search(new Query(getQuery())).getTweets();
+            Query query = new Query(getQuery());
+
+            if (queryResult != null) {
+                if (queryResult.hasNext()) {
+                    query = queryResult.nextQuery();
+                }
+            }
+            queryResult = getTwitter().search(query);
+            statuses = queryResult.getTweets();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -27,11 +42,6 @@ public class SearchFragment extends RecyclerViewFragment<Status> {
         }
 
         return statuses;
-    }
-
-    @Override
-    public RecyclerView.Adapter getAdapter() {
-        return new StatusRecyclerViewAdapter(getActivity());
     }
 
     private String getQuery() {

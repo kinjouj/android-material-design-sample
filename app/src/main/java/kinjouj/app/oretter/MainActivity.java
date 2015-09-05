@@ -2,8 +2,8 @@ package kinjouj.app.oretter;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.FragmentManager;
@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        super.onResume();
         init();
         tabLayoutManager.addTab(homeTitle, R.drawable.ic_home, new HomeStatusListFragment(), true);
         tabLayoutManager.addTab(mentionTitle, R.drawable.ic_reply, new MentionListFragment());
@@ -116,24 +115,36 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.tb_menu_compose:
+                ComposeDialogFragment.show(getSupportFragmentManager());
+
+                break;
+
+            default:
+                break;
+        }
+
+        return false;
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.v(TAG, "onConfigrationChanged()");
+        Logger.v("onConfigrationChanged()");
     }
 
     @Override
     public void onBackPressed() {
         if (drawerLayoutManager.isOpen()) {
-            Log.v(TAG, "onBackPressed: closeDrawer");
+            Logger.v("onBackPressed: closeDrawer");
             drawerLayoutManager.close();
         } else {
             if (!searchViewManager.isIconified()) {
-                Log.v(TAG, "onBackPressed: SearchView.onActionViewCollapsed");
+                Logger.v("onBackPressed: SearchView.onActionViewCollapsed");
                 searchViewManager.collapse();
             } else {
-                Log.v(TAG, "count: " + tabLayoutManager.getBackStackTabEntryCount());
-
                 if (tabLayoutManager.getBackStackTabEntryCount() > 0) {
                     tabLayoutManager.popBackStackTab();
                 } else {
@@ -146,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSearchRequested() {
         if (!drawerLayoutManager.isOpen()) {
-            Log.v(TAG, "onSearchRequested: onActionViewExpanded");
+            Logger.v("onSearchRequested: onActionViewExpanded");
             searchViewManager.expand();
         }
 

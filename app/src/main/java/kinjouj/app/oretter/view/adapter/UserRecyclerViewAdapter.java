@@ -115,7 +115,8 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
 
         @Override
         public boolean areContentsTheSame(User oldItem, User newItem) {
-            return oldItem.getScreenName().equals(newItem.getScreenName());
+            return areItemsTheSame(oldItem, newItem);
+            //return oldItem.getScreenName().equals(newItem.getScreenName());
         }
 
         @Override
