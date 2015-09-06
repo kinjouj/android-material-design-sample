@@ -14,6 +14,12 @@ public class FollowerListFragment extends RecyclerViewFragment<User> {
     long cursor = -1;
 
     @Override
+    public void onPause() {
+        super.onPause();
+        cursor = -1;
+    }
+
+    @Override
     public RecyclerView.Adapter getAdapter() {
         return new UserRecyclerViewAdapter(getActivity());
     }
@@ -24,8 +30,7 @@ public class FollowerListFragment extends RecyclerViewFragment<User> {
 
         try {
             Twitter twitter = getTwitter();
-            User user = twitter.verifyCredentials();
-            users = twitter.getFollowersList(user.getId(), cursor);
+            users = twitter.getFollowersList(twitter.verifyCredentials().getId(), cursor);
             cursor = users.hasNext() ? users.getNextCursor() : 0;
         } catch (Exception e) {
             e.printStackTrace();

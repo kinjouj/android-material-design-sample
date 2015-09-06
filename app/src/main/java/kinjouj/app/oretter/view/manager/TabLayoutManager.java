@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import android.app.Activity;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import butterknife.Bind;
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
+import kinjouj.app.oretter.fragments.RecyclerViewFragment;
 
 public class TabLayoutManager extends ViewManager<MainActivity> implements TabLayout.OnTabSelectedListener {
 
@@ -114,8 +116,12 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
     public void onTabReselected(TabLayout.Tab tab) {
         Fragment fragment = getTagFragment(tab.getTag());
 
-        if (fragment != null && fragment instanceof AppInterfaces.TabReselectedListener) {
-            ((AppInterfaces.TabReselectedListener) fragment).onTabReselected();
+        if (fragment != null && fragment instanceof RecyclerViewFragment) {
+            RecyclerView recyclerView = ((RecyclerViewFragment) fragment).getRecyclerView();
+
+            if (recyclerView.computeVerticalScrollOffset() > 0) {
+                recyclerView.scrollToPosition(0);
+            }
         }
     }
 

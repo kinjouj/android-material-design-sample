@@ -2,7 +2,6 @@ package kinjouj.app.oretter.fragments;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -11,28 +10,26 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 
-import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.EndlessScrollListener;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
+import kinjouj.app.oretter.util.LayoutManagerUtil;
+
+import static kinjouj.app.oretter.AppInterfaces.SortedListAdapter;
 
 public abstract class RecyclerViewFragment<T> extends Fragment
     implements SwipeRefreshLayout.OnRefreshListener,
-                AppBarLayout.OnOffsetChangedListener,
-                AppInterfaces.TabReselectedListener {
+                AppBarLayout.OnOffsetChangedListener {
 
     private static final String TAG = RecyclerViewFragment.class.getName();
     public static int STAGGERED_GRID_NUM_COLUMNS = 2;
@@ -50,7 +47,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         }
     };
 
-    protected RecyclerView.Adapter adapter;
+    RecyclerView.Adapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -101,19 +98,9 @@ public abstract class RecyclerViewFragment<T> extends Fragment
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        Log.v(TAG, "onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
-
-        RecyclerView.LayoutManager prevLayoutManager = recyclerView.getLayoutManager();
-        int pos = 0;
-
-        if (prevLayoutManager instanceof LinearLayoutManager) {
-            pos = ((LinearLayoutManager) prevLayoutManager).findFirstVisibleItemPosition();
-        } else if (prevLayoutManager instanceof StaggeredGridLayoutManager) {
-            int[] into = new int[STAGGERED_GRID_NUM_COLUMNS];
-            pos = ((StaggeredGridLayoutManager) prevLayoutManager).findFirstVisibleItemPositions(into)[0];
-        }
-
+        RecyclerView.LayoutManager previousLayoutManager = recyclerView.getLayoutManager();
+        int pos = LayoutManagerUtil.findFirstVisibleItemPosition(previousLayoutManager);
         RecyclerView.LayoutManager layoutManager = getLayoutManager();
 
         if (pos != 0) {
@@ -142,24 +129,12 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         swipeRefreshLayout.setEnabled(verticalOffset == 0);
     }
 
-    @Override
-    public void onTabReselected() {
-        if (recyclerView.computeVerticalScrollOffset() != 0) {
-            recyclerView.scrollToPosition(0);
-        }
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
     }
 
     public RecyclerView.LayoutManager getLayoutManager() {
-        Configuration config = getResources().getConfiguration();
-
-        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            return new StaggeredGridLayoutManager(
-                STAGGERED_GRID_NUM_COLUMNS,
-                StaggeredGridLayoutManager.VERTICAL
-            );
-        } else {
-            return new LinearLayoutManager(getActivity());
-        }
+        return LayoutManagerUtil.getOrientationLayoutManager(getActivity());
     }
 
     public Twitter getTwitter() {
@@ -179,7 +154,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
                     @Override
                     public void run() {
                         if (users != null && adapter != null) {
-                            ((AppInterfaces.SortedListAdapter<T>)adapter).addAll(users);
+                            ((SortedListAdapter<T>)adapter).addAll(users);
                         }
 
                         if (callback != null) {

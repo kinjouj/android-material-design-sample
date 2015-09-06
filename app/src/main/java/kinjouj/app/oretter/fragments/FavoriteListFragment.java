@@ -6,7 +6,6 @@ import java.util.List;
 import android.support.v7.widget.RecyclerView;
 import twitter4j.Paging;
 import twitter4j.Status;
-import twitter4j.Twitter;
 
 import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
 

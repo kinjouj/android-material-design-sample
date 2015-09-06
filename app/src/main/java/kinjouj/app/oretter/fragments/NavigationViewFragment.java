@@ -19,7 +19,6 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.UserList;
 
-import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.view.DrawerHeaderView;
@@ -27,6 +26,8 @@ import kinjouj.app.oretter.view.DrawerHeaderView;
 public class NavigationViewFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = NavigationViewFragment.class.getName();
+    private static Twitter twitter = TwitterFactory.getSingleton();
+    private User user;
 
     @Bind(R.id.navigation_view)
     NavigationView navigationView;
@@ -53,8 +54,26 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        navigationView.addHeaderView(new DrawerHeaderView(getActivity()));
         navigationView.setNavigationItemSelectedListener(this);
+
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    user = twitter.verifyCredentials();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            navigationView.addHeaderView(
+                                new DrawerHeaderView(getActivity(), user)
+                            );
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
     }
 
     @Override
@@ -124,8 +143,10 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
         ResponseList<UserList> userLists = null;
 
         try {
-            Twitter twitter = TwitterFactory.getSingleton();
-            User user = twitter.verifyCredentials();
+            if (user == null) {
+                user = twitter.verifyCredentials();
+            }
+
             userLists = twitter.getUserLists(user.getId());
         } catch (Exception e) {
             e.printStackTrace();

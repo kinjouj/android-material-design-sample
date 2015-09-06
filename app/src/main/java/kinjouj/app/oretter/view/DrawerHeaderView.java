@@ -25,41 +25,19 @@ public class DrawerHeaderView extends FrameLayout {
     @Bind(R.id.nav_user_name)
     TextView userName;
 
-    public DrawerHeaderView(Context context) {
+    private User user;
+
+    public DrawerHeaderView(Context context, User user) {
         super(context);
         inflate(context, R.layout.navigation_header, this);
         ButterKnife.bind(this);
+        this.user = user;
         init(context);
     }
 
     public void init(final Context context) {
-        final Handler handler = new Handler();
-
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    final User user = TwitterFactory.getSingleton().verifyCredentials();
-
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            userName.setText(user.getName());
-
-                            Picasso.with(context)
-                                    .load(user.getProfileBackgroundImageURL())
-                                    .fit()
-                                    .into(userBg);
-
-                            Picasso.with(context)
-                                    .load(user.getProfileImageURL())
-                                    .into(userIcon);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
+        userName.setText(user.getName());
+        Picasso.with(context).load(user.getProfileBackgroundImageURL()).fit().into(userBg);
+        Picasso.with(context).load(user.getProfileImageURL()).into(userIcon);
     }
 }

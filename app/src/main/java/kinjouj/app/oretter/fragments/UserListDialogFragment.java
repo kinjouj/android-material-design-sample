@@ -15,6 +15,7 @@ import twitter4j.UserList;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
+import kinjouj.app.oretter.util.BundleUtil;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class UserListDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
@@ -65,17 +66,14 @@ public class UserListDialogFragment extends DialogFragment implements DialogInte
     @Override
     public void onClick(DialogInterface dialog, int which) {
         UserList userList = userLists.get(selectedIndex);
-
         UserListFragment fragment = UserListFragment.newInstance(userList);
         String title = "リスト: " + userList.getName();
         TabLayoutManager tabManager = ((MainActivity)getActivity()).getTabLayoutManager();
         TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_list, fragment);
         tabManager.select(tab, 300);
-        System.out.println(selectedIndex);
     }
 
     private void initUserLists() {
-        Bundle args = getArguments();
         List<UserList> userLists = getUserLists();
 
         if (userLists != null && userLists.size() > 0) {
@@ -91,23 +89,14 @@ public class UserListDialogFragment extends DialogFragment implements DialogInte
 
     @SuppressWarnings("unchecked")
     private ResponseList<UserList> getUserLists() {
-        ResponseList<UserList> userLists = null;
         Bundle args = getArguments();
-
-        if (args != null && args.containsKey(EXTRA_USER_LISTS)) {
-            userLists = (ResponseList<UserList>)args.getSerializable(EXTRA_USER_LISTS);
-        }
-
+        ResponseList<UserList> userLists = BundleUtil.getSerializable(args, EXTRA_USER_LISTS);
         return userLists;
     }
 
     public static UserListDialogFragment newInstance(ResponseList<UserList> userLists) {
-        Bundle args = new Bundle();
-        args.putSerializable(EXTRA_USER_LISTS, userLists);
-
         UserListDialogFragment fragment = new UserListDialogFragment();
-        fragment.setArguments(args);
-
+        fragment.setArguments(BundleUtil.createSerializable(EXTRA_USER_LISTS, userLists));
         return fragment;
     }
 }
