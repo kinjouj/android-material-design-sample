@@ -15,14 +15,14 @@ import android.util.Patterns;
 import android.view.MotionEvent;
 import android.widget.TextView;
 import android.widget.Toast;
-//import com.twitter.Regex;
+import com.twitter.Regex;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.UserStatusListFragment;
+import kinjouj.app.oretter.fragments.UserFragment;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class TweetTextView extends TextView {
@@ -35,7 +35,7 @@ public class TweetTextView extends TextView {
 
     public void linkify() {
         Linkify.addLinks(this, MENTION_PATTERN, null);
-        //Linkify.addLinks(this, Regex.VALID_HASHTAG, null);
+        Linkify.addLinks(this, Regex.VALID_HASHTAG, null);
         Linkify.addLinks(this, Patterns.WEB_URL, null);
         setMovementMethod(new TweetMovementMethod());
     }
@@ -54,13 +54,15 @@ public class TweetTextView extends TextView {
                 e.printStackTrace();
             }
 
-            if (user != null) {
-                String title = String.format("%s @%s", user.getName(), user.getScreenName());
-                UserStatusListFragment fragment = UserStatusListFragment.newInstance(user);
-                TabLayoutManager tabManager = activity.getTabLayoutManager();
-                TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_person, fragment);
-                tabManager.select(tab, 300);
+            if (user == null) {
+                return;
             }
+
+            String title = String.format("%s @%s", user.getName(), user.getScreenName());
+            UserFragment fragment = UserFragment.newInstance(user);
+            TabLayoutManager tabManager = activity.getTabLayoutManager();
+            TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_person, fragment);
+            tabManager.select(tab, 300);
         } else {
             Toast.makeText(getContext(), text, Toast.LENGTH_LONG).show();
         }

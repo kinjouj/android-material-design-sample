@@ -1,5 +1,6 @@
 package kinjouj.app.oretter.fragments;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.AlertDialog;
@@ -16,25 +17,18 @@ import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
-public class ListSpinnerDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
+public class UserListDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
 
     private static final String EXTRA_USER_LISTS = "extra_userlists";
-    private List<UserList> userLists;
+    private List<UserList> userLists = new ArrayList<UserList>();
     private int selectedIndex = -1;
 
-    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
+        initUserLists();
 
-        if (args != null && args.containsKey(EXTRA_USER_LISTS)) {
-            userLists = (ResponseList<UserList>)args.getSerializable(EXTRA_USER_LISTS);
-        }
-
-        int userListsSize = userLists != null ? userLists.size() : 0;
-
-        if (userListsSize <= 0) {
+        if (userLists.size() <= 0) {
             setShowsDialog(false);
         }
     }
@@ -47,10 +41,6 @@ public class ListSpinnerDialogFragment extends DialogFragment implements DialogI
         );
 
         for (UserList userList : userLists) {
-            if (userList.getMemberCount() <= 0) {
-                continue;
-            }
-
             adapter.add(userList.getName());
         }
 
@@ -84,11 +74,38 @@ public class ListSpinnerDialogFragment extends DialogFragment implements DialogI
         System.out.println(selectedIndex);
     }
 
-    public static ListSpinnerDialogFragment newInstance(ResponseList<UserList> userLists) {
+    private void initUserLists() {
+        Bundle args = getArguments();
+        List<UserList> userLists = getUserLists();
+
+        if (userLists != null && userLists.size() > 0) {
+            for (UserList userList : userLists) {
+                if (userList.getMemberCount() <= 0) {
+                    continue;
+                }
+
+                this.userLists.add(userList);
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private ResponseList<UserList> getUserLists() {
+        ResponseList<UserList> userLists = null;
+        Bundle args = getArguments();
+
+        if (args != null && args.containsKey(EXTRA_USER_LISTS)) {
+            userLists = (ResponseList<UserList>)args.getSerializable(EXTRA_USER_LISTS);
+        }
+
+        return userLists;
+    }
+
+    public static UserListDialogFragment newInstance(ResponseList<UserList> userLists) {
         Bundle args = new Bundle();
         args.putSerializable(EXTRA_USER_LISTS, userLists);
 
-        ListSpinnerDialogFragment fragment = new ListSpinnerDialogFragment();
+        UserListDialogFragment fragment = new UserListDialogFragment();
         fragment.setArguments(args);
 
         return fragment;

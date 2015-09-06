@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,11 +29,10 @@ import kinjouj.app.oretter.EndlessScrollListener;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 
-import static kinjouj.app.oretter.AppInterfaces.SortedListAdapter;
-
 public abstract class RecyclerViewFragment<T> extends Fragment
     implements SwipeRefreshLayout.OnRefreshListener,
-                AppBarLayout.OnOffsetChangedListener {
+                AppBarLayout.OnOffsetChangedListener,
+                AppInterfaces.TabReselectedListener {
 
     private static final String TAG = RecyclerViewFragment.class.getName();
     public static int STAGGERED_GRID_NUM_COLUMNS = 2;
@@ -142,6 +142,13 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         swipeRefreshLayout.setEnabled(verticalOffset == 0);
     }
 
+    @Override
+    public void onTabReselected() {
+        if (recyclerView.computeVerticalScrollOffset() != 0) {
+            recyclerView.scrollToPosition(0);
+        }
+    }
+
     public RecyclerView.LayoutManager getLayoutManager() {
         Configuration config = getResources().getConfiguration();
 
@@ -172,7 +179,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
                     @Override
                     public void run() {
                         if (users != null && adapter != null) {
-                            ((SortedListAdapter<T>)adapter).addAll(users);
+                            ((AppInterfaces.SortedListAdapter<T>)adapter).addAll(users);
                         }
 
                         if (callback != null) {

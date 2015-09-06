@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import butterknife.Bind;
 
+import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 
@@ -111,6 +112,11 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
+        Fragment fragment = getTagFragment(tab.getTag());
+
+        if (fragment != null && fragment instanceof AppInterfaces.TabReselectedListener) {
+            ((AppInterfaces.TabReselectedListener) fragment).onTabReselected();
+        }
     }
 
     @Override

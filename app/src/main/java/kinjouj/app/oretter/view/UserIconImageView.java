@@ -14,7 +14,7 @@ import twitter4j.User;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.UserStatusListFragment;
+import kinjouj.app.oretter.fragments.UserFragment;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class UserIconImageView extends RoundedImageView implements View.OnClickListener {
@@ -41,7 +41,7 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
         }
 
         String title = String.format("%s @%s", user.getName(), user.getScreenName());
-        UserStatusListFragment fragment = UserStatusListFragment.newInstance(user);
+        UserFragment fragment = UserFragment.newInstance(user);
         TabLayoutManager tabManager = ((MainActivity)context).getTabLayoutManager();
         TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_person, fragment);
         tabManager.select(tab, 300);

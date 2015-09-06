@@ -11,7 +11,7 @@ import twitter4j.User;
 
 import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
 
-public class UserStatusListFragment extends RecyclerViewFragment<Status> {
+public class UserFragment extends RecyclerViewFragment<Status> {
 
     public static final String EXTRA_USER = "extra_user";
 
@@ -39,11 +39,11 @@ public class UserStatusListFragment extends RecyclerViewFragment<Status> {
         return (User)getArguments().getSerializable(EXTRA_USER);
     }
 
-    public static UserStatusListFragment newInstance(User user) {
+    public static UserFragment newInstance(User user) {
         Bundle extras = new Bundle();
         extras.putSerializable(EXTRA_USER, user);
 
-        UserStatusListFragment fragment = new UserStatusListFragment();
+        UserFragment fragment = new UserFragment();
         fragment.setArguments(extras);
 
         return fragment;

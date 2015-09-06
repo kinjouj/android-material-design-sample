@@ -11,9 +11,9 @@ import twitter4j.Status;
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
 
-public class HomeStatusListFragment extends RecyclerViewFragment<Status> {
+public class HomeFragment extends RecyclerViewFragment<Status> {
 
-    private static final String TAG = HomeStatusListFragment.class.getName();
+    private static final String TAG = HomeFragment.class.getName();
 
     @Override
     public RecyclerView.Adapter getAdapter() {

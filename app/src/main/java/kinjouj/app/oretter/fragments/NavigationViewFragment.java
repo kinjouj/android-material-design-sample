@@ -105,14 +105,16 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
     }
 
     private void showListSpinnerFragment() {
-        final Handler handler = new Handler();
-
         new Thread() {
             @Override
             public void run() {
+                ResponseList<UserList> userLists = getUserLists();
 
-                ListSpinnerDialogFragment fragment = ListSpinnerDialogFragment
-                                                        .newInstance(getUserLists());
+                if (userLists == null) {
+                    return;
+                }
+
+                UserListDialogFragment fragment = UserListDialogFragment.newInstance(userLists);
                 fragment.show(getFragmentManager(), "list_spinner_dialog_fragment");
             }
         }.start();

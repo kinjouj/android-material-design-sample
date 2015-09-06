@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         init();
-        tabLayoutManager.addTab(homeTitle, R.drawable.ic_home, new HomeStatusListFragment(), true);
+        tabLayoutManager.addTab(homeTitle, R.drawable.ic_home, new HomeFragment(), true);
         tabLayoutManager.addTab(mentionTitle, R.drawable.ic_reply, new MentionListFragment());
         tabLayoutManager.addTab(favoriteTitle, R.drawable.ic_grade, new FavoriteListFragment());
         tabLayoutManager.addTab(followTitle, R.drawable.ic_follow, new FollowListFragment());
