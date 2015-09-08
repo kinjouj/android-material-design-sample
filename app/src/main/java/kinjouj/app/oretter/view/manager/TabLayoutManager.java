@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.LinkedList;
 
 import android.app.Activity;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -17,18 +18,17 @@ import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragments.RecyclerViewFragment;
 
-public class TabLayoutManager extends ViewManager<MainActivity> implements TabLayout.OnTabSelectedListener {
+public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayout.OnTabSelectedListener {
 
     private static final String TAG = TabLayoutManager.class.getName();
     private static LinkedList<TabLayout.Tab> backStackTabs = new LinkedList<TabLayout.Tab>();
     private boolean backStackState = false;
+    private AppInterfaces.FragmentRenderListener listener;
 
-    @Bind(R.id.tab_layout)
-    TabLayout tabLayout;
-
-    public TabLayoutManager(Activity activity) {
-        super(activity);
-        tabLayout.setOnTabSelectedListener(this);
+    public TabLayoutManager(View view, AppInterfaces.FragmentRenderListener listener) {
+        super(view);
+        this.listener = listener;
+        getView().setOnTabSelectedListener(this);
     }
 
     public TabLayout.Tab addTab(String title, int iconRes, Fragment tagFragment) {
@@ -36,7 +36,7 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
     }
 
     public TabLayout.Tab addTab(String title, int iconRes, Fragment tagFragment, boolean isSelected) {
-        TabLayout.Tab tab = tabLayout.newTab()
+        TabLayout.Tab tab = getView().newTab()
                                     .setText(title)
                                     .setIcon(iconRes)
                                     .setTag(tagFragment)
@@ -46,21 +46,23 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
     }
 
     public TabLayout.Tab addTab(TabLayout.Tab tab, boolean isSelected) {
-        tabLayout.addTab(tab, isSelected);
+        getView().addTab(tab, isSelected);
         return tab;
     }
 
     public TabLayout.Tab get(int position) {
-        return tabLayout.getTabAt(position);
+        return getView().getTabAt(position);
     }
 
     public void select(final TabLayout.Tab tab, final int interval) {
+        final Handler handler = new Handler();
+
         new Thread() {
             @Override
             public void run() {
                 try {
                     Thread.sleep(interval);
-                    getActivity().runOnUiThread(new Runnable() {
+                    handler.post(new Runnable() {
                         @Override
                         public void run() {
                             tab.select();
@@ -74,7 +76,7 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
     }
 
     public int getCurrentPosition() {
-        return tabLayout.getSelectedTabPosition();
+        return getView().getSelectedTabPosition();
     }
 
     public TabLayout.Tab getCurrentTab() {
@@ -99,16 +101,21 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
         backStackTabs.clear();
     }
 
+    public void clearTabs() {
+        getView().removeAllTabs();
+    }
+
+    public void clear() {
+        clearBackStack();
+        clearTabs();
+    }
+
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         Fragment fragment = getTagFragment(tab.getTag());
 
         if (fragment != null) {
-            MainActivity activity = getActivity();
-
-            if (activity != null) {
-                activity.getContentFragmentManager().render(fragment);
-            }
+            listener.render(fragment);
         }
     }
 
@@ -134,12 +141,6 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
         }
     }
 
-    @Override
-    public void unbind() {
-        //tabLayout.removeAllTabs();
-        super.unbind();
-    }
-
     Fragment getTagFragment(Object o) {
         Fragment fragment = null;
 
@@ -151,7 +152,7 @@ public class TabLayoutManager extends ViewManager<MainActivity> implements TabLa
     }
 
     View createTabView() {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.tab, null);
+        View view = LayoutInflater.from(getView().getContext()).inflate(R.layout.tab, null);
         return view;
     }
 }

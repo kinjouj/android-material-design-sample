@@ -2,12 +2,10 @@ package kinjouj.app.oretter.fragments;
 
 import java.util.List;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -40,14 +38,8 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    private EndlessScrollListener listener = new EndlessScrollListener() {
-        @Override
-        public void onLoadMore(int currentPage) {
-            load(currentPage, null);
-        }
-    };
-
     RecyclerView.Adapter adapter;
+    EndlessScrollListener listener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -84,16 +76,23 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     public void onResume() {
         Log.v(TAG, "onResume");
         super.onResume();
-        recyclerView.addOnScrollListener(listener);
         ((MainActivity) getActivity()).getAppBarLayoutManager().addOnOffsetChangedListener(this);
+        listener = new EndlessScrollListener() {
+            @Override
+            public void onLoadMore(int currentPage) {
+                load(currentPage, null);
+            }
+        };
+        recyclerView.addOnScrollListener(listener);
     }
 
     @Override
     public void onPause() {
         Log.v(TAG, "onPause");
         super.onPause();
-        recyclerView.removeOnScrollListener(listener);
         ((MainActivity) getActivity()).getAppBarLayoutManager().removeOnOffsetChangedListener();
+        recyclerView.removeOnScrollListener(listener);
+        listener = null;
     }
 
     @Override

@@ -40,4 +40,11 @@ public class DrawerHeaderView extends FrameLayout {
         Picasso.with(context).load(user.getProfileBackgroundImageURL()).fit().into(userBg);
         Picasso.with(context).load(user.getProfileImageURL()).into(userIcon);
     }
+
+    @Override
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        ButterKnife.unbind(this);
+        user = null;
+    }
 }

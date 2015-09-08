@@ -1,42 +1,43 @@
 package kinjouj.app.oretter.view.manager;
 
 import android.app.Activity;
+import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import butterknife.Bind;
+import android.support.v7.widget.Toolbar;
 
-import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 
-public class DrawerLayoutManager extends ViewManager<MainActivity> {
+public class DrawerLayoutManager extends ViewManager<DrawerLayout> {
 
-    @Bind(R.id.drawer_layout)
-    DrawerLayout drawerLayout;
+    private Toolbar toolbar;
 
-    public DrawerLayoutManager(Activity activity) {
-        super(activity);
+    public DrawerLayoutManager(View view, Toolbar toolbar) {
+        super(view);
+        this.toolbar = toolbar;
         init();
     }
 
     private void init() {
+        DrawerLayout view = getView();
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
-            getActivity(),
-            drawerLayout,
-            ((MainActivity)getActivity()).getToolbarManager().getToolbar(),
+            (Activity)view.getContext(),
+            view,
+            toolbar,
             R.drawable.ic_drawer,
             R.drawable.ic_drawer
         );
-        drawerLayout.setDrawerListener(drawerToggle);
+        getView().setDrawerListener(drawerToggle);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
     }
 
     public boolean isOpen() {
-        return drawerLayout.isDrawerOpen(GravityCompat.START);
+        return getView().isDrawerOpen(GravityCompat.START);
     }
 
     public void close() {
-        drawerLayout.closeDrawer(GravityCompat.START);
+        getView().closeDrawer(GravityCompat.START);
     }
 }

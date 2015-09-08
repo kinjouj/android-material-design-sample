@@ -1,30 +1,24 @@
 package kinjouj.app.oretter.view.manager;
 
-import android.app.Activity;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import butterknife.ButterKnife;
+import android.view.View;
 
-public abstract class ViewManager<T extends AppCompatActivity> {
+public abstract class ViewManager<T extends View> {
 
-    private Activity activity;
+    private View view;
 
-    public ViewManager(Activity activity) {
-        this.activity = activity;
-        ButterKnife.bind(this, activity);
-    }
-
-    public void unbind() {
-        ButterKnife.unbind(this);
-        activity = null;
+    public ViewManager(View view) {
+        this.view = view;
     }
 
     @SuppressWarnings("unchecked")
-    protected T getActivity() {
-        return (T)activity;
+    public T getView() {
+        return (T)view;
     }
 
-    protected FragmentManager getSupportFragmentManager() {
-        return getActivity().getSupportFragmentManager();
+    public void unbind() {
+    }
+
+    protected void destroyView() {
+        view = null;
     }
 }

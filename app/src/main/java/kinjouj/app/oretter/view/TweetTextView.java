@@ -3,6 +3,8 @@ package kinjouj.app.oretter.view;
 import java.util.regex.Pattern;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.text.Layout;
 import android.text.Spannable;
@@ -13,6 +15,7 @@ import android.text.util.Linkify;
 import android.util.AttributeSet;
 import android.util.Patterns;
 import android.view.MotionEvent;
+import android.webkit.URLUtil;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.twitter.Regex;
@@ -63,8 +66,15 @@ public class TweetTextView extends TextView {
             TabLayoutManager tabManager = activity.getTabLayoutManager();
             TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_person, fragment);
             tabManager.select(tab, 300);
+        } else if (URLUtil.isNetworkUrl(text)) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(text));
+            activity.startActivity(intent);
         } else {
-            Toast.makeText(getContext(), text, Toast.LENGTH_LONG).show();
+            Toast.makeText(
+                getContext(),
+                String.format("unknown pattern: \"%s\"", text),
+                Toast.LENGTH_LONG
+            ).show();
         }
     }
 

@@ -22,8 +22,9 @@ import twitter4j.UserList;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.view.DrawerHeaderView;
+import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
-public class NavigationViewFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
+public class NavigationViewFragment extends Fragment {
 
     private static final String TAG = NavigationViewFragment.class.getName();
     private static Twitter twitter = TwitterFactory.getSingleton();
@@ -41,6 +42,13 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        ButterKnife.unbind(this);
+        user = null;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
@@ -54,7 +62,7 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(new ItemSelectedListener());
 
         new Thread() {
             @Override
@@ -64,9 +72,7 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            navigationView.addHeaderView(
-                                new DrawerHeaderView(getActivity(), user)
-                            );
+                            navigationView.addHeaderView(new DrawerHeaderView(getActivity(), user));
                         }
                     });
                 } catch (Exception e) {
@@ -74,53 +80,6 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
                 }
             }
         }.start();
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem menuItem) {
-        ((MainActivity)getActivity()).getDrawerLayoutManager().close();
-        int id = menuItem.getItemId();
-
-        switch (id) {
-            case R.id.nav_menu_home:
-                navigateTab(0);
-                break;
-
-            case R.id.nav_menu_mention:
-                navigateTab(1);
-                break;
-
-            case R.id.nav_menu_favorite:
-                navigateTab(2);
-                break;
-
-            case R.id.nav_menu_follow:
-                navigateTab(3);
-                break;
-
-            case R.id.nav_menu_follower:
-                navigateTab(4);
-                break;
-
-            case R.id.nav_menu_list:
-                showListSpinnerFragment();
-                break;
-
-            case R.id.nav_menu_exit:
-                ((MainActivity)getActivity()).getTabLayoutManager().clearBackStack();
-                getActivity().finish();
-                break;
-
-            default:
-                break;
-
-        }
-
-        return false;
-    }
-
-    private void navigateTab(int position) {
-        ((MainActivity)getActivity()).getTabLayoutManager().get(position).select();
     }
 
     private void showListSpinnerFragment() {
@@ -134,7 +93,7 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
                 }
 
                 UserListDialogFragment fragment = UserListDialogFragment.newInstance(userLists);
-                fragment.show(getFragmentManager(), "list_spinner_dialog_fragment");
+                fragment.show(getFragmentManager(), fragment.getClass().getName());
             }
         }.start();
     }
@@ -153,5 +112,55 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
         }
 
         return userLists;
+    }
+
+    private class ItemSelectedListener implements NavigationView.OnNavigationItemSelectedListener {
+        @Override
+        public boolean onNavigationItemSelected(MenuItem menuItem) {
+            ((MainActivity)getActivity()).getDrawerLayoutManager().close();
+            int id = menuItem.getItemId();
+
+            switch (id) {
+                case R.id.nav_menu_home:
+                    navigateTab(0);
+                    break;
+
+                case R.id.nav_menu_mention:
+                    navigateTab(1);
+                    break;
+
+                case R.id.nav_menu_favorite:
+                    navigateTab(2);
+                    break;
+
+                case R.id.nav_menu_follow:
+                    navigateTab(3);
+                    break;
+
+                case R.id.nav_menu_follower:
+                    navigateTab(4);
+                    break;
+
+                case R.id.nav_menu_list:
+                    showListSpinnerFragment();
+                    break;
+
+                case R.id.nav_menu_exit:
+                    MainActivity activity = (MainActivity) getActivity();
+                    activity.getTabLayoutManager().clear();
+                    activity.finish();
+                    break;
+
+                default:
+                    break;
+
+            }
+
+            return false;
+        }
+
+        private void navigateTab(int position) {
+            ((MainActivity)getActivity()).getTabLayoutManager().get(position).select();
+        }
     }
 }

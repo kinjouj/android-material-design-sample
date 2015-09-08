@@ -42,7 +42,7 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
 
         String title = String.format("%s @%s", user.getName(), user.getScreenName());
         UserFragment fragment = UserFragment.newInstance(user);
-        TabLayoutManager tabManager = ((MainActivity)context).getTabLayoutManager();
+        TabLayoutManager tabManager = ((MainActivity) context).getTabLayoutManager();
         TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_person, fragment);
         tabManager.select(tab, 300);
     }

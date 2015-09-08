@@ -2,35 +2,55 @@ package kinjouj.app.oretter;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
+import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-import kinjouj.app.oretter.fragments.*;
-
+import kinjouj.app.oretter.fragments.ComposeDialogFragment;
+import kinjouj.app.oretter.fragments.FavoriteListFragment;
+import kinjouj.app.oretter.fragments.FollowListFragment;
+import kinjouj.app.oretter.fragments.FollowerListFragment;
+import kinjouj.app.oretter.fragments.HomeFragment;
+import kinjouj.app.oretter.fragments.MentionListFragment;
 import kinjouj.app.oretter.view.manager.AppBarLayoutManager;
-import kinjouj.app.oretter.view.manager.ContentFragmentManager;
 import kinjouj.app.oretter.view.manager.DrawerLayoutManager;
 import kinjouj.app.oretter.view.manager.SearchViewManager;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
-import kinjouj.app.oretter.view.manager.ToolbarManager;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
+    public static final String FRAGMENT_TAG = "current_content_fragment";
 
     private AppBarLayoutManager appBarLayoutManager;
-    private ContentFragmentManager contentFragmentManager;
     private DrawerLayoutManager drawerLayoutManager;
     private SearchViewManager searchViewManager;
     private TabLayoutManager tabLayoutManager;
-    private ToolbarManager toolbarManager;
+
+    @Bind(R.id.appbar_layout)
+    AppBarLayout appBarLayout;
+
+    @Bind(R.id.drawer_layout)
+    DrawerLayout drawerLayout;
+
+    @Bind(R.id.tab_layout)
+    TabLayout tabLayout;
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     @BindString(R.string.nav_menu_home)
     String homeTitle;
@@ -47,12 +67,53 @@ public class MainActivity extends AppCompatActivity {
     @BindString(R.string.nav_menu_follower)
     String followerTitle;
 
+    private AppInterfaces.FragmentRenderListener fragmentRenderListener;
+
+    private void init() {
+        initFragmentRenderListener();
+
+        if (appBarLayoutManager == null) {
+            appBarLayoutManager = new AppBarLayoutManager(appBarLayout);
+        }
+
+        if (drawerLayoutManager == null) {
+            drawerLayoutManager = new DrawerLayoutManager(drawerLayout, toolbar);
+        }
+
+        if (tabLayoutManager == null) {
+            tabLayoutManager = new TabLayoutManager(tabLayout, fragmentRenderListener);
+        }
+    }
+
+    private void initFragmentRenderListener() {
+        if (fragmentRenderListener != null) {
+            return;
+        }
+
+        fragmentRenderListener = new AppInterfaces.FragmentRenderListener() {
+            @Override
+            public void render(Fragment fragment) {
+                FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+                tx.replace(R.id.content, fragment, FRAGMENT_TAG);
+                tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                tx.commit();
+            }
+        };
+    }
+
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         init();
+
         tabLayoutManager.addTab(homeTitle, R.drawable.ic_home, new HomeFragment(), true);
         tabLayoutManager.addTab(mentionTitle, R.drawable.ic_reply, new MentionListFragment());
         tabLayoutManager.addTab(favoriteTitle, R.drawable.ic_grade, new FavoriteListFragment());
@@ -67,6 +128,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRestart() {
+        super.onRestart();
+        ButterKnife.bind(this);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
 
@@ -75,19 +142,9 @@ public class MainActivity extends AppCompatActivity {
             appBarLayoutManager = null;
         }
 
-        if (contentFragmentManager != null) {
-            contentFragmentManager.unbind();
-            contentFragmentManager = null;
-        }
-
         if (drawerLayoutManager != null) {
             drawerLayoutManager.unbind();
             drawerLayoutManager = null;
-        }
-
-        if (searchViewManager != null) {
-            searchViewManager.unbind();
-            searchViewManager = null;
         }
 
         if (tabLayoutManager != null) {
@@ -95,10 +152,7 @@ public class MainActivity extends AppCompatActivity {
             tabLayoutManager = null;
         }
 
-        if (toolbarManager != null) {
-            toolbarManager.unbind();
-            toolbarManager = null;
-        }
+        fragmentRenderListener = null;
 
         ButterKnife.unbind(this);
     }
@@ -108,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         searchViewManager = new SearchViewManager(
-            this,
             (SearchView)MenuItemCompat.getActionView(menu.findItem(R.id.tb_menu_search))
         );
 
@@ -119,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
         switch (menuItem.getItemId()) {
             case R.id.tb_menu_compose:
                 ComposeDialogFragment.show(getSupportFragmentManager());
-
                 break;
 
             default:
@@ -148,6 +200,8 @@ public class MainActivity extends AppCompatActivity {
                 if (tabLayoutManager.getBackStackTabEntryCount() > 0) {
                     tabLayoutManager.popBackStackTab();
                 } else {
+                    tabLayoutManager.clearBackStack();
+                    tabLayoutManager.clearTabs();
                     finish();
                 }
             }
@@ -164,34 +218,8 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    public void init() {
-        if (appBarLayoutManager == null) {
-            appBarLayoutManager = new AppBarLayoutManager(this);
-        }
-
-        if (contentFragmentManager == null) {
-            contentFragmentManager = new ContentFragmentManager(this);
-        }
-
-        if (toolbarManager == null) {
-            toolbarManager = new ToolbarManager(this);
-        }
-
-        if (drawerLayoutManager == null) {
-            drawerLayoutManager = new DrawerLayoutManager(this);
-        }
-
-        if (tabLayoutManager == null) {
-            tabLayoutManager = new TabLayoutManager(this);
-        }
-    }
-
     public AppBarLayoutManager getAppBarLayoutManager() {
         return appBarLayoutManager;
-    }
-
-    public ContentFragmentManager getContentFragmentManager() {
-        return contentFragmentManager;
     }
 
     public DrawerLayoutManager getDrawerLayoutManager() {
@@ -204,9 +232,5 @@ public class MainActivity extends AppCompatActivity {
 
     public TabLayoutManager getTabLayoutManager() {
         return tabLayoutManager;
-    }
-
-    public ToolbarManager getToolbarManager() {
-        return toolbarManager;
     }
 }
