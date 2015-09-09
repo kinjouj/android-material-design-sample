@@ -37,7 +37,7 @@ public class TweetTextView extends TextView {
     }
 
     public void linkify() {
-        Linkify.addLinks(this, MENTION_PATTERN, null);
+        Linkify.addLinks(this, Regex.VALID_MENTION_OR_LIST, null);
         Linkify.addLinks(this, Regex.VALID_HASHTAG, null);
         Linkify.addLinks(this, Patterns.WEB_URL, null);
         setMovementMethod(new TweetMovementMethod());
@@ -45,10 +45,11 @@ public class TweetTextView extends TextView {
 
     public void onTouchLinkify(String text) {
         MainActivity activity = (MainActivity)getContext();
+        String s= text.trim();
 
-        if (text.startsWith("#")) {
-            activity.getSearchViewManager().search(text);
-        } else if (text.startsWith("@")){
+        if (s.startsWith("#") || s.startsWith("\uFF03")) {
+            activity.getSearchViewManager().search(s);
+        } else if (s.startsWith("@") || s.startsWith("\uFF20")){
             User user = null;
 
             try {
@@ -66,7 +67,7 @@ public class TweetTextView extends TextView {
             TabLayoutManager tabManager = activity.getTabLayoutManager();
             TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_person, fragment);
             tabManager.select(tab, 300);
-        } else if (URLUtil.isNetworkUrl(text)) {
+        } else if (URLUtil.isNetworkUrl(s)) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(text));
             activity.startActivity(intent);
         } else {
@@ -96,6 +97,7 @@ public class TweetTextView extends TextView {
                 URLSpan[] links = buffer.getSpans(off, off, URLSpan.class);
 
                 if (links.length != 0) {
+                    System.out.println("span: " + links[0].getSpanTypeId());
                     String url = links[0].getURL();
                     onTouchLinkify(url);
 

@@ -67,10 +67,10 @@ public class MainActivity extends AppCompatActivity {
     @BindString(R.string.nav_menu_follower)
     String followerTitle;
 
-    private AppInterfaces.FragmentRenderListener fragmentRenderListener;
+    private AppInterfaces.FragmentRendererListener fragmentRendererListener;
 
     private void init() {
-        initFragmentRenderListener();
+        initFragmentRendererListener();
 
         if (appBarLayoutManager == null) {
             appBarLayoutManager = new AppBarLayoutManager(appBarLayout);
@@ -81,16 +81,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (tabLayoutManager == null) {
-            tabLayoutManager = new TabLayoutManager(tabLayout, fragmentRenderListener);
+            tabLayoutManager = new TabLayoutManager(tabLayout, fragmentRendererListener);
         }
     }
 
-    private void initFragmentRenderListener() {
-        if (fragmentRenderListener != null) {
+    private void initFragmentRendererListener() {
+        if (fragmentRendererListener != null) {
             return;
         }
 
-        fragmentRenderListener = new AppInterfaces.FragmentRenderListener() {
+        fragmentRendererListener = new AppInterfaces.FragmentRendererListener() {
             @Override
             public void render(Fragment fragment) {
                 FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
@@ -106,14 +106,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        init();
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        init();
-
         tabLayoutManager.addTab(homeTitle, R.drawable.ic_home, new HomeFragment(), true);
         tabLayoutManager.addTab(mentionTitle, R.drawable.ic_reply, new MentionListFragment());
         tabLayoutManager.addTab(favoriteTitle, R.drawable.ic_grade, new FavoriteListFragment());
@@ -152,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
             tabLayoutManager = null;
         }
 
-        fragmentRenderListener = null;
+        fragmentRendererListener = null;
 
         ButterKnife.unbind(this);
     }
@@ -162,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         searchViewManager = new SearchViewManager(
+            this,
             (SearchView)MenuItemCompat.getActionView(menu.findItem(R.id.tb_menu_search))
         );
 
@@ -184,24 +182,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Logger.v("onConfigrationChanged()");
+        Log.v(TAG, "onConfigrationChanged()");
     }
 
     @Override
     public void onBackPressed() {
         if (drawerLayoutManager.isOpen()) {
-            Logger.v("onBackPressed: closeDrawer");
+            Log.v(TAG, "onBackPressed: closeDrawer");
             drawerLayoutManager.close();
         } else {
             if (!searchViewManager.isIconified()) {
-                Logger.v("onBackPressed: SearchView.onActionViewCollapsed");
+                Log.v(TAG, "onBackPressed: SearchView.onActionViewCollapsed");
                 searchViewManager.collapse();
             } else {
-                if (tabLayoutManager.getBackStackTabEntryCount() > 0) {
+                if (tabLayoutManager.hasBackStackTab()) {
                     tabLayoutManager.popBackStackTab();
                 } else {
-                    tabLayoutManager.clearBackStack();
-                    tabLayoutManager.clearTabs();
+                    tabLayoutManager.clear();
                     finish();
                 }
             }
@@ -211,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSearchRequested() {
         if (!drawerLayoutManager.isOpen()) {
-            Logger.v("onSearchRequested: onActionViewExpanded");
+            Log.v(TAG, "onActionViewExpanded");
             searchViewManager.expand();
         }
 

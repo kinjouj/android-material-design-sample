@@ -21,18 +21,16 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
 
     private static final String TAG = UserIconImageView.class.getName();
 
-    private Context context;
     private User user;
 
     public UserIconImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
     }
 
     public void setUser(User user) {
         this.user = user;
         setOnClickListener(this);
-        Picasso.with(context).load(user.getProfileImageURL()).fit().into(this);
+        Picasso.with(getContext()).load(user.getProfileImageURL()).fit().into(this);
     }
 
     public void onClick(View view) {
@@ -42,7 +40,7 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
 
         String title = String.format("%s @%s", user.getName(), user.getScreenName());
         UserFragment fragment = UserFragment.newInstance(user);
-        TabLayoutManager tabManager = ((MainActivity) context).getTabLayoutManager();
+        TabLayoutManager tabManager = ((MainActivity) getContext()).getTabLayoutManager();
         TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_person, fragment);
         tabManager.select(tab, 300);
     }

@@ -25,17 +25,14 @@ public class DrawerHeaderView extends FrameLayout {
     @Bind(R.id.nav_user_name)
     TextView userName;
 
-    private User user;
-
     public DrawerHeaderView(Context context, User user) {
         super(context);
         inflate(context, R.layout.navigation_header, this);
-        ButterKnife.bind(this);
-        this.user = user;
-        init(context);
+        init(context, user);
     }
 
-    public void init(final Context context) {
+    public void init(Context context, User user) {
+        ButterKnife.bind(this);
         userName.setText(user.getName());
         Picasso.with(context).load(user.getProfileBackgroundImageURL()).fit().into(userBg);
         Picasso.with(context).load(user.getProfileImageURL()).into(userIcon);
@@ -45,6 +42,5 @@ public class DrawerHeaderView extends FrameLayout {
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         ButterKnife.unbind(this);
-        user = null;
     }
 }

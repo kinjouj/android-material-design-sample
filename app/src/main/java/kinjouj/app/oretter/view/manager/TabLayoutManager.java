@@ -23,9 +23,9 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
     private static final String TAG = TabLayoutManager.class.getName();
     private static LinkedList<TabLayout.Tab> backStackTabs = new LinkedList<TabLayout.Tab>();
     private boolean backStackState = false;
-    private AppInterfaces.FragmentRenderListener listener;
+    private AppInterfaces.FragmentRendererListener listener;
 
-    public TabLayoutManager(View view, AppInterfaces.FragmentRenderListener listener) {
+    public TabLayoutManager(View view, AppInterfaces.FragmentRendererListener listener) {
         super(view);
         this.listener = listener;
         getView().setOnTabSelectedListener(this);
@@ -35,11 +35,11 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
         return addTab(title, iconRes, tagFragment, false);
     }
 
-    public TabLayout.Tab addTab(String title, int iconRes, Fragment tagFragment, boolean isSelected) {
+    public TabLayout.Tab addTab(String title, int icon, Fragment fragment, boolean isSelected) {
         TabLayout.Tab tab = getView().newTab()
                                     .setText(title)
-                                    .setIcon(iconRes)
-                                    .setTag(tagFragment)
+                                    .setIcon(icon)
+                                    .setTag(fragment)
                                     .setCustomView(createTabView());
 
         return addTab(tab, isSelected);
@@ -83,12 +83,16 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
         return get(getCurrentPosition());
     }
 
+    public void addToBackStackTab(TabLayout.Tab tab) {
+        backStackTabs.add(tab);
+    }
+
     public int getBackStackTabEntryCount() {
         return backStackTabs.size();
     }
 
-    public void addToBackStackTab(TabLayout.Tab tab) {
-        backStackTabs.add(tab);
+    public boolean hasBackStackTab() {
+        return getBackStackTabEntryCount() > 0;
     }
 
     public void popBackStackTab() {

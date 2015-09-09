@@ -1,6 +1,7 @@
 package kinjouj.app.oretter.view.manager;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.SearchView;
 import android.view.View;
@@ -11,8 +12,11 @@ import kinjouj.app.oretter.fragments.SearchFragment;
 
 public class SearchViewManager extends ViewManager<SearchView> implements SearchView.OnQueryTextListener {
 
-    public SearchViewManager(View view) {
+    private Context context;
+
+    public SearchViewManager(Context context, View view) {
         super(view);
+        this.context = context;
         getView().setOnQueryTextListener(this);
     }
 
@@ -31,7 +35,7 @@ public class SearchViewManager extends ViewManager<SearchView> implements Search
     public void search(String query) {
         String title = "検索: " + query;
         SearchFragment fragment = SearchFragment.newInstance(query);
-        TabLayoutManager tabManager = ((MainActivity) getView().getContext()).getTabLayoutManager();
+        TabLayoutManager tabManager = ((MainActivity) context).getTabLayoutManager();
         TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_search, fragment);
         tabManager.select(tab, 300);
     }
@@ -56,6 +60,6 @@ public class SearchViewManager extends ViewManager<SearchView> implements Search
     @Override
     public void unbind() {
         super.unbind();
-        destroyView();
+        context = null;
     }
 }

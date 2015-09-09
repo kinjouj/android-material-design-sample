@@ -72,7 +72,9 @@ public class NavigationViewFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            navigationView.addHeaderView(new DrawerHeaderView(getActivity(), user));
+                            navigationView.addHeaderView(
+                                new DrawerHeaderView(getActivity().getApplicationContext(), user)
+                            );
                         }
                     });
                 } catch (Exception e) {

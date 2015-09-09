@@ -17,8 +17,4 @@ public abstract class ViewManager<T extends View> {
 
     public void unbind() {
     }
-
-    protected void destroyView() {
-        view = null;
-    }
 }

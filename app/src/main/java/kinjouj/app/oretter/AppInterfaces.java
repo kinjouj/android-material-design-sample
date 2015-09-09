@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 
 public interface AppInterfaces {
 
-    public static interface FragmentRenderListener {
+    public static interface FragmentRendererListener {
         void render(Fragment fragment);
     }
 

@@ -20,7 +20,7 @@ public class GridViewAdapter extends BaseAdapter {
     private MediaEntity[] entities;
 
     public GridViewAdapter(Context context, MediaEntity[] entities) {
-        this.context  = context;
+        this.context  = context.getApplicationContext();
         this.entities = entities;
     }
 
@@ -51,15 +51,16 @@ public class GridViewAdapter extends BaseAdapter {
         }
 
         final MediaEntity entity = (MediaEntity)getItem(position);
-        Picasso.with(context).load(entity.getMediaURL()).fit().into(imageView);
+        final String url = entity.getMediaURL();
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse(entity.getMediaURL());
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
             }
         });
+        Picasso.with(context).load(url).fit().into(imageView);
 
         return imageView;
     }

@@ -28,7 +28,7 @@ public class DrawerLayoutManager extends ViewManager<DrawerLayout> {
             R.drawable.ic_drawer,
             R.drawable.ic_drawer
         );
-        getView().setDrawerListener(drawerToggle);
+        view.setDrawerListener(drawerToggle);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
     }
