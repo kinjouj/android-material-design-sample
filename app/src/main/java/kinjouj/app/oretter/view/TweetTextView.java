@@ -1,7 +1,5 @@
 package kinjouj.app.oretter.view;
 
-import java.util.regex.Pattern;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,7 +15,6 @@ import android.util.Patterns;
 import android.view.MotionEvent;
 import android.webkit.URLUtil;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.twitter.Regex;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -30,7 +27,9 @@ import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class TweetTextView extends TextView {
 
-    private static final Pattern MENTION_PATTERN = Pattern.compile("@[A-Za-z0-9_]{1,15}");
+    private static final String UNKNOWN_PATTERN_STRING = "unknown pattern: \"%s\"";
+    private static final String FULLWIDTH_NUMBER_SIGN = "\uFF03";
+    private static final String FULLWIDTH_COMMERCIAL_AT = "\uFF20";
 
     public TweetTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -44,12 +43,11 @@ public class TweetTextView extends TextView {
     }
 
     public void onTouchLinkify(String text) {
-        MainActivity activity = (MainActivity)getContext();
-        String s= text.trim();
+        MainActivity activity = (MainActivity) getContext();
 
-        if (s.startsWith("#") || s.startsWith("\uFF03")) {
-            activity.getSearchViewManager().search(s);
-        } else if (s.startsWith("@") || s.startsWith("\uFF20")){
+        if (text.startsWith("#") || text.startsWith(FULLWIDTH_NUMBER_SIGN)) {
+            activity.getSearchViewManager().search(text);
+        } else if (text.startsWith("@") || text.startsWith(FULLWIDTH_COMMERCIAL_AT)){
             User user = null;
 
             try {
@@ -67,15 +65,9 @@ public class TweetTextView extends TextView {
             TabLayoutManager tabManager = activity.getTabLayoutManager();
             TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_person, fragment);
             tabManager.select(tab, 300);
-        } else if (URLUtil.isNetworkUrl(s)) {
+        } else if (URLUtil.isNetworkUrl(text)) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(text));
             activity.startActivity(intent);
-        } else {
-            Toast.makeText(
-                getContext(),
-                String.format("unknown pattern: \"%s\"", text),
-                Toast.LENGTH_LONG
-            ).show();
         }
     }
 
@@ -85,21 +77,20 @@ public class TweetTextView extends TextView {
         public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 int x = (int)event.getX();
-                int y = (int)event.getY();
                 x -= widget.getTotalPaddingLeft();
-                y -= widget.getTotalPaddingTop();
                 x += widget.getScrollX();
+
+                int y = (int)event.getY();
+                y -= widget.getTotalPaddingTop();
                 y += widget.getScrollY();
 
-                Layout layout   = widget.getLayout();
-                int line        = layout.getLineForVertical(y);
-                int off         = layout.getOffsetForHorizontal(line, x);
+                Layout layout = widget.getLayout();
+                int off = layout.getOffsetForHorizontal(layout.getLineForVertical(y), x);
                 URLSpan[] links = buffer.getSpans(off, off, URLSpan.class);
 
                 if (links.length != 0) {
-                    System.out.println("span: " + links[0].getSpanTypeId());
                     String url = links[0].getURL();
-                    onTouchLinkify(url);
+                    onTouchLinkify(url.trim());
 
                     return true;
                 }

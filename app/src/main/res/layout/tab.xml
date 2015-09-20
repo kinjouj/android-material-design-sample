@@ -4,13 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="15dp"
-    android:paddingRight="15dp">
+    android:paddingRight="15dp"
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@android:id/icon"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginRight="10dp" />
+        android:layout_marginRight="5dp" />
 
     <TextView
         android:id="@android:id/text1"

@@ -12,13 +12,13 @@ dependencies {
     compile 'org.twitter4j:twitter4j-core:4.0.4'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.makeramen:roundedimageview:2.0.1'
+    compile 'com.annimon:stream:1.0.3'
 
     //debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3'
     //releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3'
 
     testCompile 'org.hamcrest:hamcrest-all:1.3'
     testCompile 'org.mockito:mockito-all:1.10.19'
-    testCompile 'com.squareup.assertj:assertj-android:1.1.0'
     testCompile 'com.squareup.okhttp:mockwebserver:2.4.0'
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.powermock:powermock-core:1.6.2'
@@ -27,6 +27,10 @@ dependencies {
     testCompile 'org.powermock:powermock-module-junit4-rule:1.6.2'
     testCompile 'org.powermock:powermock-classloading-base:1.6.2'
     testCompile 'org.powermock:powermock-classloading-xstream:1.6.2'
+
+    testCompile('com.squareup.assertj:assertj-android:1.1.0') {
+        exclude group: "com.android.support", module: "support-annotations"
+    }
 }
 
 android {
@@ -43,25 +47,27 @@ android {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude '.readme'
     }
 
     lintOptions {
+        disable 'GradleDependency'
+        disable 'InflateParams'
         disable 'InvalidPackage'
         disable 'RtlEnabled'
         disable 'RtlHardcoded'
-        disable 'GradleDependency'
+        disable 'ViewConstructor'
     }
 
     buildTypes {
         debug {
             testCoverageEnabled = true
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //minifyEnabled true
+            //proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
