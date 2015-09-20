@@ -113,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         tabLayoutManager.addTab(homeTitle, R.drawable.ic_home, new HomeFragment(), true);
         tabLayoutManager.addTab(mentionTitle, R.drawable.ic_reply, new MentionListFragment());
-        tabLayoutManager.addTab(favoriteTitle, R.drawable.ic_grade, new FavoriteListFragment());
+        tabLayoutManager.addTab(favoriteTitle, R.drawable.ic_star, new FavoriteListFragment());
         tabLayoutManager.addTab(followTitle, R.drawable.ic_follow, new FollowListFragment());
         tabLayoutManager.addTab(followerTitle, R.drawable.ic_follower, new FollowerListFragment());
     }
