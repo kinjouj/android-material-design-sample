@@ -156,7 +156,7 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
     }
 
     View createTabView() {
-        View view = LayoutInflater.from(getView().getContext()).inflate(R.layout.tab, null);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.tab, null);
         return view;
     }
 }

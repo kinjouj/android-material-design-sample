@@ -36,15 +36,12 @@ public class StatusRecyclerViewAdapter
     private static final String TAG = StatusRecyclerViewAdapter.class.getName();
 
     private SortedList<Status> statuses = new SortedList<>(Status.class, new StatusSortedListCallback());
-    private Context context;
-
-    public StatusRecyclerViewAdapter(Context context) {
-        this.context = context;
-    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list_item_status, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext())
+                                .inflate(R.layout.list_item_status, viewGroup, false);
+
         return new ViewHolder(view);
     }
 
@@ -63,7 +60,7 @@ public class StatusRecyclerViewAdapter
                 String title = String.format("%s @%s", user.getName(), user.getScreenName());
                 StatusFragment fragment = StatusFragment.newInstance(status);
 
-                TabLayoutManager tm = ((MainActivity)context).getTabLayoutManager();
+                TabLayoutManager tm = ((MainActivity)viewHolder.getContext()).getTabLayoutManager();
                 TabLayout.Tab tab = tm.addTab(title, R.drawable.ic_person, fragment);
                 tm.select(tab, 300);
             }
@@ -110,6 +107,10 @@ public class StatusRecyclerViewAdapter
             super(view);
             root = view;
             ButterKnife.bind(this, view);
+        }
+
+        public Context getContext() {
+            return root.getContext();
         }
 
         public void setContentText(String text) {

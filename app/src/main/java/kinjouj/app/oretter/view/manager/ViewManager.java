@@ -1,5 +1,6 @@
 package kinjouj.app.oretter.view.manager;
 
+import android.content.Context;
 import android.view.View;
 
 public abstract class ViewManager<T extends View> {
@@ -13,6 +14,10 @@ public abstract class ViewManager<T extends View> {
     @SuppressWarnings("unchecked")
     public T getView() {
         return (T)view;
+    }
+
+    public Context getContext() {
+        return getView().getContext();
     }
 
     public void unbind() {

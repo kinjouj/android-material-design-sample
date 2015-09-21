@@ -22,7 +22,7 @@ public class DrawerLayoutManager extends ViewManager<DrawerLayout> {
     private void init() {
         DrawerLayout view = getView();
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
-            (Activity)view.getContext(),
+            (Activity)getContext(),
             view,
             toolbar,
             R.drawable.ic_drawer,

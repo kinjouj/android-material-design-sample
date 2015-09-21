@@ -17,7 +17,7 @@ public class UserFragment extends RecyclerViewFragment<Status> {
 
     @Override
     public RecyclerView.Adapter getAdapter() {
-        return new StatusRecyclerViewAdapter(getActivity());
+        return new StatusRecyclerViewAdapter();
     }
 
     @Override

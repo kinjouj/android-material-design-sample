@@ -32,15 +32,11 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     private static final String TAG = UserRecyclerViewAdapter.class.getName();
 
     private SortedList<User> users = new SortedList<>(User.class, new UserSortedListCallback());
-    private Context context;
-
-    public UserRecyclerViewAdapter(Context context) {
-        this.context = context;
-    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list_item_user, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext())
+                                .inflate(R.layout.list_item_user, viewGroup, false);
 
         return new ViewHolder(view);
     }
@@ -50,7 +46,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         final User user = users.get(i);
         viewHolder.userIcon.setUser(user);
         viewHolder.setContentText(user.getDescription());
-        Picasso.with(context)
+        Picasso.with(viewHolder.getContext())
                 .load(user.getProfileBackgroundImageURL())
                 .fit()
                 .into(viewHolder.userBg);
@@ -96,6 +92,10 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
             super(view);
             root = view;
             ButterKnife.bind(this, view);
+        }
+
+        public Context getContext() {
+            return root.getContext();
         }
 
         public void setContentText(CharSequence text) {

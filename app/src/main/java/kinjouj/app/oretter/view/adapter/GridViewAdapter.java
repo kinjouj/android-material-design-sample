@@ -10,7 +10,11 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
+import de.greenrobot.event.EventBus;
 import twitter4j.MediaEntity;
+
+import kinjouj.app.oretter.MainActivity;
+import kinjouj.app.oretter.EventHandler;
 
 public class GridViewAdapter extends BaseAdapter {
 
@@ -41,6 +45,7 @@ public class GridViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        MediaEntity entity = (MediaEntity)getItem(position);
         ImageView imageView = null;
 
         if (convertView == null) {
@@ -50,14 +55,20 @@ public class GridViewAdapter extends BaseAdapter {
             imageView = (ImageView)convertView;
         }
 
-        final MediaEntity entity = (MediaEntity)getItem(position);
         final String url = entity.getMediaURL();
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                EventHandler.post(
+                    new EventHandler.AppEvent() {
+                        @Override
+                        public void run(Context context) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                        }
+                    }
+                );
             }
         });
         Picasso.with(context).load(url).fit().into(imageView);

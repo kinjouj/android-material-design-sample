@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
     private AppInterfaces.FragmentRendererListener fragmentRendererListener;
 
     private void init() {
+        ButterKnife.bind(this);
+        EventHandler.register(this);
         initFragmentRendererListener();
 
         if (appBarLayoutManager == null) {
@@ -105,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
         init();
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -124,11 +125,13 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
+    /*
     @Override
     public void onRestart() {
         super.onRestart();
         ButterKnife.bind(this);
     }
+    */
 
     @Override
     public void onStop() {
@@ -150,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         fragmentRendererListener = null;
-
+        EventHandler.unregister(this);
         ButterKnife.unbind(this);
     }
 
@@ -166,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.tb_menu_compose:
@@ -213,6 +217,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    public void onEvent(EventHandler.AppEvent event) {
+        event.run(this);
     }
 
     public AppBarLayoutManager getAppBarLayoutManager() {

@@ -21,7 +21,7 @@ public class FollowerListFragment extends RecyclerViewFragment<User> {
 
     @Override
     public RecyclerView.Adapter getAdapter() {
-        return new UserRecyclerViewAdapter(getActivity());
+        return new UserRecyclerViewAdapter();
     }
 
     @Override
