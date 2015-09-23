@@ -125,14 +125,6 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
-    /*
-    @Override
-    public void onRestart() {
-        super.onRestart();
-        ButterKnife.bind(this);
-    }
-    */
-
     @Override
     public void onStop() {
         super.onStop();
@@ -158,6 +150,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRestart() {
+        super.onRestart();
+        ButterKnife.bind(this);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
@@ -173,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.tb_menu_compose:
-                ComposeDialogFragment.show(getSupportFragmentManager());
+                ComposeDialogFragment.open(getSupportFragmentManager());
                 break;
 
             default:
@@ -219,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-    public void onEvent(EventHandler.AppEvent event) {
+    public void onEvent(AppInterfaces.AppEvent event) {
         event.run(this);
     }
 

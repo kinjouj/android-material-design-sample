@@ -59,7 +59,7 @@ public class StatusFragment extends Fragment {
         Status status = getStatus();
         statusText.setText(status.getText());
         userImage.setUser(status.getUser());
-        mediaGrid.setAdapter(new GridViewAdapter(getActivity(), status.getExtendedMediaEntities()));
+        mediaGrid.setAdapter(new GridViewAdapter(status.getExtendedMediaEntities()));
         Picasso.with(getActivity())
                 .load(status.getUser().getProfileBackgroundImageURL())
                 .fit()

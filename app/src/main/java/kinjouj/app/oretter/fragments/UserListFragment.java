@@ -19,10 +19,7 @@ public class UserListFragment extends RecyclerViewFragment<Status> {
         List<Status> statuses = null;
 
         try {
-            statuses = getTwitter().getUserListStatuses(
-                getUserList().getId(),
-                new Paging(currentPage)
-            );
+            statuses = getTwitter().getUserListStatuses(getUserList().getId(), new Paging(currentPage));
         } catch (Exception e) {
             e.printStackTrace();
         }

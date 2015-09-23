@@ -24,7 +24,7 @@ public class ComposeDialogFragment extends DialogFragment {
         return dialog;
     }
 
-    public static void show(FragmentManager fm) {
+    public static void open(FragmentManager fm) {
         ComposeDialogFragment fragment = new ComposeDialogFragment();
         fragment.show(fm, ComposeDialogFragment.class.getSimpleName());
     }

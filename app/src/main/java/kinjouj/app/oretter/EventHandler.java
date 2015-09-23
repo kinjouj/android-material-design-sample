@@ -3,6 +3,8 @@ package kinjouj.app.oretter;
 import android.content.Context;
 import de.greenrobot.event.EventBus;
 
+import static kinjouj.app.oretter.AppInterfaces.AppEvent;
+
 public class EventHandler {
 
     public static void register(Object o) {
@@ -18,9 +20,5 @@ public class EventHandler {
 
     public static void post(AppEvent event) {
         EventBus.getDefault().post(event);
-    }
-
-    public static abstract class AppEvent {
-        public abstract void run(Context context);
     }
 }

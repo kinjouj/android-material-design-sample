@@ -39,11 +39,15 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     RecyclerView recyclerView;
 
     RecyclerView.Adapter adapter;
-    EndlessScrollListener listener;
+    EndlessScrollListener listener = new EndlessScrollListener() {
+        @Override
+        public void onLoadMore(int currentPage) {
+            load(currentPage, null);
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
-        Log.v(TAG, "onCreateView");
         View view = inflater.inflate(R.layout.fragment_tweet_list, container, false);
         ButterKnife.bind(this, view);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -52,6 +56,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         RecyclerView.LayoutManager layoutManager = getLayoutManager();
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(listener);
         load(1, null);
 
         return view;
@@ -77,13 +82,6 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         Log.v(TAG, "onResume");
         super.onResume();
         ((MainActivity) getActivity()).getAppBarLayoutManager().addOnOffsetChangedListener(this);
-        listener = new EndlessScrollListener() {
-            @Override
-            public void onLoadMore(int currentPage) {
-                load(currentPage, null);
-            }
-        };
-        recyclerView.addOnScrollListener(listener);
     }
 
     @Override
@@ -91,29 +89,49 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         Log.v(TAG, "onPause");
         super.onPause();
         ((MainActivity) getActivity()).getAppBarLayoutManager().removeOnOffsetChangedListener();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.v(TAG, "onDestroyView");
         recyclerView.removeOnScrollListener(listener);
         listener = null;
+        adapter = null;
+        ButterKnife.unbind(this);
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        RecyclerView.LayoutManager previousLayoutManager = recyclerView.getLayoutManager();
-        int pos = LayoutManagerUtil.findFirstVisibleItemPosition(previousLayoutManager);
+        RecyclerView.LayoutManager prevLayoutManager = recyclerView.getLayoutManager();
         RecyclerView.LayoutManager layoutManager = getLayoutManager();
+        int pos = LayoutManagerUtil.findFirstVisibleItemPosition(prevLayoutManager);
 
         if (pos != 0) {
             layoutManager.scrollToPosition(pos);
         }
 
+        /*
+        if (listener == null) {
+            listener = new EndlessScrollListener() {
+                @Override
+                public void onLoadMore(int currentPage) {
+                    load(currentPage, null);
+                }
+            };
+        }
+        */
+
         recyclerView.setLayoutManager(layoutManager);
+        /*
         recyclerView.removeOnScrollListener(listener);
         recyclerView.addOnScrollListener(listener);
+        */
     }
 
     @Override
     public void onRefresh() {
-        Log.v(TAG, "onRefresh");
         load(1, new Runnable() {
             @Override
             public void run() {
@@ -124,7 +142,6 @@ public abstract class RecyclerViewFragment<T> extends Fragment
 
     @Override
     public void onOffsetChanged(AppBarLayout appBar, int verticalOffset) {
-        Log.v(TAG, "onOffsetChanged: " + verticalOffset);
         swipeRefreshLayout.setEnabled(verticalOffset == 0);
     }
 

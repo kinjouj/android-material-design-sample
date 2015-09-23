@@ -19,11 +19,11 @@ public class HomeFragment extends RecyclerViewFragment<Status> {
     }
 
     @Override
-    public List<Status> fetch(int page) {
+    public List<Status> fetch(int currentPage) {
         List<Status> statuses = null;
 
         try {
-            statuses = getTwitter().getHomeTimeline(new Paging(page));
+            statuses = getTwitter().getHomeTimeline(new Paging(currentPage));
         } catch (Exception e) {
             e.printStackTrace();
             statuses = Collections.<Status>emptyList();

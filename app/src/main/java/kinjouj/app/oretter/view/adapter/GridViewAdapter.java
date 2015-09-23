@@ -3,6 +3,7 @@ package kinjouj.app.oretter.view.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,18 +14,18 @@ import com.squareup.picasso.Picasso;
 import de.greenrobot.event.EventBus;
 import twitter4j.MediaEntity;
 
+import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.EventHandler;
+import kinjouj.app.oretter.fragments.PhotoPreviewDialogFragment;
+import kinjouj.app.oretter.fragments.PhotoPreviewDialogFragmentBuilder;
 
 public class GridViewAdapter extends BaseAdapter {
 
     private static final String TAG = GridViewAdapter.class.getName();
-
-    private Context context;
     private MediaEntity[] entities;
 
-    public GridViewAdapter(Context context, MediaEntity[] entities) {
-        this.context  = context.getApplicationContext();
+    public GridViewAdapter(MediaEntity[] entities) {
         this.entities = entities;
     }
 
@@ -49,7 +50,7 @@ public class GridViewAdapter extends BaseAdapter {
         ImageView imageView = null;
 
         if (convertView == null) {
-            imageView = new ImageView(context);
+            imageView = new ImageView(parent.getContext());
             imageView.setLayoutParams(new GridView.LayoutParams(130, 130));
         } else {
             imageView = (ImageView)convertView;
@@ -59,20 +60,24 @@ public class GridViewAdapter extends BaseAdapter {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventHandler.post(
-                    new EventHandler.AppEvent() {
-                        @Override
-                        public void run(Context context) {
-                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
-                        }
+                EventHandler.post(new AppInterfaces.AppEvent() {
+                    @Override
+                    public void run(Context context) {
+                        showPreviewImage(context, url);
                     }
-                );
+                });
             }
         });
-        Picasso.with(context).load(url).fit().into(imageView);
+        Picasso.with(parent.getContext()).load(url).fit().into(imageView);
 
         return imageView;
+    }
+
+    public void showPreviewImage(Context context, String url) {
+        PhotoPreviewDialogFragment fragment = new PhotoPreviewDialogFragmentBuilder(url).build();
+        fragment.show(
+            ((MainActivity) context).getSupportFragmentManager(),
+            PhotoPreviewDialogFragment.class.getName()
+        );
     }
 }
