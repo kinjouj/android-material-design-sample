@@ -2,6 +2,7 @@ package kinjouj.app.oretter.fragments;
 
 import java.util.List;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,7 +31,6 @@ public abstract class RecyclerViewFragment<T> extends Fragment
                 AppBarLayout.OnOffsetChangedListener {
 
     private static final String TAG = RecyclerViewFragment.class.getName();
-    public static int STAGGERED_GRID_NUM_COLUMNS = 2;
 
     @Bind(R.id.refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -38,16 +38,13 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    RecyclerView.Adapter adapter;
-    EndlessScrollListener listener = new EndlessScrollListener() {
-        @Override
-        public void onLoadMore(int currentPage) {
-            load(currentPage, null);
-        }
-    };
+    RecyclerView.Adapter  adapter;
+    EndlessScrollListener listener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
+        Log.v(TAG, "onCreateView");
+
         View view = inflater.inflate(R.layout.fragment_tweet_list, container, false);
         ButterKnife.bind(this, view);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -63,11 +60,21 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.v(TAG, "onAttach");
+        listener = new EndlessScrollListener() {
+            @Override
+            public void onLoadMore(int currentPage) {
+                load(currentPage, null);
+            }
+        };
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         Log.v(TAG, "onDetach");
-        ButterKnife.unbind(this);
-        adapter = null;
     }
 
     @Override
@@ -112,22 +119,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
             layoutManager.scrollToPosition(pos);
         }
 
-        /*
-        if (listener == null) {
-            listener = new EndlessScrollListener() {
-                @Override
-                public void onLoadMore(int currentPage) {
-                    load(currentPage, null);
-                }
-            };
-        }
-        */
-
         recyclerView.setLayoutManager(layoutManager);
-        /*
-        recyclerView.removeOnScrollListener(listener);
-        recyclerView.addOnScrollListener(listener);
-        */
     }
 
     @Override

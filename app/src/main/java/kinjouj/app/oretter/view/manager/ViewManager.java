@@ -13,7 +13,7 @@ public abstract class ViewManager<T extends View> {
 
     @SuppressWarnings("unchecked")
     public T getView() {
-        return (T)view;
+        return (T) view;
     }
 
     public Context getContext() {

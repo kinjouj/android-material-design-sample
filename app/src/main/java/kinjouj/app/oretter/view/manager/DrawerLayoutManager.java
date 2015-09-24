@@ -7,28 +7,25 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 
+import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 
 public class DrawerLayoutManager extends ViewManager<DrawerLayout> {
 
-    private Toolbar toolbar;
-
     public DrawerLayoutManager(View view, Toolbar toolbar) {
         super(view);
-        this.toolbar = toolbar;
-        init();
+        init(toolbar);
     }
 
-    private void init() {
-        DrawerLayout view = getView();
+    private void init(Toolbar toolbar) {
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
-            (Activity)getContext(),
-            view,
+            (MainActivity)getContext(),
+            getView(),
             toolbar,
             R.drawable.ic_drawer,
             R.drawable.ic_drawer
         );
-        view.setDrawerListener(drawerToggle);
+        getView().setDrawerListener(drawerToggle);
         drawerToggle.setDrawerIndicatorEnabled(true);
         drawerToggle.syncState();
     }

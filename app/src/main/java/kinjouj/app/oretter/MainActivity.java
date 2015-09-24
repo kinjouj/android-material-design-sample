@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
     private AppInterfaces.FragmentRendererListener fragmentRendererListener;
 
     private void init() {
-        ButterKnife.bind(this);
         EventHandler.register(this);
         initFragmentRendererListener();
 
@@ -107,11 +106,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
-        init();
+        ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        init();
         tabLayoutManager.addTab(homeTitle, R.drawable.ic_home, new HomeFragment(), true);
         tabLayoutManager.addTab(mentionTitle, R.drawable.ic_reply, new MentionListFragment());
         tabLayoutManager.addTab(favoriteTitle, R.drawable.ic_star, new FavoriteListFragment());
