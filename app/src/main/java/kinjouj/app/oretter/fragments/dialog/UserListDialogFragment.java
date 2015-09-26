@@ -1,4 +1,4 @@
-package kinjouj.app.oretter.fragments;
+package kinjouj.app.oretter.fragments.dialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,24 +10,28 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
 import android.widget.ArrayAdapter;
+import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import twitter4j.ResponseList;
 import twitter4j.UserList;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.util.BundleUtil;
+import kinjouj.app.oretter.fragments.UserListFragment;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class UserListDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
 
     private static final String EXTRA_USER_LISTS = "extra_userlists";
-    private List<UserList> userLists = new ArrayList<UserList>();
     private int selectedIndex = -1;
+
+    @Arg
+    ResponseList<UserList> userLists;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initUserLists();
+        FragmentArgs.inject(this);
 
         if (userLists.size() <= 0) {
             setShowsDialog(false);
@@ -36,7 +40,7 @@ public class UserListDialogFragment extends DialogFragment implements DialogInte
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(
             getActivity(),
             android.R.layout.simple_list_item_single_choice
         );
@@ -67,36 +71,8 @@ public class UserListDialogFragment extends DialogFragment implements DialogInte
     public void onClick(DialogInterface dialog, int which) {
         UserList userList = userLists.get(selectedIndex);
         UserListFragment fragment = UserListFragment.newInstance(userList);
-        String title = "リスト: " + userList.getName();
-        TabLayoutManager tabManager = ((MainActivity)getActivity()).getTabLayoutManager();
-        TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_list, fragment);
-        tabManager.select(tab, 300);
-    }
-
-    private void initUserLists() {
-        List<UserList> userLists = getUserLists();
-
-        if (userLists != null && userLists.size() > 0) {
-            for (UserList userList : userLists) {
-                if (userList.getMemberCount() <= 0) {
-                    continue;
-                }
-
-                this.userLists.add(userList);
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private ResponseList<UserList> getUserLists() {
-        Bundle args = getArguments();
-        ResponseList<UserList> userLists = BundleUtil.getSerializable(args, EXTRA_USER_LISTS);
-        return userLists;
-    }
-
-    public static UserListDialogFragment newInstance(ResponseList<UserList> userLists) {
-        UserListDialogFragment fragment = new UserListDialogFragment();
-        fragment.setArguments(BundleUtil.createSerializable(EXTRA_USER_LISTS, userLists));
-        return fragment;
+        TabLayoutManager tm = ((MainActivity) getActivity()).getTabLayoutManager();
+        TabLayout.Tab tab = tm.addTab("リスト: " + userList.getName(), R.drawable.ic_list, fragment);
+        tm.select(tab, 300);
     }
 }

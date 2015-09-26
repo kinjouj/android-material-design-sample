@@ -13,6 +13,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
+        android:padding="5dp"
         android:orientation="horizontal">
 
         <kinjouj.app.oretter.view.UserIconImageView
@@ -26,17 +27,38 @@
             app:riv_border_width="3dp"
             app:riv_corner_radius="8dp" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_toRightOf="@id/status_icon_image"
-            android:orientation="vertical">
+            android:layout_margin="10dp">
+
+            <RelativeLayout
+                android:id="@+id/status_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp">
+
+                <TextView
+                    android:id="@+id/status_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10dp" />
+
+                <TextView
+                    android:id="@+id/status_created_at"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textSize="10dp" />
+
+            </RelativeLayout>
 
             <kinjouj.app.oretter.view.TweetTextView
                 android:id="@+id/status_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
+                android:layout_below="@id/status_header"
                 android:textColor="@android:color/black" />
 
             <kinjouj.app.oretter.view.MediaGridView
@@ -44,13 +66,14 @@
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
+                android:layout_below="@id/status_text"
                 android:columnWidth="130dp"
                 android:numColumns="auto_fit"
                 android:horizontalSpacing="3dp"
                 android:verticalSpacing="10dp"
                 android:stretchMode="columnWidth" />
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </RelativeLayout>
 

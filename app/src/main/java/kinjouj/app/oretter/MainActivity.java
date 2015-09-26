@@ -19,18 +19,18 @@ import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 
-import kinjouj.app.oretter.fragments.ComposeDialogFragment;
 import kinjouj.app.oretter.fragments.FavoriteListFragment;
 import kinjouj.app.oretter.fragments.FollowListFragment;
 import kinjouj.app.oretter.fragments.FollowerListFragment;
 import kinjouj.app.oretter.fragments.HomeFragment;
 import kinjouj.app.oretter.fragments.MentionListFragment;
+import kinjouj.app.oretter.fragments.dialog.ComposeDialogFragment;
 import kinjouj.app.oretter.view.manager.AppBarLayoutManager;
 import kinjouj.app.oretter.view.manager.DrawerLayoutManager;
 import kinjouj.app.oretter.view.manager.SearchViewManager;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AppInterfaces.FragmentRendererListener {
 
     private static final String TAG = MainActivity.class.getName();
     public static final String FRAGMENT_TAG = "current_content_fragment";
@@ -67,11 +67,8 @@ public class MainActivity extends AppCompatActivity {
     @BindString(R.string.nav_menu_follower)
     String followerTitle;
 
-    private AppInterfaces.FragmentRendererListener fragmentRendererListener;
-
     private void init() {
-        EventHandler.register(this);
-        initFragmentRendererListener();
+        EventManager.register(this);
 
         if (appBarLayoutManager == null) {
             appBarLayoutManager = new AppBarLayoutManager(appBarLayout);
@@ -82,24 +79,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (tabLayoutManager == null) {
-            tabLayoutManager = new TabLayoutManager(tabLayout, fragmentRendererListener);
+            tabLayoutManager = new TabLayoutManager(tabLayout);
         }
-    }
-
-    private void initFragmentRendererListener() {
-        if (fragmentRendererListener != null) {
-            return;
-        }
-
-        fragmentRendererListener = new AppInterfaces.FragmentRendererListener() {
-            @Override
-            public void render(Fragment fragment) {
-                FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-                tx.replace(R.id.content, fragment, FRAGMENT_TAG);
-                tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                tx.commit();
-            }
-        };
     }
 
     @Override
@@ -144,8 +125,7 @@ public class MainActivity extends AppCompatActivity {
             tabLayoutManager = null;
         }
 
-        fragmentRendererListener = null;
-        EventHandler.unregister(this);
+        EventManager.unregister(this);
         ButterKnife.unbind(this);
     }
 
@@ -160,7 +140,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         searchViewManager = new SearchViewManager(
-            this,
             (SearchView)MenuItemCompat.getActionView(menu.findItem(R.id.tb_menu_search))
         );
 
@@ -184,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.v(TAG, "onConfigrationChanged()");
     }
 
     @Override
@@ -197,8 +175,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.v(TAG, "onBackPressed: SearchView.onActionViewCollapsed");
                 searchViewManager.collapse();
             } else {
-                if (tabLayoutManager.hasBackStackTab()) {
-                    tabLayoutManager.popBackStackTab();
+                if (tabLayoutManager.hasBackStack()) {
+                    tabLayoutManager.popBackStack();
                 } else {
                     tabLayoutManager.clear();
                     finish();
@@ -210,15 +188,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onSearchRequested() {
         if (!drawerLayoutManager.isOpen()) {
-            Log.v(TAG, "onActionViewExpanded");
             searchViewManager.expand();
         }
 
         return false;
     }
 
-    public void onEvent(AppInterfaces.AppEvent event) {
-        event.run(this);
+    @Override
+    public void render(Fragment fragment) {
+        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
+        tx.replace(R.id.content, fragment, FRAGMENT_TAG);
+        tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        tx.commit();
     }
 
     public AppBarLayoutManager getAppBarLayoutManager() {
@@ -235,5 +216,9 @@ public class MainActivity extends AppCompatActivity {
 
     public TabLayoutManager getTabLayoutManager() {
         return tabLayoutManager;
+    }
+
+    public void onEvent(AppInterfaces.AppEvent event) {
+        event.run(this);
     }
 }

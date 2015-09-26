@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.LinkedList;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.View;
 import butterknife.Bind;
 
 import kinjouj.app.oretter.AppInterfaces;
+import kinjouj.app.oretter.EventManager;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragments.RecyclerViewFragment;
@@ -23,11 +25,9 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
     private static final String TAG = TabLayoutManager.class.getName();
     private static LinkedList<TabLayout.Tab> backStackTabs = new LinkedList<TabLayout.Tab>();
     private boolean backStackState = false;
-    private AppInterfaces.FragmentRendererListener listener;
 
-    public TabLayoutManager(View view, AppInterfaces.FragmentRendererListener listener) {
+    public TabLayoutManager(View view) {
         super(view);
-        this.listener = listener;
         getView().setOnTabSelectedListener(this);
     }
 
@@ -83,7 +83,7 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
         return get(getCurrentPosition());
     }
 
-    public void addToBackStackTab(TabLayout.Tab tab) {
+    public void addToBackStack(TabLayout.Tab tab) {
         backStackTabs.add(tab);
     }
 
@@ -91,11 +91,11 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
         return backStackTabs.size();
     }
 
-    public boolean hasBackStackTab() {
+    public boolean hasBackStack() {
         return getBackStackTabEntryCount() > 0;
     }
 
-    public void popBackStackTab() {
+    public void popBackStack() {
         TabLayout.Tab tab = backStackTabs.removeLast();
         backStackState = true;
         select(tab, 300);
@@ -116,10 +116,15 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
-        Fragment fragment = getTagFragment(tab.getTag());
+        final Fragment fragment = getTagFragment(tab.getTag());
 
         if (fragment != null) {
-            listener.render(fragment);
+            EventManager.post(new AppInterfaces.AppEvent() {
+                @Override
+                public void run(Context context) {
+                    ((MainActivity) context).render(fragment);
+                }
+            });
         }
     }
 
@@ -139,7 +144,7 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
         if (!backStackState) {
-            addToBackStackTab(tab);
+            addToBackStack(tab);
         } else {
             backStackState = false;
         }

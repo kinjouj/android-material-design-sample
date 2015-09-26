@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.User;
+import twitter4j.util.TimeSpanConverter;
 
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
@@ -47,12 +48,18 @@ public class StatusRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
-        Status _status = statuses.get(i);
-        final Status status = _status.isRetweet() ? _status.getRetweetedStatus() : _status;
-        viewHolder.setContentText(status.getText());
-        viewHolder.setMediaEntities(status.getExtendedMediaEntities());
-
+        final Status status = getStatus(i);
         final User user = status.getUser();
+
+        viewHolder.content.setText(status.getText());
+        viewHolder.content.linkify();
+        viewHolder.mediaGrid.setAdapter(
+            new GridViewAdapter(status.getExtendedMediaEntities())
+        );
+        viewHolder.createdAt.setText(
+            new TimeSpanConverter().toTimeSpanString(status.getCreatedAt())
+        );
+        viewHolder.userName.setText(user.getName());
         viewHolder.icon.setUser(user);
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +84,7 @@ public class StatusRecyclerViewAdapter
     }
 
     public void addAll(List<Status> statuses) {
-        if (statuses == null || statuses.size() <= 0) {
+        if (statuses.size() <= 0) {
             return;
         }
 
@@ -90,12 +97,23 @@ public class StatusRecyclerViewAdapter
         this.statuses.endBatchedUpdates();
     }
 
+    public Status getStatus(int position) {
+        Status _status = statuses.get(position);
+        return _status.isRetweet() ? _status.getRetweetedStatus() : _status;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         View root;
 
         @Bind(R.id.status_icon_image)
         UserIconImageView icon;
+
+        @Bind(R.id.status_user_name)
+        TextView userName;
+
+        @Bind(R.id.status_created_at)
+        TextView createdAt;
 
         @Bind(R.id.status_text)
         TweetTextView content;
@@ -111,15 +129,6 @@ public class StatusRecyclerViewAdapter
 
         public Context getContext() {
             return root.getContext();
-        }
-
-        public void setContentText(String text) {
-            content.setText(text);
-            content.linkify();
-        }
-
-        public void setMediaEntities(MediaEntity[] entities) {
-            mediaGrid.setAdapter(new GridViewAdapter(entities));
         }
     }
 

@@ -1,11 +1,10 @@
 package kinjouj.app.oretter;
 
-import android.content.Context;
 import de.greenrobot.event.EventBus;
 
 import static kinjouj.app.oretter.AppInterfaces.AppEvent;
 
-public class EventHandler {
+public class EventManager {
 
     public static void register(Object o) {
         EventBus eventBus = EventBus.getDefault();

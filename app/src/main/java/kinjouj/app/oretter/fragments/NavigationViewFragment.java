@@ -21,6 +21,8 @@ import twitter4j.UserList;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
+import kinjouj.app.oretter.fragments.dialog.UserListDialogFragment;
+import kinjouj.app.oretter.fragments.dialog.UserListDialogFragmentBuilder;
 import kinjouj.app.oretter.view.DrawerHeaderView;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
@@ -89,12 +91,7 @@ public class NavigationViewFragment extends Fragment {
             @Override
             public void run() {
                 ResponseList<UserList> userLists = getUserLists();
-
-                if (userLists == null) {
-                    return;
-                }
-
-                UserListDialogFragment fragment = UserListDialogFragment.newInstance(userLists);
+                UserListDialogFragment fragment = new UserListDialogFragmentBuilder(userLists).build();
                 fragment.show(getFragmentManager(), fragment.getClass().getName());
             }
         }.start();
@@ -109,6 +106,14 @@ public class NavigationViewFragment extends Fragment {
             }
 
             userLists = twitter.getUserLists(user.getId());
+
+            for (UserList userList : userLists) {
+                if (userList.getMemberCount() > 0) {
+                    continue;
+                }
+
+                userLists.remove(userList);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

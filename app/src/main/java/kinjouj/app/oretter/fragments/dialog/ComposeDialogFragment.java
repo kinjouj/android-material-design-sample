@@ -1,4 +1,4 @@
-package kinjouj.app.oretter.fragments;
+package kinjouj.app.oretter.fragments.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;

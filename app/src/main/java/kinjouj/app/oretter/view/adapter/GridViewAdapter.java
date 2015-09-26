@@ -11,14 +11,13 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
-import de.greenrobot.event.EventBus;
 import twitter4j.MediaEntity;
 
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
-import kinjouj.app.oretter.EventHandler;
-import kinjouj.app.oretter.fragments.PhotoPreviewDialogFragment;
-import kinjouj.app.oretter.fragments.PhotoPreviewDialogFragmentBuilder;
+import kinjouj.app.oretter.EventManager;
+import kinjouj.app.oretter.fragments.dialog.PhotoPreviewDialogFragment;
+import kinjouj.app.oretter.fragments.dialog.PhotoPreviewDialogFragmentBuilder;
 
 public class GridViewAdapter extends BaseAdapter {
 
@@ -60,7 +59,7 @@ public class GridViewAdapter extends BaseAdapter {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventHandler.post(new AppInterfaces.AppEvent() {
+                EventManager.post(new AppInterfaces.AppEvent() {
                     @Override
                     public void run(Context context) {
                         showPreviewImage(context, url);
