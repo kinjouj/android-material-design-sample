@@ -27,16 +27,17 @@ import kinjouj.app.oretter.fragments.StatusFragment;
 import kinjouj.app.oretter.view.TweetTextView;
 import kinjouj.app.oretter.view.UserIconImageView;
 
-public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerViewAdapter.ViewHolder> implements AppInterfaces.SortedListAdapter<User> {
+public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>
+    implements AppInterfaces.SortedListAdapter<User> {
 
-    private static final String TAG = UserRecyclerViewAdapter.class.getName();
+    private static final String TAG = UserAdapter.class.getName();
 
-    private SortedList<User> users = new SortedList<>(User.class, new UserSortedListCallback());
+    private SortedList<User> users = new SortedList<>(User.class, new SortedListCallback());
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                                .inflate(R.layout.list_item_user, viewGroup, false);
+                                    .inflate(R.layout.list_item_user, viewGroup, false);
 
         return new ViewHolder(view);
     }
@@ -44,12 +45,20 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         final User user = users.get(i);
-        viewHolder.userIcon.setUser(user);
-        viewHolder.setContentText(user.getDescription());
+
         Picasso.with(viewHolder.getContext())
                 .load(user.getProfileBackgroundImageURL())
                 .fit()
                 .into(viewHolder.userBg);
+
+        Picasso.with(viewHolder.getContext())
+                .load(user.getProfileImageURL())
+                .fit()
+                .into(viewHolder.userIcon);
+
+        viewHolder.userIcon.setTag(user);
+        viewHolder.content.setText(user.getDescription());
+        viewHolder.content.linkify();
     }
 
     @Override
@@ -62,7 +71,7 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
     }
 
     public void addAll(List<User> users) {
-        if (users == null || users.size() < 1) {
+        if (users.size() <= 0) {
             return;
         }
 
@@ -97,16 +106,11 @@ public class UserRecyclerViewAdapter extends RecyclerView.Adapter<UserRecyclerVi
         public Context getContext() {
             return root.getContext();
         }
-
-        public void setContentText(CharSequence text) {
-            content.setText(text);
-            content.linkify();
-        }
     }
 
-    private class UserSortedListCallback extends SortedList.Callback<User> {
+    private class SortedListCallback extends SortedList.Callback<User> {
 
-        private final String TAG = UserSortedListCallback.class.getName();
+        private final String TAG = SortedListCallback.class.getName();
 
         @Override
         public boolean areItemsTheSame(User item1, User item2) {

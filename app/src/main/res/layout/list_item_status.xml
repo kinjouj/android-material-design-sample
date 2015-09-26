@@ -1,22 +1,27 @@
 <?xml version="1.0" ?>
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_margin="2px"
-    app:cardElevation="0dp"
-    app:cardCornerRadius="0dp">
-    <!--app:cardPreventCornerOverlap="false">-->
+    android:layout_marginTop="-3dp"
+    android:layout_marginRight="-2dp"
+    android:layout_marginBottom="-3dp"
+    android:layout_marginLeft="-2dp"
+    card_view:cardElevation="0dp"
+    card_view:cardCornerRadius="0dp"
+    card_view:cardPreventCornerOverlap="false"
+    card_view:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:padding="5dp"
+        android:layout_margin="0dp"
         android:orientation="horizontal">
 
         <kinjouj.app.oretter.view.UserIconImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/status_icon_image"
             android:layout_width="48dp"
             android:layout_height="48dp"

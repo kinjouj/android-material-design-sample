@@ -15,6 +15,7 @@ import android.util.Patterns;
 import android.view.MotionEvent;
 import android.webkit.URLUtil;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.twitter.Regex;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -22,7 +23,7 @@ import twitter4j.User;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.UserFragment;
+import kinjouj.app.oretter.fragments.UserFragmentBuilder;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class TweetTextView extends TextView {
@@ -60,14 +61,18 @@ public class TweetTextView extends TextView {
                 return;
             }
 
-            String title = String.format("%s @%s", user.getName(), user.getScreenName());
-            UserFragment fragment = UserFragment.newInstance(user);
             TabLayoutManager tabManager = activity.getTabLayoutManager();
-            TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_person, fragment);
+            TabLayout.Tab tab = tabManager.addTab(
+                String.format("%s @%s", user.getName(), user.getScreenName()),
+                R.drawable.ic_person,
+                new UserFragmentBuilder(user).build()
+            );
             tabManager.select(tab, 300);
         } else if (URLUtil.isNetworkUrl(text)) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(text));
             activity.startActivity(intent);
+        } else {
+            Toast.makeText(activity, UNKNOWN_PATTERN_STRING, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -76,11 +81,11 @@ public class TweetTextView extends TextView {
         @Override
         public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_UP) {
-                int x = (int)event.getX();
+                int x = (int) event.getX();
                 x -= widget.getTotalPaddingLeft();
                 x += widget.getScrollX();
 
-                int y = (int)event.getY();
+                int y = (int) event.getY();
                 y -= widget.getTotalPaddingTop();
                 y += widget.getScrollY();
 

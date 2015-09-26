@@ -9,13 +9,13 @@ import twitter4j.Paging;
 import twitter4j.Status;
 
 import kinjouj.app.oretter.AppInterfaces;
-import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
+import kinjouj.app.oretter.view.adapter.StatusAdapter;
 
 public class HomeFragment extends RecyclerViewFragment<Status> {
 
     @Override
     public RecyclerView.Adapter getAdapter() {
-        return new StatusRecyclerViewAdapter();
+        return new StatusAdapter();
     }
 
     @Override

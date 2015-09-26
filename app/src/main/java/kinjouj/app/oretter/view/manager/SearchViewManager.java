@@ -10,7 +10,7 @@ import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.EventManager;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.SearchFragment;
+import kinjouj.app.oretter.fragments.SearchFragmentBuilder;
 
 public class SearchViewManager extends ViewManager<SearchView> implements SearchView.OnQueryTextListener {
 
@@ -35,9 +35,12 @@ public class SearchViewManager extends ViewManager<SearchView> implements Search
         EventManager.post(new AppInterfaces.AppEvent() {
             @Override
             public void run(Context context) {
-                SearchFragment fragment = SearchFragment.newInstance(query);
                 TabLayoutManager tabManager = ((MainActivity) context).getTabLayoutManager();
-                TabLayout.Tab tab = tabManager.addTab("検索: " + query, R.drawable.ic_search, fragment);
+                TabLayout.Tab tab = tabManager.addTab(
+                    "検索: " + query,
+                    R.drawable.ic_search,
+                    new SearchFragmentBuilder(query).build()
+                );
                 tabManager.select(tab, 300);
             }
         });

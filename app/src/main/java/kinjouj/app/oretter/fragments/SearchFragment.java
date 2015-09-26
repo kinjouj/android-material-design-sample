@@ -5,20 +5,30 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
 
-import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
+import kinjouj.app.oretter.view.adapter.StatusAdapter;
 
 public class SearchFragment extends RecyclerViewFragment<Status> {
 
-    private static final String EXTRA_QUERY = "extra_query";
     private QueryResult queryResult;
+
+    @Arg
+    String query;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        FragmentArgs.inject(this);
+    }
 
     @Override
     public RecyclerView.Adapter getAdapter() {
-        return new StatusRecyclerViewAdapter();
+        return new StatusAdapter();
     }
 
     @Override
@@ -26,7 +36,7 @@ public class SearchFragment extends RecyclerViewFragment<Status> {
         List<Status> statuses = null;
 
         try {
-            Query query = new Query(getQuery());
+            Query query = new Query(this.query);
 
             if (queryResult != null) {
                 if (queryResult.hasNext()) {
@@ -35,26 +45,11 @@ public class SearchFragment extends RecyclerViewFragment<Status> {
             }
             queryResult = getTwitter().search(query);
             statuses = queryResult.getTweets();
-
         } catch (Exception e) {
             e.printStackTrace();
             statuses = Collections.<Status>emptyList();
         }
 
         return statuses;
-    }
-
-    private String getQuery() {
-        return getArguments().getString(EXTRA_QUERY);
-    }
-
-    public static SearchFragment newInstance(String query) {
-        Bundle extras = new Bundle();
-        extras.putString(EXTRA_QUERY, query);
-
-        SearchFragment fragment = new SearchFragment();
-        fragment.setArguments(extras);
-
-        return fragment;
     }
 }

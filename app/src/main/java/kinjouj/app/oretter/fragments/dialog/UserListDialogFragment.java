@@ -18,12 +18,12 @@ import twitter4j.UserList;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragments.UserListFragment;
+import kinjouj.app.oretter.fragments.UserListFragmentBuilder;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class UserListDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
 
-    private static final String EXTRA_USER_LISTS = "extra_userlists";
-    private int selectedIndex = -1;
+    int selectedIndex = -1;
 
     @Arg
     ResponseList<UserList> userLists;
@@ -69,10 +69,17 @@ public class UserListDialogFragment extends DialogFragment implements DialogInte
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
+        if (selectedIndex < 0) {
+            return;
+        }
+
         UserList userList = userLists.get(selectedIndex);
-        UserListFragment fragment = UserListFragment.newInstance(userList);
         TabLayoutManager tm = ((MainActivity) getActivity()).getTabLayoutManager();
-        TabLayout.Tab tab = tm.addTab("リスト: " + userList.getName(), R.drawable.ic_list, fragment);
+        TabLayout.Tab tab = tm.addTab(
+            "リスト: " + userList.getName(),
+            R.drawable.ic_list,
+            new UserListFragmentBuilder(userList).build()
+        );
         tm.select(tab, 300);
     }
 }

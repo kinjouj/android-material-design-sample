@@ -33,7 +33,6 @@ import kinjouj.app.oretter.view.manager.TabLayoutManager;
 public class MainActivity extends AppCompatActivity implements AppInterfaces.FragmentRendererListener {
 
     private static final String TAG = MainActivity.class.getName();
-    public static final String FRAGMENT_TAG = "current_content_fragment";
 
     private AppBarLayoutManager appBarLayoutManager;
     private DrawerLayoutManager drawerLayoutManager;
@@ -139,9 +138,9 @@ public class MainActivity extends AppCompatActivity implements AppInterfaces.Fra
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
-        searchViewManager = new SearchViewManager(
-            (SearchView)MenuItemCompat.getActionView(menu.findItem(R.id.tb_menu_search))
-        );
+        MenuItem searchMenuItem = menu.findItem(R.id.tb_menu_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
+        searchViewManager = new SearchViewManager(searchView);
 
         return true;
     }
@@ -197,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements AppInterfaces.Fra
     @Override
     public void render(Fragment fragment) {
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.content, fragment, FRAGMENT_TAG);
+        tx.replace(R.id.content, fragment, "current_content_fragment");
         tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         tx.commit();
     }

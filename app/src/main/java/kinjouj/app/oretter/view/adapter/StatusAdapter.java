@@ -3,7 +3,10 @@ package kinjouj.app.oretter.view.adapter;
 import java.util.List;
 
 import android.content.Context;
-import android.text.util.Linkify;
+import android.graphics.Color;
+import android.support.design.widget.TabLayout;
+import android.support.v7.util.SortedList;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,9 +14,6 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.support.design.widget.TabLayout;
-import android.support.v7.util.SortedList;
-import android.support.v7.widget.RecyclerView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
@@ -26,22 +26,22 @@ import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragments.StatusFragment;
+import kinjouj.app.oretter.fragments.StatusFragmentBuilder;
 import kinjouj.app.oretter.view.TweetTextView;
 import kinjouj.app.oretter.view.UserIconImageView;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
-public class StatusRecyclerViewAdapter
-    extends RecyclerView.Adapter<StatusRecyclerViewAdapter.ViewHolder>
+public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder>
     implements AppInterfaces.SortedListAdapter<Status> {
 
-    private static final String TAG = StatusRecyclerViewAdapter.class.getName();
+    private static final String TAG = StatusAdapter.class.getName();
 
-    private SortedList<Status> statuses = new SortedList<>(Status.class, new StatusSortedListCallback());
+    private SortedList<Status> statuses = new SortedList<>(Status.class, new SortedListCallback());
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                                .inflate(R.layout.list_item_status, viewGroup, false);
+                                    .inflate(R.layout.list_item_status, viewGroup, false);
 
         return new ViewHolder(view);
     }
@@ -51,23 +51,26 @@ public class StatusRecyclerViewAdapter
         final Status status = getStatus(i);
         final User user = status.getUser();
 
+        if (status.isFavorited()) {
+        }
+
+        Picasso.with(viewHolder.getContext())
+                .load(user.getProfileImageURL())
+                .fit()
+                .into(viewHolder.icon);
+
+        viewHolder.icon.setTag(user);
+        viewHolder.userName.setText(user.getName() + "\r\n@" + user.getScreenName());
+        viewHolder.createdAt.setText(new TimeSpanConverter().toTimeSpanString(status.getCreatedAt()));
         viewHolder.content.setText(status.getText());
         viewHolder.content.linkify();
-        viewHolder.mediaGrid.setAdapter(
-            new GridViewAdapter(status.getExtendedMediaEntities())
-        );
-        viewHolder.createdAt.setText(
-            new TimeSpanConverter().toTimeSpanString(status.getCreatedAt())
-        );
-        viewHolder.userName.setText(user.getName());
-        viewHolder.icon.setUser(user);
+        viewHolder.mediaGrid.setAdapter(new GridViewAdapter(status.getExtendedMediaEntities()));
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String title = String.format("%s @%s", user.getName(), user.getScreenName());
-                StatusFragment fragment = StatusFragment.newInstance(status);
-
-                TabLayoutManager tm = ((MainActivity)viewHolder.getContext()).getTabLayoutManager();
+                StatusFragment fragment = new StatusFragmentBuilder(status).build();
+                TabLayoutManager tm = ((MainActivity) viewHolder.getContext()).getTabLayoutManager();
                 TabLayout.Tab tab = tm.addTab(title, R.drawable.ic_person, fragment);
                 tm.select(tab, 300);
             }
@@ -98,8 +101,8 @@ public class StatusRecyclerViewAdapter
     }
 
     public Status getStatus(int position) {
-        Status _status = statuses.get(position);
-        return _status.isRetweet() ? _status.getRetweetedStatus() : _status;
+        Status status = statuses.get(position);
+        return status.isRetweet() ? status.getRetweetedStatus() : status;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -132,9 +135,9 @@ public class StatusRecyclerViewAdapter
         }
     }
 
-    private class StatusSortedListCallback extends SortedList.Callback<Status> {
+    private class SortedListCallback extends SortedList.Callback<Status> {
 
-        private final String TAG = StatusSortedListCallback.class.getName();
+        private final String TAG = SortedListCallback.class.getName();
 
         @Override
         public boolean areItemsTheSame(Status item1, Status item2) {

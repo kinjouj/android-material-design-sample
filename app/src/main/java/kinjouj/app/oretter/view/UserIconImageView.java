@@ -14,34 +14,32 @@ import twitter4j.User;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.UserFragment;
+import kinjouj.app.oretter.fragments.UserFragmentBuilder;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class UserIconImageView extends RoundedImageView implements View.OnClickListener {
 
     private static final String TAG = UserIconImageView.class.getName();
 
-    private User user;
-
     public UserIconImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public void setUser(User user) {
-        this.user = user;
         setOnClickListener(this);
-        Picasso.with(getContext()).load(user.getProfileImageURL()).fit().into(this);
     }
 
+    @Override
     public void onClick(View view) {
+        User user = (User) getTag();
+
         if (user == null) {
             return;
         }
 
-        String title = String.format("%s @%s", user.getName(), user.getScreenName());
-        UserFragment fragment = UserFragment.newInstance(user);
         TabLayoutManager tabManager = ((MainActivity) getContext()).getTabLayoutManager();
-        TabLayout.Tab tab = tabManager.addTab(title, R.drawable.ic_person, fragment);
+        TabLayout.Tab tab = tabManager.addTab(
+            String.format("%s @%s", user.getName(), user.getScreenName()),
+            R.drawable.ic_person,
+            new UserFragmentBuilder(user).build()
+        );
         tabManager.select(tab, 300);
     }
 }

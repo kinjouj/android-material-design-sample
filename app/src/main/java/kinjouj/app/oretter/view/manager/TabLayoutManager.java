@@ -23,7 +23,7 @@ import kinjouj.app.oretter.fragments.RecyclerViewFragment;
 public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayout.OnTabSelectedListener {
 
     private static final String TAG = TabLayoutManager.class.getName();
-    private static LinkedList<TabLayout.Tab> backStackTabs = new LinkedList<TabLayout.Tab>();
+    private static LinkedList<TabLayout.Tab> backStackTabs = new LinkedList<>();
     private boolean backStackState = false;
 
     public TabLayoutManager(View view) {
@@ -117,7 +117,6 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         final Fragment fragment = getTagFragment(tab.getTag());
-
         if (fragment != null) {
             EventManager.post(new AppInterfaces.AppEvent() {
                 @Override
@@ -133,11 +132,7 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
         Fragment fragment = getTagFragment(tab.getTag());
 
         if (fragment != null && fragment instanceof RecyclerViewFragment) {
-            RecyclerView recyclerView = ((RecyclerViewFragment) fragment).getRecyclerView();
-
-            if (recyclerView.computeVerticalScrollOffset() > 0) {
-                recyclerView.scrollToPosition(0);
-            }
+            ((RecyclerViewFragment) fragment).scrollToTop();
         }
     }
 
@@ -150,14 +145,8 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
         }
     }
 
-    Fragment getTagFragment(Object o) {
-        Fragment fragment = null;
-
-        if (o instanceof Fragment) {
-            fragment = (Fragment)o;
-        }
-
-        return fragment;
+    Fragment getTagFragment(Object obj) {
+        return obj instanceof Fragment ? (Fragment) obj : null;
     }
 
     View createTabView() {

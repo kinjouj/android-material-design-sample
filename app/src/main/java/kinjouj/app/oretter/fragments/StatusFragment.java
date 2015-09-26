@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.support.v4.app.Fragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.squareup.picasso.Picasso;
 import twitter4j.Status;
 
@@ -21,7 +23,6 @@ import kinjouj.app.oretter.view.adapter.GridViewAdapter;
 public class StatusFragment extends Fragment {
 
     private static final String TAG = StatusFragment.class.getName();
-    public static final String EXTRA_STATUS = "extra_status";
 
     @Bind(R.id.detail_user_bg_image)
     ImageView userBgImage;
@@ -35,6 +36,15 @@ public class StatusFragment extends Fragment {
     @Bind(R.id.status_per_media_grid)
     GridView mediaGrid;
 
+    @Arg
+    Status status;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        FragmentArgs.inject(this);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.detail, container, false);
@@ -44,39 +54,24 @@ public class StatusFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setRetainInstance(true);
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
         bindView();
     }
 
     private void bindView() {
-        Status status = getStatus();
         statusText.setText(status.getText());
-        userImage.setUser(status.getUser());
+        userImage.setTag(status.getUser());
         mediaGrid.setAdapter(new GridViewAdapter(status.getExtendedMediaEntities()));
+
+        Picasso.with(getActivity())
+                .load(status.getUser().getProfileImageURL())
+                .fit()
+                .into(userImage);
+
         Picasso.with(getActivity())
                 .load(status.getUser().getProfileBackgroundImageURL())
                 .fit()
                 .into(userBgImage);
-    }
-
-    private Status getStatus() {
-        return (Status)getArguments().getSerializable(StatusFragment.EXTRA_STATUS);
-    }
-
-    public static StatusFragment newInstance(Status status) {
-        Bundle extras = new Bundle();
-        extras.putSerializable(EXTRA_STATUS, status);
-
-        StatusFragment fragment = new StatusFragment();
-        fragment.setArguments(extras);
-
-        return fragment;
     }
 }

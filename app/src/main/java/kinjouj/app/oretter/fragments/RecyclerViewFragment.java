@@ -137,8 +137,10 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         swipeRefreshLayout.setEnabled(verticalOffset == 0);
     }
 
-    public RecyclerView getRecyclerView() {
-        return recyclerView;
+    public void scrollToTop() {
+        if (recyclerView.computeVerticalScrollOffset() > 0) {
+            recyclerView.scrollToPosition(0);
+        }
     }
 
     public RecyclerView.LayoutManager getLayoutManager() {

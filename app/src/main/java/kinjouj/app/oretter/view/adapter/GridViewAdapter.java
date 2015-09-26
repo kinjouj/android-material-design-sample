@@ -1,8 +1,6 @@
 package kinjouj.app.oretter.view.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
@@ -45,17 +43,18 @@ public class GridViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        MediaEntity entity = (MediaEntity)getItem(position);
+        MediaEntity entity = (MediaEntity) getItem(position);
         ImageView imageView = null;
 
         if (convertView == null) {
             imageView = new ImageView(parent.getContext());
             imageView.setLayoutParams(new GridView.LayoutParams(130, 130));
         } else {
-            imageView = (ImageView)convertView;
+            imageView = (ImageView) convertView;
         }
 
         final String url = entity.getMediaURL();
+        Picasso.with(parent.getContext()).load(url).fit().into(imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +66,6 @@ public class GridViewAdapter extends BaseAdapter {
                 });
             }
         });
-        Picasso.with(parent.getContext()).load(url).fit().into(imageView);
 
         return imageView;
     }

@@ -5,19 +5,28 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import com.hannesdorfmann.fragmentargs.FragmentArgs;
+import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import twitter4j.Paging;
 import twitter4j.Status;
 import twitter4j.User;
 
-import kinjouj.app.oretter.view.adapter.StatusRecyclerViewAdapter;
+import kinjouj.app.oretter.view.adapter.StatusAdapter;
 
 public class UserFragment extends RecyclerViewFragment<Status> {
 
-    public static final String EXTRA_USER = "extra_user";
+    @Arg
+    User user;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        FragmentArgs.inject(this);
+    }
 
     @Override
     public RecyclerView.Adapter getAdapter() {
-        return new StatusRecyclerViewAdapter();
+        return new StatusAdapter();
     }
 
     @Override
@@ -25,7 +34,6 @@ public class UserFragment extends RecyclerViewFragment<Status> {
         List<Status> statuses = null;
 
         try {
-            User user = getUser();
             statuses = getTwitter().getUserTimeline(user.getId(), new Paging(currentPage));
         } catch (Exception e) {
             e.printStackTrace();
@@ -33,19 +41,5 @@ public class UserFragment extends RecyclerViewFragment<Status> {
         }
 
         return statuses;
-    }
-
-    private User getUser() {
-        return (User)getArguments().getSerializable(EXTRA_USER);
-    }
-
-    public static UserFragment newInstance(User user) {
-        Bundle extras = new Bundle();
-        extras.putSerializable(EXTRA_USER, user);
-
-        UserFragment fragment = new UserFragment();
-        fragment.setArguments(extras);
-
-        return fragment;
     }
 }
