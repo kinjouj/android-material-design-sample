@@ -46,6 +46,7 @@ public class NavigationViewFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        navigationView.setNavigationItemSelectedListener(null);
         ButterKnife.unbind(this);
         user = null;
     }

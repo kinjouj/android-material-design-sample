@@ -45,17 +45,20 @@
                 android:layout_marginBottom="5dp">
 
                 <TextView
-                    android:id="@+id/status_user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="10dp" />
-
-                <TextView
                     android:id="@+id/status_created_at"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:textSize="10dp" />
+                    android:layout_marginLeft="3dp"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/status_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/status_created_at"
+                    android:textSize="12sp" />
 
             </RelativeLayout>
 

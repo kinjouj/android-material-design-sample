@@ -21,7 +21,15 @@
 -dontwarn butterknife.internal.**
 -keep class **$$ViewBinder { *; }
 
--keep class twitter4j.**
+-keepclasseswithmembernames class * {
+    @butterknife.* <fields>;
+}
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <methods>;
+}
+
+-keep class twitter4j.** { *; }
 -dontwarn twitter4j.*
 -dontwarn twitter4j.management.**
 -dontwarn twitter4j.TwitterAPIMonitor
@@ -30,3 +38,9 @@
 
 -keep class org.yaml.snakeyaml.** { public protected private *; }
 -dontwarn org.yaml.snakeyaml.**
+
+-keep class android.support.design.widget.** { *; }
+-keep class android.support.** { *; }
+-keepclassmembers class ** {
+    public void onEvent**(**);
+}

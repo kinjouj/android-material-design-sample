@@ -1,3 +1,4 @@
 .gradle
 build
 twitter4j.properties
+gradle.properties
