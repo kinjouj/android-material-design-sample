@@ -3,14 +3,9 @@ package kinjouj.app.oretter;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.AppBarLayout;
@@ -30,7 +25,7 @@ import kinjouj.app.oretter.view.manager.DrawerLayoutManager;
 import kinjouj.app.oretter.view.manager.SearchViewManager;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
-public class MainActivity extends AppCompatActivity implements AppInterfaces.FragmentRendererListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
 
@@ -66,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements AppInterfaces.Fra
     @BindString(R.string.nav_menu_follower)
     String followerTitle;
 
-    private void init() {
+    private void initViewManager() {
         EventManager.register(this);
 
         if (appBarLayoutManager == null) {
@@ -75,6 +70,12 @@ public class MainActivity extends AppCompatActivity implements AppInterfaces.Fra
 
         if (drawerLayoutManager == null) {
             drawerLayoutManager = new DrawerLayoutManager(drawerLayout, toolbar);
+        }
+
+        if (searchViewManager == null) {
+            searchViewManager = new SearchViewManager(
+                MenuItemCompat.getActionView(toolbar.getMenu().findItem(R.id.tb_menu_search))
+            );
         }
 
         if (tabLayoutManager == null) {
@@ -87,11 +88,8 @@ public class MainActivity extends AppCompatActivity implements AppInterfaces.Fra
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        init();
+        toolbar.inflateMenu(R.menu.menu_toolbar);
+        initViewManager();
         tabLayoutManager.addTab(homeTitle, R.drawable.ic_home, new HomeFragment(), true);
         tabLayoutManager.addTab(mentionTitle, R.drawable.ic_reply, new MentionListFragment());
         tabLayoutManager.addTab(favoriteTitle, R.drawable.ic_star, new FavoriteListFragment());
@@ -100,13 +98,8 @@ public class MainActivity extends AppCompatActivity implements AppInterfaces.Fra
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        init();
-    }
-
-    @Override
     public void onStop() {
+        Log.v(TAG, "onStop");
         super.onStop();
 
         if (appBarLayoutManager != null) {
@@ -117,6 +110,11 @@ public class MainActivity extends AppCompatActivity implements AppInterfaces.Fra
         if (drawerLayoutManager != null) {
             drawerLayoutManager.unbind();
             drawerLayoutManager = null;
+        }
+
+        if (searchViewManager != null) {
+            searchViewManager.unbind();
+            searchViewManager = null;
         }
 
         if (tabLayoutManager != null) {
@@ -132,19 +130,10 @@ public class MainActivity extends AppCompatActivity implements AppInterfaces.Fra
     public void onRestart() {
         super.onRestart();
         ButterKnife.bind(this);
+        initViewManager();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
-        MenuItem searchMenuItem = menu.findItem(R.id.tb_menu_search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenuItem);
-        searchViewManager = new SearchViewManager(searchView);
-
-        return true;
-    }
-
+    /*
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
@@ -158,6 +147,7 @@ public class MainActivity extends AppCompatActivity implements AppInterfaces.Fra
 
         return false;
     }
+    */
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -191,14 +181,6 @@ public class MainActivity extends AppCompatActivity implements AppInterfaces.Fra
         }
 
         return false;
-    }
-
-    @Override
-    public void render(Fragment fragment) {
-        FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.content, fragment, "current_content_fragment");
-        tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-        tx.commit();
     }
 
     public AppBarLayoutManager getAppBarLayoutManager() {

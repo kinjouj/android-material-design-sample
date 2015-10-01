@@ -20,6 +20,12 @@ public class SearchViewManager extends ViewManager<SearchView> implements Search
     }
 
     @Override
+    public void unbind() {
+        getView().setOnQueryTextListener(null);
+        view = null;
+    }
+
+    @Override
     public boolean onQueryTextChange(String newText) {
         return false;
     }

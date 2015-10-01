@@ -1,15 +1,12 @@
 package kinjouj.app.oretter.view;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Handler;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
-import twitter4j.TwitterFactory;
 import twitter4j.User;
 
 import kinjouj.app.oretter.R;

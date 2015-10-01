@@ -1,7 +1,12 @@
 <?xml version="1.0" ?>
 <lint>
+
     <issue id="ResourceType">
-        <!-- Remove this when this is fixed: https://github.com/JakeWharton/butterknife/issues/338 -->
         <ignore path="**/*$$ViewBinder.java" />
     </issue>
+
+    <issue id="UnusedResources">
+        <ignore path="**/arrays.xml" />
+    </issue>
+
 </lint>

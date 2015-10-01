@@ -16,31 +16,23 @@
 #   public *;
 #}
 
+-repackageclasses
+
 # for Butter Knife (see http://jakewharton.github.io/butterknife/#proguard)
 -keep class butterknife.** { *; }
--dontwarn butterknife.internal.**
 -keep class **$$ViewBinder { *; }
+-dontwarn butterknife.internal.**
+-keepclasseswithmembernames class * { @butterknife.* <fields>; }
+-keepclasseswithmembernames class * { @butterknife.* <methods>; }
 
--keepclasseswithmembernames class * {
-    @butterknife.* <fields>;
-}
-
--keepclasseswithmembernames class * {
-    @butterknife.* <methods>;
-}
+-dontwarn com.squareup.okhttp.**
 
 -keep class twitter4j.** { *; }
 -dontwarn twitter4j.*
 -dontwarn twitter4j.management.**
--dontwarn twitter4j.TwitterAPIMonitor
-
--dontwarn com.squareup.okhttp.**
 
 -keep class org.yaml.snakeyaml.** { public protected private *; }
 -dontwarn org.yaml.snakeyaml.**
 
--keep class android.support.design.widget.** { *; }
 -keep class android.support.** { *; }
--keepclassmembers class ** {
-    public void onEvent**(**);
-}
+-keepclassmembers class ** { public void onEvent*(**); }

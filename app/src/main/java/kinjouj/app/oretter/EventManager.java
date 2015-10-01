@@ -8,9 +8,7 @@ public class EventManager {
 
     public static void register(Object o) {
         EventBus eventBus = EventBus.getDefault();
-        if (!eventBus.isRegistered(o)) {
-            eventBus.register(o);
-        }
+        eventBus.register(o);
     }
 
     public static void unregister(Object o) {

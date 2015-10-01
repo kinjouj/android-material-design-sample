@@ -8,6 +8,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -121,7 +123,11 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
             EventManager.post(new AppInterfaces.AppEvent() {
                 @Override
                 public void run(Context context) {
-                    ((MainActivity) context).render(fragment);
+                    FragmentManager fm = ((MainActivity) context).getSupportFragmentManager();
+                    FragmentTransaction tx = fm.beginTransaction();
+                    tx.replace(R.id.content, fragment, "current_content_fragment");
+                    tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                    tx.commit();
                 }
             });
         }

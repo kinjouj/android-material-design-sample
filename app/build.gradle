@@ -62,6 +62,7 @@ android {
         disable 'RtlEnabled'
         disable 'RtlHardcoded'
         disable 'ViewConstructor'
+        disable 'AllowBackup'
     }
 
     signingConfigs {
@@ -72,7 +73,6 @@ android {
         debug {
             testCoverageEnabled = true
             minifyEnabled false
-            //proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         release {
