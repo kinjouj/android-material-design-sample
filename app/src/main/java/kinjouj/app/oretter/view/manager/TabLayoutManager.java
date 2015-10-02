@@ -21,6 +21,7 @@ import kinjouj.app.oretter.EventManager;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragments.RecyclerViewFragment;
+import kinjouj.app.oretter.util.ThreadUtil;
 
 public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayout.OnTabSelectedListener {
 
@@ -59,7 +60,7 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
     public void select(final TabLayout.Tab tab, final int interval) {
         final Handler handler = new Handler();
 
-        new Thread() {
+        ThreadUtil.run(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -74,7 +75,7 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
                     e.printStackTrace();
                 }
             }
-        }.start();
+        });
     }
 
     public int getCurrentPosition() {
@@ -125,6 +126,7 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
                 public void run(Context context) {
                     FragmentManager fm = ((MainActivity) context).getSupportFragmentManager();
                     FragmentTransaction tx = fm.beginTransaction();
+                    tx.disallowAddToBackStack();
                     tx.replace(R.id.content, fragment, "current_content_fragment");
                     tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
                     tx.commit();
@@ -149,6 +151,11 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
         } else {
             backStackState = false;
         }
+    }
+
+    @Override
+    public void unbind() {
+        getView().setOnTabSelectedListener(null);
     }
 
     Fragment getTagFragment(Object obj) {

@@ -12,6 +12,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import butterknife.Bind;
@@ -23,6 +24,7 @@ import kinjouj.app.oretter.EndlessScrollListener;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.util.LayoutManagerUtil;
+import kinjouj.app.oretter.util.ThreadUtil;
 
 import static kinjouj.app.oretter.AppInterfaces.SortedListAdapter;
 
@@ -127,7 +129,9 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         load(1, new Runnable() {
             @Override
             public void run() {
-                swipeRefreshLayout.setRefreshing(false);
+                if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
             }
         });
     }
@@ -154,7 +158,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     private void load(final int currentPage, final Runnable callback) {
         final Handler handler = new Handler();
 
-        new Thread() {
+        ThreadUtil.run(new Runnable() {
             @Override
             public void run() {
                 final List<T> users = fetch(currentPage);
@@ -173,7 +177,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
                     }
                 });
             }
-        }.start();
+        });
     }
 
     abstract RecyclerView.Adapter getAdapter();

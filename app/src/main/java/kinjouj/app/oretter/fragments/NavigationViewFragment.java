@@ -23,6 +23,7 @@ import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragments.dialog.UserListDialogFragment;
 import kinjouj.app.oretter.fragments.dialog.UserListDialogFragmentBuilder;
+import kinjouj.app.oretter.util.ThreadUtil;
 import kinjouj.app.oretter.view.DrawerHeaderView;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
@@ -67,7 +68,7 @@ public class NavigationViewFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         navigationView.setNavigationItemSelectedListener(new ItemSelectedListener());
 
-        new Thread() {
+        ThreadUtil.run(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -84,18 +85,18 @@ public class NavigationViewFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-        }.start();
+        });
     }
 
     private void showListSpinnerFragment() {
-        new Thread() {
+        ThreadUtil.run(new Runnable() {
             @Override
             public void run() {
                 ResponseList<UserList> userLists = getUserLists();
                 UserListDialogFragment fragment = new UserListDialogFragmentBuilder(userLists).build();
                 fragment.show(getFragmentManager(), fragment.getClass().getName());
             }
-        }.start();
+        });
     }
 
     private ResponseList<UserList> getUserLists() {

@@ -22,7 +22,7 @@ public class SearchViewManager extends ViewManager<SearchView> implements Search
     @Override
     public void unbind() {
         getView().setOnQueryTextListener(null);
-        view = null;
+        destroyView();
     }
 
     @Override

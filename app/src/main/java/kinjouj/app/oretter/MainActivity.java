@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
         return tabLayoutManager;
     }
 
-    public void onEvent(AppInterfaces.AppEvent event) {
+    public void onEventMainThread(AppInterfaces.AppEvent event) {
         event.run(this);
     }
 }

@@ -5,19 +5,23 @@ import android.view.View;
 
 public abstract class ViewManager<T extends View> {
 
-    protected View view;
+    private View view;
 
     public ViewManager(View view) {
         this.view = view;
     }
 
     @SuppressWarnings("unchecked")
-    public T getView() {
+    protected T getView() {
         return (T) view;
     }
 
-    public Context getContext() {
+    protected Context getContext() {
         return getView().getContext();
+    }
+
+    protected void destroyView() {
+        view = null;
     }
 
     public void unbind() {
