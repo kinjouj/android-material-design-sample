@@ -3,19 +3,14 @@ package kinjouj.app.oretter.view.adapter;
 import java.util.List;
 
 import android.content.Context;
-import android.os.Handler;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
@@ -23,7 +18,6 @@ import twitter4j.User;
 
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.StatusFragment;
 import kinjouj.app.oretter.view.TweetTextView;
 import kinjouj.app.oretter.view.UserIconImageView;
 
@@ -44,7 +38,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        final User user = users.get(i);
+        User user = users.get(i);
 
         Picasso.with(viewHolder.getContext())
                 .load(user.getProfileBackgroundImageURL())

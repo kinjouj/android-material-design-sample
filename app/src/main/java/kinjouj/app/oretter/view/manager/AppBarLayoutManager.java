@@ -2,10 +2,8 @@ package kinjouj.app.oretter.view.manager;
 
 import android.view.View;
 import android.support.design.widget.AppBarLayout;
-import butterknife.Bind;
 
 import kinjouj.app.oretter.MainActivity;
-import kinjouj.app.oretter.R;
 
 public class AppBarLayoutManager extends ViewManager<AppBarLayout> {
 
@@ -27,5 +25,10 @@ public class AppBarLayoutManager extends ViewManager<AppBarLayout> {
             getView().removeOnOffsetChangedListener(listener);
             listener = null;
         }
+    }
+
+    @Override
+    public void unbind() {
+        removeOnOffsetChangedListener();
     }
 }

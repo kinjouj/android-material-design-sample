@@ -1,6 +1,5 @@
 package kinjouj.app.oretter.view.manager;
 
-import android.app.Activity;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -19,7 +18,7 @@ public class DrawerLayoutManager extends ViewManager<DrawerLayout> {
 
     private void init(Toolbar toolbar) {
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
-            (MainActivity)getContext(),
+            (MainActivity) getContext(),
             getView(),
             toolbar,
             R.drawable.ic_drawer,
@@ -36,5 +35,9 @@ public class DrawerLayoutManager extends ViewManager<DrawerLayout> {
 
     public void close() {
         getView().closeDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void unbind() {
     }
 }

@@ -1,6 +1,5 @@
 package kinjouj.app.oretter.view.manager;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.SearchView;
@@ -20,12 +19,6 @@ public class SearchViewManager extends ViewManager<SearchView> implements Search
     }
 
     @Override
-    public void unbind() {
-        getView().setOnQueryTextListener(null);
-        destroyView();
-    }
-
-    @Override
     public boolean onQueryTextChange(String newText) {
         return false;
     }
@@ -37,8 +30,14 @@ public class SearchViewManager extends ViewManager<SearchView> implements Search
         return false;
     }
 
+    @Override
+    public void unbind() {
+        getView().setOnQueryTextListener(null);
+        destroyView();
+    }
+
     public void search(final String query) {
-        EventManager.post(new AppInterfaces.AppEvent() {
+        EventManager.getInstance().post(new AppInterfaces.AppEvent() {
             @Override
             public void run(Context context) {
                 TabLayoutManager tabManager = ((MainActivity) context).getTabLayoutManager();

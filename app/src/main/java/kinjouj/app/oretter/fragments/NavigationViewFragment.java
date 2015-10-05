@@ -27,7 +27,7 @@ import kinjouj.app.oretter.util.ThreadUtil;
 import kinjouj.app.oretter.view.DrawerHeaderView;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
-public class NavigationViewFragment extends Fragment {
+public class NavigationViewFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = NavigationViewFragment.class.getName();
     private static Twitter twitter = TwitterFactory.getSingleton();
@@ -59,14 +59,9 @@ public class NavigationViewFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        navigationView.setNavigationItemSelectedListener(new ItemSelectedListener());
+        navigationView.setNavigationItemSelectedListener(this);
 
         ThreadUtil.run(new Runnable() {
             @Override
@@ -88,18 +83,66 @@ public class NavigationViewFragment extends Fragment {
         });
     }
 
-    private void showListSpinnerFragment() {
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+        ((MainActivity)getActivity()).getDrawerLayoutManager().close();
+        int id = menuItem.getItemId();
+
+        switch (id) {
+            case R.id.nav_menu_home:
+                navigateTab(0);
+                break;
+
+            case R.id.nav_menu_mention:
+                navigateTab(1);
+                break;
+
+            case R.id.nav_menu_favorite:
+                navigateTab(2);
+                break;
+
+            case R.id.nav_menu_follow:
+                navigateTab(3);
+                break;
+
+            case R.id.nav_menu_follower:
+                navigateTab(4);
+                break;
+
+            case R.id.nav_menu_list:
+                showListSpinnerFragment();
+                break;
+
+            case R.id.nav_menu_exit:
+                MainActivity activity = (MainActivity) getActivity();
+                activity.getTabLayoutManager().clear();
+                activity.finish();
+                break;
+
+            default:
+                break;
+
+        }
+
+        return false;
+    }
+
+    void navigateTab(int position) {
+        ((MainActivity) getActivity()).getTabLayoutManager().get(position).select();
+    }
+
+    void showListSpinnerFragment() {
         ThreadUtil.run(new Runnable() {
             @Override
             public void run() {
                 ResponseList<UserList> userLists = getUserLists();
                 UserListDialogFragment fragment = new UserListDialogFragmentBuilder(userLists).build();
-                fragment.show(getFragmentManager(), fragment.getClass().getName());
+                fragment.show(getFragmentManager(), UserListDialogFragment.class.getName());
             }
         });
     }
 
-    private ResponseList<UserList> getUserLists() {
+    ResponseList<UserList> getUserLists() {
         ResponseList<UserList> userLists = null;
 
         try {
@@ -121,55 +164,5 @@ public class NavigationViewFragment extends Fragment {
         }
 
         return userLists;
-    }
-
-    private class ItemSelectedListener implements NavigationView.OnNavigationItemSelectedListener {
-        @Override
-        public boolean onNavigationItemSelected(MenuItem menuItem) {
-            ((MainActivity)getActivity()).getDrawerLayoutManager().close();
-            int id = menuItem.getItemId();
-
-            switch (id) {
-                case R.id.nav_menu_home:
-                    navigateTab(0);
-                    break;
-
-                case R.id.nav_menu_mention:
-                    navigateTab(1);
-                    break;
-
-                case R.id.nav_menu_favorite:
-                    navigateTab(2);
-                    break;
-
-                case R.id.nav_menu_follow:
-                    navigateTab(3);
-                    break;
-
-                case R.id.nav_menu_follower:
-                    navigateTab(4);
-                    break;
-
-                case R.id.nav_menu_list:
-                    showListSpinnerFragment();
-                    break;
-
-                case R.id.nav_menu_exit:
-                    MainActivity activity = (MainActivity) getActivity();
-                    activity.getTabLayoutManager().clear();
-                    activity.finish();
-                    break;
-
-                default:
-                    break;
-
-            }
-
-            return false;
-        }
-
-        private void navigateTab(int position) {
-            ((MainActivity)getActivity()).getTabLayoutManager().get(position).select();
-        }
     }
 }

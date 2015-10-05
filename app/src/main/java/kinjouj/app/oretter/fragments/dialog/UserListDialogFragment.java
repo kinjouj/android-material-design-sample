@@ -33,7 +33,7 @@ public class UserListDialogFragment extends DialogFragment implements DialogInte
         super.onCreate(savedInstanceState);
         FragmentArgs.inject(this);
 
-        if (userLists.size() <= 0) {
+        if (userLists == null || userLists.size() <= 0) {
             setShowsDialog(false);
         }
     }

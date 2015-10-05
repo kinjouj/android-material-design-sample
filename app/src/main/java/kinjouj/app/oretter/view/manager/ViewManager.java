@@ -24,6 +24,5 @@ public abstract class ViewManager<T extends View> {
         view = null;
     }
 
-    public void unbind() {
-    }
+    public abstract void unbind();
 }

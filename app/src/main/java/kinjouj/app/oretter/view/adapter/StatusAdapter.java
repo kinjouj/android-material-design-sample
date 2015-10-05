@@ -3,10 +3,10 @@ package kinjouj.app.oretter.view.adapter;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.design.widget.TabLayout;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +25,6 @@ import twitter4j.util.TimeSpanConverter;
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.StatusFragment;
 import kinjouj.app.oretter.fragments.StatusFragmentBuilder;
 import kinjouj.app.oretter.view.TweetTextView;
 import kinjouj.app.oretter.view.UserIconImageView;
@@ -47,17 +46,25 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+        final Context context = viewHolder.getContext();
         final Status status = getStatus(i);
         final User user = status.getUser();
 
+        viewHolder.favoriteIconText.setText(String.valueOf(status.getFavoriteCount()));
+        viewHolder.retweetIconText.setText(String.valueOf(status.getRetweetCount()));
+
         if (status.isFavorited()) {
+            viewHolder.favoriteIcon.setImageResource(R.drawable.ic_star_small_marked);
+        } else {
+            viewHolder.favoriteIcon.setImageResource(R.drawable.ic_star_small);
         }
 
-        Picasso.with(viewHolder.getContext())
-                .load(user.getProfileImageURL())
-                .fit()
-                .into(viewHolder.icon);
+        if (status.isRetweeted()) {
+            viewHolder.retweetIcon.setImageResource(R.drawable.ic_rt_small_marked);
+        } else {
+            viewHolder.retweetIcon.setImageResource(R.drawable.ic_rt_small);
+        }
 
         viewHolder.icon.setTag(user);
         viewHolder.userName.setText(user.getName() + "\r\n@" + user.getScreenName());
@@ -68,13 +75,18 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String title = String.format("%s @%s", user.getName(), user.getScreenName());
-                StatusFragment fragment = new StatusFragmentBuilder(status).build();
-                TabLayoutManager tm = ((MainActivity) viewHolder.getContext()).getTabLayoutManager();
-                TabLayout.Tab tab = tm.addTab(title, R.drawable.ic_person, fragment);
-                tm.select(tab, 300);
+                TabLayoutManager tm = ((MainActivity) context).getTabLayoutManager();
+                tm.select(
+                    tm.addTab(
+                        String.format("%s @%s", user.getName(), user.getScreenName()),
+                        R.drawable.ic_person,
+                        new StatusFragmentBuilder(status).build()
+                    ),
+                    300
+                );
             }
         });
+        Picasso.with(context).load(user.getProfileImageURL()).fit().into(viewHolder.icon);
     }
 
     @Override
@@ -123,6 +135,18 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
         @Bind(R.id.status_media_grid)
         GridView mediaGrid;
+
+        @Bind(R.id.status_retweet_icon)
+        ImageView retweetIcon;
+
+        @Bind(R.id.status_retweet_icon_text)
+        TextView retweetIconText;
+
+        @Bind(R.id.status_favorite_icon)
+        ImageView favoriteIcon;
+
+        @Bind(R.id.status_favorite_icon_text)
+        TextView favoriteIconText;
 
         public ViewHolder(View view) {
             super(view);

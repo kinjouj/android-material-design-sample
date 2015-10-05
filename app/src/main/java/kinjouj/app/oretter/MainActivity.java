@@ -200,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onEventMainThread(AppInterfaces.AppEvent event) {
+        Log.v(TAG, "onEvent[AppEvent]: " + Thread.currentThread());
         event.run(this);
     }
 }

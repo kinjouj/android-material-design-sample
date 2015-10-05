@@ -29,8 +29,7 @@ import kinjouj.app.oretter.util.ThreadUtil;
 import static kinjouj.app.oretter.AppInterfaces.SortedListAdapter;
 
 public abstract class RecyclerViewFragment<T> extends Fragment
-    implements SwipeRefreshLayout.OnRefreshListener,
-                AppBarLayout.OnOffsetChangedListener {
+    implements SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
 
     private static final String TAG = RecyclerViewFragment.class.getName();
 

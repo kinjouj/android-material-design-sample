@@ -1,7 +1,6 @@
 package kinjouj.app.oretter.view.adapter;
 
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,24 +52,20 @@ public class GridViewAdapter extends BaseAdapter {
             imageView = (ImageView) convertView;
         }
 
+        final Context context = imageView.getContext();
         final String url = entity.getMediaURL();
-        Picasso.with(parent.getContext()).load(url).fit().into(imageView);
+        Picasso.with(context).load(url).fit().into(imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventManager.post(new AppInterfaces.AppEvent() {
-                    @Override
-                    public void run(Context context) {
-                        showPreviewImage(context, url);
-                    }
-                });
+                showPreviewImage(context, url);
             }
         });
 
         return imageView;
     }
 
-    public void showPreviewImage(Context context, String url) {
+    void showPreviewImage(Context context, String url) {
         PhotoPreviewDialogFragment fragment = new PhotoPreviewDialogFragmentBuilder(url).build();
         fragment.show(
             ((MainActivity) context).getSupportFragmentManager(),

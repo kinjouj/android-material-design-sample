@@ -1,9 +1,7 @@
 package kinjouj.app.oretter.view.manager;
 
-import java.util.List;
 import java.util.LinkedList;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
@@ -14,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import butterknife.Bind;
 
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.EventManager;
@@ -78,24 +75,16 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
         });
     }
 
-    public int getCurrentPosition() {
-        return getView().getSelectedTabPosition();
-    }
-
     public TabLayout.Tab getCurrentTab() {
-        return get(getCurrentPosition());
+        return get(getView().getSelectedTabPosition());
     }
 
     public void addToBackStack(TabLayout.Tab tab) {
         backStackTabs.add(tab);
     }
 
-    public int getBackStackTabEntryCount() {
-        return backStackTabs.size();
-    }
-
     public boolean hasBackStack() {
-        return getBackStackTabEntryCount() > 0;
+        return backStackTabs.size() > 0;
     }
 
     public void popBackStack() {
@@ -120,19 +109,22 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         final Fragment fragment = getTagFragment(tab.getTag());
-        if (fragment != null) {
-            EventManager.post(new AppInterfaces.AppEvent() {
-                @Override
-                public void run(Context context) {
-                    FragmentManager fm = ((MainActivity) context).getSupportFragmentManager();
-                    FragmentTransaction tx = fm.beginTransaction();
-                    tx.disallowAddToBackStack();
-                    tx.replace(R.id.content, fragment, "current_content_fragment");
-                    tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                    tx.commit();
-                }
-            });
+
+        if (fragment == null) {
+            return;
         }
+
+        EventManager.getInstance().post(new AppInterfaces.AppEvent() {
+            @Override
+            public void run(Context context) {
+                FragmentManager fm = ((MainActivity) context).getSupportFragmentManager();
+                FragmentTransaction tx = fm.beginTransaction();
+                tx.disallowAddToBackStack();
+                tx.replace(R.id.content, fragment, "current_content_fragment");
+                tx.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                tx.commit();
+            }
+        });
     }
 
     @Override

@@ -29,15 +29,15 @@ public class DrawerHeaderView extends FrameLayout {
         init(context, user);
     }
 
-    public void init(Context context, User user) {
-        userName.setText(user.getName());
-        Picasso.with(context).load(user.getProfileBackgroundImageURL()).fit().into(userBg);
-        Picasso.with(context).load(user.getProfileImageURL()).into(userIcon);
-    }
-
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         ButterKnife.unbind(this);
+    }
+
+    void init(Context context, User user) {
+        userName.setText(user.getName());
+        Picasso.with(context).load(user.getProfileBackgroundImageURL()).fit().into(userBg);
+        Picasso.with(context).load(user.getProfileImageURL()).into(userIcon);
     }
 }

@@ -7,7 +7,6 @@ import android.support.design.widget.TabLayout;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.AttributeSet;
