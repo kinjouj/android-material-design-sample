@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,12 +16,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 
-import kinjouj.app.oretter.EndlessScrollListener;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.util.LayoutManagerUtil;
@@ -32,6 +33,8 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     implements SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
 
     private static final String TAG = RecyclerViewFragment.class.getName();
+    private int currentPage = 1;
+
 
     @Bind(R.id.refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -40,7 +43,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     RecyclerView recyclerView;
 
     RecyclerView.Adapter  adapter;
-    EndlessScrollListener listener;
+    RecyclerView.OnScrollListener listener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -62,20 +65,27 @@ public abstract class RecyclerViewFragment<T> extends Fragment
 
     @Override
     public void onAttach(Context context) {
-        super.onAttach(context);
         Log.v(TAG, "onAttach");
-        listener = new EndlessScrollListener() {
+        super.onAttach(context);
+        listener = new RecyclerView.OnScrollListener() {
             @Override
-            public void onLoadMore(int currentPage) {
-                load(currentPage, null);
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (!ViewCompat.canScrollVertically(recyclerView, 1)) {
+                    try {
+                        onLoadMore();
+                        currentPage++;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         };
     }
 
     @Override
     public void onDetach() {
-        super.onDetach();
         Log.v(TAG, "onDetach");
+        super.onDetach();
     }
 
     @Override
@@ -100,13 +110,19 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     }
 
     @Override
+    public void onStop() {
+        Log.v(TAG, "onStop");
+        super.onStop();
+    }
+
+    @Override
     public void onDestroyView() {
-        super.onDestroyView();
         Log.v(TAG, "onDestroyView");
         recyclerView.removeOnScrollListener(listener);
         listener = null;
         adapter = null;
         ButterKnife.unbind(this);
+        super.onDestroyView();
     }
 
     @Override
@@ -116,7 +132,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         RecyclerView.LayoutManager layoutManager = getLayoutManager();
         int pos = LayoutManagerUtil.findFirstVisibleItemPosition(prevLayoutManager);
 
-        if (pos != 0) {
+        if (pos > 0) {
             layoutManager.scrollToPosition(pos);
         }
 
@@ -138,6 +154,11 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     @Override
     public void onOffsetChanged(AppBarLayout appBar, int verticalOffset) {
         swipeRefreshLayout.setEnabled(verticalOffset == 0);
+    }
+
+    public void onLoadMore() {
+        Toast.makeText(getActivity(), "load more", Toast.LENGTH_LONG).show();
+        load(currentPage + 1, null);
     }
 
     public void scrollToTop() {

@@ -152,15 +152,20 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
 
             userLists = twitter.getUserLists(user.getId());
 
-            for (UserList userList : userLists) {
+            for (int i = 0; i < userLists.size(); i++) {
+                UserList userList = userLists.get(i);
+
                 if (userList.getMemberCount() > 0) {
                     continue;
                 }
 
-                userLists.remove(userList);
+                synchronized (userLists) {
+                    userLists.remove(userList);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            userLists = null;
         }
 
         return userLists;

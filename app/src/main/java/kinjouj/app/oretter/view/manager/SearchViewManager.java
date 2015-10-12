@@ -40,13 +40,15 @@ public class SearchViewManager extends ViewManager<SearchView> implements Search
         EventManager.getInstance().post(new AppInterfaces.AppEvent() {
             @Override
             public void run(Context context) {
-                TabLayoutManager tabManager = ((MainActivity) context).getTabLayoutManager();
-                TabLayout.Tab tab = tabManager.addTab(
-                    "検索: " + query,
-                    R.drawable.ic_search,
-                    new SearchFragmentBuilder(query).build()
+                TabLayoutManager tm = ((MainActivity) context).getTabLayoutManager();
+                tm.select(
+                    tm.addTab(
+                        "検索: " + query,
+                        R.drawable.ic_search,
+                        new SearchFragmentBuilder(query).build()
+                    ),
+                    300
                 );
-                tabManager.select(tab, 300);
             }
         });
     }

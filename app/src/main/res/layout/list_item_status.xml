@@ -70,22 +70,32 @@
                 android:layout_below="@id/status_header"
                 android:textColor="@android:color/black" />
 
-            <kinjouj.app.oretter.view.MediaGridView
-                android:id="@+id/status_media_grid"
-                android:layout_width="fill_parent"
+            <RelativeLayout
+                android:id="@+id/status_media_grid_layout"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="10dp"
-                android:layout_below="@id/status_text"
-                android:columnWidth="130dp"
-                android:numColumns="auto_fit"
-                android:horizontalSpacing="3dp"
-                android:verticalSpacing="10dp"
-                android:stretchMode="columnWidth" />
+                android:layout_below="@id/status_text">
+
+
+                <kinjouj.app.oretter.view.MediaGridView
+                    android:id="@+id/status_media_grid"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="0dp"
+                    android:gravity="center"
+                    android:columnWidth="90dp"
+                    android:numColumns="auto_fit"
+                    android:horizontalSpacing="0dp"
+                    android:verticalSpacing="5dp"
+                    android:stretchMode="columnWidth" />
+
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/status_media_grid"
+                android:layout_below="@id/status_media_grid_layout"
                 android:padding="5dp">
 
                 <LinearLayout
@@ -112,8 +122,7 @@
                     <ImageView
                         android:id="@+id/status_retweet_icon"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_rt_small" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/status_retweet_icon_text"
@@ -132,8 +141,7 @@
                     <ImageView
                         android:id="@+id/status_favorite_icon"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_star_small" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/status_favorite_icon_text"

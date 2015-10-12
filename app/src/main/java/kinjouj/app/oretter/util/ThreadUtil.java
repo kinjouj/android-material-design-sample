@@ -19,4 +19,12 @@ public class ThreadUtil {
     public static void run(Runnable r) {
         executor.submit(r);
     }
+
+    public static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -75,14 +75,6 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
         });
     }
 
-    public TabLayout.Tab getCurrentTab() {
-        return get(getView().getSelectedTabPosition());
-    }
-
-    public void addToBackStack(TabLayout.Tab tab) {
-        backStackTabs.add(tab);
-    }
-
     public boolean hasBackStack() {
         return backStackTabs.size() > 0;
     }
@@ -93,17 +85,9 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
         select(tab, 300);
     }
 
-    public void clearBackStack() {
-        backStackTabs.clear();
-    }
-
-    public void clearTabs() {
-        getView().removeAllTabs();
-    }
-
     public void clear() {
-        clearBackStack();
-        clearTabs();
+        backStackTabs.clear();
+        getView().removeAllTabs();
     }
 
     @Override
@@ -139,7 +123,7 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
         if (!backStackState) {
-            addToBackStack(tab);
+            backStackTabs.add(tab);
         } else {
             backStackState = false;
         }

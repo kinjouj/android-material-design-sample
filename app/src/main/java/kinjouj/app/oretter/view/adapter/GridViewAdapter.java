@@ -2,17 +2,22 @@ package kinjouj.app.oretter.view.adapter;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import twitter4j.MediaEntity;
 
 import kinjouj.app.oretter.AppInterfaces;
-import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.EventManager;
+import kinjouj.app.oretter.MainActivity;
+import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragments.dialog.PhotoPreviewDialogFragment;
 import kinjouj.app.oretter.fragments.dialog.PhotoPreviewDialogFragmentBuilder;
 
@@ -42,27 +47,28 @@ public class GridViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        MediaEntity entity = (MediaEntity) getItem(position);
-        ImageView imageView = null;
+        final Context context = parent.getContext();
+        final MediaEntity entity = (MediaEntity) getItem(position);
+        View view = convertView;
+        ViewHolder holder;
 
-        if (convertView == null) {
-            imageView = new ImageView(parent.getContext());
-            imageView.setLayoutParams(new GridView.LayoutParams(130, 130));
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.item_media, parent, false);
+            holder = new ViewHolder(view);
+            view.setTag(holder);
         } else {
-            imageView = (ImageView) convertView;
+            holder = (ViewHolder) view.getTag();
         }
 
-        final Context context = imageView.getContext();
-        final String url = entity.getMediaURL();
-        Picasso.with(context).load(url).fit().into(imageView);
-        imageView.setOnClickListener(new View.OnClickListener() {
+        Picasso.with(context).load(entity.getMediaURL()).resize(90, 90).into(holder.media);
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPreviewImage(context, url);
+                showPreviewImage(context, entity.getMediaURL());
             }
         });
 
-        return imageView;
+        return view;
     }
 
     void showPreviewImage(Context context, String url) {
@@ -71,5 +77,19 @@ public class GridViewAdapter extends BaseAdapter {
             ((MainActivity) context).getSupportFragmentManager(),
             PhotoPreviewDialogFragment.class.getName()
         );
+    }
+
+    public static class ViewHolder {
+
+        @Bind(R.id.media_thumb_image_view)
+        ImageView media;
+
+        public ViewHolder(View root) {
+            ButterKnife.bind(this, root);
+        }
+
+        public Context getContext() {
+            return media.getContext();
+        }
     }
 }

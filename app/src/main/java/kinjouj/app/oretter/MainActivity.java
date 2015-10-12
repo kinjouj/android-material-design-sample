@@ -46,22 +46,7 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindString(R.string.nav_menu_home)
-    String homeTitle;
-
-    @BindString(R.string.nav_menu_mention)
-    String mentionTitle;
-
-    @BindString(R.string.nav_menu_favorite)
-    String favoriteTitle;
-
-    @BindString(R.string.nav_menu_follow)
-    String followTitle;
-
-    @BindString(R.string.nav_menu_follower)
-    String followerTitle;
-
-    private void initViewManager() {
+    void initViewManager() {
         EventManager.register(this);
 
         if (appBarLayoutManager == null) {
@@ -83,6 +68,39 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    void initTab() {
+        tabLayoutManager.addTab(
+            getString(R.string.nav_menu_home),
+            R.drawable.ic_home,
+            new HomeFragment(),
+            true
+        );
+
+        tabLayoutManager.addTab(
+            getString(R.string.nav_menu_mention),
+            R.drawable.ic_reply,
+            new MentionListFragment()
+        );
+
+        tabLayoutManager.addTab(
+            getString(R.string.nav_menu_favorite),
+            R.drawable.ic_star,
+            new FavoriteListFragment()
+        );
+
+        tabLayoutManager.addTab(
+            getString(R.string.nav_menu_follow),
+            R.drawable.ic_follow,
+            new FollowListFragment()
+        );
+
+        tabLayoutManager.addTab(
+            getString(R.string.nav_menu_follower),
+            R.drawable.ic_follower,
+            new FollowerListFragment()
+        );
+    }
+
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -90,11 +108,7 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         toolbar.inflateMenu(R.menu.menu_toolbar);
         initViewManager();
-        tabLayoutManager.addTab(homeTitle, R.drawable.ic_home, new HomeFragment(), true);
-        tabLayoutManager.addTab(mentionTitle, R.drawable.ic_reply, new MentionListFragment());
-        tabLayoutManager.addTab(favoriteTitle, R.drawable.ic_star, new FavoriteListFragment());
-        tabLayoutManager.addTab(followTitle, R.drawable.ic_follow, new FollowListFragment());
-        tabLayoutManager.addTab(followerTitle, R.drawable.ic_follower, new FollowerListFragment());
+        initTab();
     }
 
     @Override

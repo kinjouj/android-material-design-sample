@@ -1,4 +1,7 @@
 .gradle
+.idea
 build
 twitter4j.properties
 gradle.properties
+local.properties
+*.iml

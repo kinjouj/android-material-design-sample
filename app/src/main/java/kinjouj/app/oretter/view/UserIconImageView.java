@@ -31,12 +31,14 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
             return;
         }
 
-        TabLayoutManager tabManager = ((MainActivity) getContext()).getTabLayoutManager();
-        TabLayout.Tab tab = tabManager.addTab(
-            String.format("%s @%s", user.getName(), user.getScreenName()),
-            R.drawable.ic_person,
-            new UserFragmentBuilder(user).build()
+        TabLayoutManager tm = ((MainActivity) getContext()).getTabLayoutManager();
+        tm.select(
+            tm.addTab(
+                String.format("%s @%s", user.getName(), user.getScreenName()),
+                R.drawable.ic_person,
+                new UserFragmentBuilder(user).build()
+            ),
+            300
         );
-        tabManager.select(tab, 300);
     }
 }
