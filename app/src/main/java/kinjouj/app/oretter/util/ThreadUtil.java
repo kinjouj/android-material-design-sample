@@ -6,8 +6,7 @@ import java.util.concurrent.ThreadFactory;
 
 public class ThreadUtil {
 
-    private static final ExecutorService executor = Executors.newFixedThreadPool(
-        1,
+    private static final ExecutorService executor = Executors.newCachedThreadPool(
         new ThreadFactory() {
             @Override
             public Thread newThread(Runnable r) {

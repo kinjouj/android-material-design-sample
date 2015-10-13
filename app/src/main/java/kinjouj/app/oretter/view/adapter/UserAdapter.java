@@ -51,8 +51,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>
                 .into(viewHolder.userIcon);
 
         viewHolder.userIcon.setTag(user);
-        viewHolder.content.setText(user.getDescription());
-        viewHolder.content.linkify();
+        viewHolder.content.linkify(user.getDescription());
     }
 
     @Override

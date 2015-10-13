@@ -35,7 +35,8 @@ public class TweetTextView extends TextView {
         super(context, attrs);
     }
 
-    public void linkify() {
+    public void linkify(String text) {
+        setText(text);
         Linkify.addLinks(this, Regex.VALID_MENTION_OR_LIST, null);
         Linkify.addLinks(this, Regex.VALID_HASHTAG, null);
         Linkify.addLinks(this, Patterns.WEB_URL, null);

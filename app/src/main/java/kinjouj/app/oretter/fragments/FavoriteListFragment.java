@@ -24,7 +24,7 @@ public class FavoriteListFragment extends RecyclerViewFragment<Status> {
             statuses = getTwitter().getFavorites(new Paging(currentPage));
         } catch (Exception e) {
             e.printStackTrace();
-            statuses = Collections.<Status>emptyList();
+            statuses = Collections.emptyList();
         }
 
         return statuses;

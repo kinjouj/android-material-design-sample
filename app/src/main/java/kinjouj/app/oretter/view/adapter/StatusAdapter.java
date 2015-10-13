@@ -38,21 +38,18 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
     private SortedList<Status> statuses = new SortedList<>(Status.class, new SortedListCallback());
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext())
-                                    .inflate(R.layout.list_item_status, viewGroup, false);
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                                    .inflate(R.layout.list_item_status, parent, false);
 
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(ViewHolder viewHolder, int position) {
         final Context context = viewHolder.getContext();
-        final Status status = getStatus(i);
+        final Status status = getStatus(position);
         final User user = status.getUser();
-
-        viewHolder.favoriteIconText.setText(String.valueOf(status.getFavoriteCount()));
-        viewHolder.retweetIconText.setText(String.valueOf(status.getRetweetCount()));
 
         if (status.isFavorited()) {
             viewHolder.favoriteIcon.setImageResource(R.drawable.ic_star_small_marked);
@@ -66,12 +63,16 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
             viewHolder.retweetIcon.setImageResource(R.drawable.ic_rt_small);
         }
 
+        Picasso.with(context).load(user.getProfileImageURL()).fit().into(viewHolder.icon);
         viewHolder.icon.setTag(user);
         viewHolder.userName.setText(user.getName() + "\r\n@" + user.getScreenName());
         viewHolder.createdAt.setText(new TimeSpanConverter().toTimeSpanString(status.getCreatedAt()));
-        viewHolder.content.setText(status.getText());
-        viewHolder.content.linkify();
+        viewHolder.content.linkify(status.getText());
         viewHolder.mediaGrid.setAdapter(new GridViewAdapter(status.getExtendedMediaEntities()));
+        viewHolder.favoriteIconText.setText(String.valueOf(status.getFavoriteCount()));
+        viewHolder.retweetIconText.setText(String.valueOf(status.getRetweetCount()));
+
+        /*
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,7 +87,19 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
                 );
             }
         });
-        Picasso.with(context).load(user.getProfileImageURL()).fit().into(viewHolder.icon);
+        */
+    }
+
+    @Override
+    public void onViewRecycled(ViewHolder holder) {
+        Log.v(TAG, "onViewRecycled: " + holder);
+        super.onViewRecycled(holder);
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(ViewHolder holder) {
+        Log.v(TAG, "onViewDetachedFromWindow: " + holder);
+        super.onViewDetachedFromWindow(holder);
     }
 
     @Override
@@ -112,7 +125,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         this.statuses.endBatchedUpdates();
     }
 
-    public Status getStatus(int position) {
+    Status getStatus(int position) {
         Status status = statuses.get(position);
         return status.isRetweet() ? status.getRetweetedStatus() : status;
     }
@@ -150,6 +163,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
         public ViewHolder(View view) {
             super(view);
+            Log.v(TAG, "ViewHolder: " + view);
             root = view;
             ButterKnife.bind(this, view);
         }
@@ -175,6 +189,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
         @Override
         public int compare(Status o1, Status o2) {
+            Log.v(TAG, "compare: "  + o1 + " = " + o2);
             return Long.valueOf(o2.getId()).compareTo(o1.getId());
         }
 

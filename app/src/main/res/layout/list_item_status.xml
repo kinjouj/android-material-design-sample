@@ -76,11 +76,11 @@
                 android:layout_height="match_parent"
                 android:layout_below="@id/status_text">
 
-
-                <kinjouj.app.oretter.view.MediaGridView
+                <!-- <kinjouj.app.oretter.view.MediaGridView -->
+                <GridView
                     android:id="@+id/status_media_grid"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_margin="0dp"
                     android:gravity="center"
                     android:columnWidth="90dp"

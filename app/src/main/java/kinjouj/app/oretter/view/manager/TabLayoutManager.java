@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.EventManager;
@@ -140,6 +141,15 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
 
     View createTabView() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.tab, null);
+        /*
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(v.getContext(), "long click", Toast.LENGTH_LONG).show();
+                return false;
+            }
+        });
+        */
         return view;
     }
 }
