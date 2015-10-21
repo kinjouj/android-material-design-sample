@@ -29,7 +29,6 @@ public class PhotoPreviewDialogFragment extends DialogFragment {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.fragment_dialog_photo_preview);
         dialog.getWindow().setLayout(WRAP_CONTENT, WRAP_CONTENT);
-
         ButterKnife.bind(this, dialog);
         Picasso.with(getActivity()).load(getUrl()).into(previewPhotoImageView);
 

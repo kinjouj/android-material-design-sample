@@ -1,16 +1,15 @@
-package kinjouj.app.oretter.fragments;
+package kinjouj.app.oretter.fragments.list.status;
 
 import java.util.List;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-
 import twitter4j.Paging;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.UserList;
 
+import kinjouj.app.oretter.fragments.RecyclerViewFragment;
 import kinjouj.app.oretter.view.adapter.StatusAdapter;
 
 public class UserListFragment extends RecyclerViewFragment<Status> {
@@ -26,7 +25,6 @@ public class UserListFragment extends RecyclerViewFragment<Status> {
     @Override
     public List<Status> fetch(int currentPage) throws TwitterException {
         UserList userList = getUserList();
-        Log.v(TAG, "userList:" + userList);
         return getTwitter().getUserListStatuses(userList.getId(), new Paging(currentPage));
     }
 

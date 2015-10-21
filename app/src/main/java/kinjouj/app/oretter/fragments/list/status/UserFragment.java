@@ -1,16 +1,15 @@
-package kinjouj.app.oretter.fragments;
+package kinjouj.app.oretter.fragments.list.status;
 
-import java.util.Collections;
 import java.util.List;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-
 import twitter4j.Paging;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
+import kinjouj.app.oretter.fragments.RecyclerViewFragment;
 import kinjouj.app.oretter.view.adapter.StatusAdapter;
 
 public class UserFragment extends RecyclerViewFragment<Status> {

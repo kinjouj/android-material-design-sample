@@ -6,16 +6,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
 import android.widget.ArrayAdapter;
-
+import com.annimon.stream.Stream;
+import com.annimon.stream.function.Consumer;
+import com.annimon.stream.function.Function;
 import twitter4j.ResponseList;
 import twitter4j.UserList;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.UserListFragment;
+import kinjouj.app.oretter.fragments.list.status.UserListFragment;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class UserListDialogFragment extends DialogFragment implements DialogInterface.OnClickListener {
@@ -40,9 +41,19 @@ public class UserListDialogFragment extends DialogFragment implements DialogInte
             android.R.layout.simple_list_item_single_choice
         );
 
-        for (UserList userList : getUserLists()) {
-            adapter.add(userList.getName());
-        }
+        Stream.of(getUserLists())
+                .map(new Function<UserList, String>() {
+                    @Override
+                    public String apply(UserList value) {
+                        return value.getName();
+                    }
+                })
+                .forEach(new Consumer<String>() {
+                    @Override
+                    public void accept(String value) {
+                        adapter.add(value);
+                    }
+                });
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder
@@ -70,12 +81,14 @@ public class UserListDialogFragment extends DialogFragment implements DialogInte
 
         UserList userList = getUserLists().get(selectedIndex);
         TabLayoutManager tm = ((MainActivity) getActivity()).getTabLayoutManager();
-        TabLayout.Tab tab = tm.addTab(
-            "リスト: " + userList.getName(),
-            R.drawable.ic_list,
-            UserListFragment.build(userList)
+        tm.select(
+            tm.addTab(
+                "リスト: " + userList.getName(),
+                R.drawable.ic_list,
+                UserListFragment.build(userList)
+            ),
+            300
         );
-        tm.select(tab, 300);
     }
 
     @SuppressWarnings("unchecked")

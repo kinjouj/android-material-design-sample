@@ -1,7 +1,6 @@
 package kinjouj.app.oretter.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +12,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import twitter4j.Status;
+import twitter4j.User;
 
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.view.UserIconImageView;
 import kinjouj.app.oretter.view.adapter.GridViewAdapter;
-import twitter4j.User;
 
 public class StatusFragment extends Fragment {
 

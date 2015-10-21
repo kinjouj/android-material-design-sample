@@ -27,8 +27,6 @@ import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.util.LayoutManagerUtil;
 import kinjouj.app.oretter.util.ThreadUtil;
 
-import static kinjouj.app.oretter.AppInterfaces.SortedListAdapter;
-
 public abstract class RecyclerViewFragment<T> extends Fragment
     implements SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
 
@@ -181,12 +179,11 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     }
 
     private void load(final int currentPage, final AppInterfaces.OnLoadCallback callback) {
-        Toast.makeText(getActivity(), "load: page(" + currentPage + ")", Toast.LENGTH_LONG).show();
         ThreadUtil.run(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Log.v(TAG, RecyclerViewFragment.this + ".fetch( " + currentPage + ")");
+                    Log.v(TAG, RecyclerViewFragment.this + ".fetch(" + currentPage + ")");
                     final List<T> data = fetch(currentPage);
 
                     getActivity().runOnUiThread(new Runnable() {
@@ -194,7 +191,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
                         @Override
                         public void run() {
                             if (data != null) {
-                                ((SortedListAdapter<T>) adapter).addAll(data);
+                                ((AppInterfaces.SortedListAdapter<T>) adapter).addAll(data);
                             }
 
                             if (callback != null) {
@@ -212,7 +209,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         });
     }
 
-    abstract RecyclerView.Adapter getAdapter();
-    abstract List<T> fetch(int currentPage) throws TwitterException;
+    public abstract RecyclerView.Adapter getAdapter();
+    public abstract List<T> fetch(int currentPage) throws TwitterException;
 
 }

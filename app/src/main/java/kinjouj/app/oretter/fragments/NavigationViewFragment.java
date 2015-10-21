@@ -56,7 +56,6 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         navigationView.setNavigationItemSelectedListener(this);
-
         ThreadUtil.run(new Runnable() {
             @Override
             public void run() {
@@ -65,9 +64,7 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            navigationView.addHeaderView(
-                                new DrawerHeaderView(getActivity(), user)
-                            );
+                            navigationView.addHeaderView(new DrawerHeaderView(getActivity(), user));
                         }
                     });
                 } catch (Exception e) {
@@ -79,7 +76,6 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-        ((MainActivity)getActivity()).getDrawerLayoutManager().close();
         int id = menuItem.getItemId();
 
         switch (id) {
@@ -117,6 +113,8 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
                 break;
 
         }
+
+        ((MainActivity) getActivity()).getDrawerLayoutManager().close();
 
         return false;
     }

@@ -1,6 +1,5 @@
-package kinjouj.app.oretter.fragments;
+package kinjouj.app.oretter.fragments.list.user;
 
-import java.util.Collections;
 import java.util.List;
 
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +8,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
+import kinjouj.app.oretter.fragments.RecyclerViewFragment;
 import kinjouj.app.oretter.view.adapter.UserAdapter;
 
 public class FollowerListFragment extends RecyclerViewFragment<User> {

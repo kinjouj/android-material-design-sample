@@ -1,4 +1,4 @@
-package kinjouj.app.oretter.fragments;
+package kinjouj.app.oretter.fragments.list.status;
 
 import java.util.List;
 
@@ -7,9 +7,10 @@ import twitter4j.Paging;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
+import kinjouj.app.oretter.fragments.RecyclerViewFragment;
 import kinjouj.app.oretter.view.adapter.StatusAdapter;
 
-public class HomeFragment extends RecyclerViewFragment<Status> {
+public class MentionListFragment extends RecyclerViewFragment<Status> {
 
     @Override
     public RecyclerView.Adapter getAdapter() {
@@ -18,6 +19,6 @@ public class HomeFragment extends RecyclerViewFragment<Status> {
 
     @Override
     public List<Status> fetch(int currentPage) throws TwitterException {
-        return getTwitter().getHomeTimeline(new Paging(currentPage));
+        return getTwitter().getMentionsTimeline(new Paging(currentPage));
     }
 }

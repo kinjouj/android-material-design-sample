@@ -1,4 +1,4 @@
-package kinjouj.app.oretter.fragments;
+package kinjouj.app.oretter.fragments.list.status;
 
 import java.util.List;
 
@@ -7,9 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
-
-import kinjouj.app.oretter.view.adapter.StatusAdapter;
 import twitter4j.TwitterException;
+
+import kinjouj.app.oretter.fragments.RecyclerViewFragment;
+import kinjouj.app.oretter.view.adapter.StatusAdapter;
 
 public class SearchFragment extends RecyclerViewFragment<Status> {
 
