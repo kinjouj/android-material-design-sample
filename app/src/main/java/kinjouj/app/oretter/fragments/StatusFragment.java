@@ -11,18 +11,18 @@ import android.widget.TextView;
 import android.support.v4.app.Fragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.hannesdorfmann.fragmentargs.FragmentArgs;
-import com.hannesdorfmann.fragmentargs.annotation.Arg;
 import com.squareup.picasso.Picasso;
 import twitter4j.Status;
 
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.view.UserIconImageView;
 import kinjouj.app.oretter.view.adapter.GridViewAdapter;
+import twitter4j.User;
 
 public class StatusFragment extends Fragment {
 
     private static final String TAG = StatusFragment.class.getName();
+    private static final String EXTRA_KEY_STATUS = "extra_key_status";
 
     @Bind(R.id.detail_user_bg_image)
     ImageView userBgImage;
@@ -35,15 +35,6 @@ public class StatusFragment extends Fragment {
 
     @Bind(R.id.status_per_media_grid)
     GridView mediaGrid;
-
-    @Arg
-    Status status;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        FragmentArgs.inject(this);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,18 +51,27 @@ public class StatusFragment extends Fragment {
     }
 
     private void bindView() {
+        Status status = getStatus();
+        User user = status.getUser();
+        userImage.setTag(user);
         statusText.setText(status.getText());
-        userImage.setTag(status.getUser());
         mediaGrid.setAdapter(new GridViewAdapter(status.getExtendedMediaEntities()));
+        Picasso.with(getActivity()).load(user.getProfileImageURL()).fit().into(userImage);
+        Picasso.with(getActivity()).load(user.getProfileBackgroundImageURL()).fit().into(userBgImage);
+    }
 
-        Picasso.with(getActivity())
-                .load(status.getUser().getProfileImageURL())
-                .fit()
-                .into(userImage);
+    Status getStatus() {
+        Bundle args = getArguments();
+        return (Status) args.getSerializable(EXTRA_KEY_STATUS);
+    }
 
-        Picasso.with(getActivity())
-                .load(status.getUser().getProfileBackgroundImageURL())
-                .fit()
-                .into(userBgImage);
+    public static StatusFragment build(Status status) {
+        Bundle args = new Bundle();
+        args.putSerializable(EXTRA_KEY_STATUS, status);
+
+        StatusFragment fragment = new StatusFragment();
+        fragment.setArguments(args);
+
+        return fragment;
     }
 }

@@ -1,6 +1,7 @@
 package kinjouj.app.oretter.view;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +13,8 @@ import twitter4j.User;
 import kinjouj.app.oretter.R;
 
 public class DrawerHeaderView extends FrameLayout {
+
+    private static final String TAG = DrawerHeaderView.class.getName();
 
     @Bind(R.id.nav_user_bg)
     ImageView userBg;
@@ -30,6 +33,7 @@ public class DrawerHeaderView extends FrameLayout {
     }
 
     void init(Context context, User user) {
+        Log.v(TAG, "init");
         userName.setText(user.getName());
         Picasso.with(context).load(user.getProfileBackgroundImageURL()).fit().into(userBg);
         Picasso.with(context).load(user.getProfileImageURL()).into(userIcon);
@@ -37,7 +41,8 @@ public class DrawerHeaderView extends FrameLayout {
 
     @Override
     public void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
+        Log.v(TAG, "onDetachedFromWindow");
         ButterKnife.unbind(this);
+        super.onDetachedFromWindow();
     }
 }

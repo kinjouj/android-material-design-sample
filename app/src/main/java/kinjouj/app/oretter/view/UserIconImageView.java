@@ -11,7 +11,7 @@ import twitter4j.User;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.UserFragmentBuilder;
+import kinjouj.app.oretter.fragments.UserFragment;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class UserIconImageView extends RoundedImageView implements View.OnClickListener {
@@ -25,6 +25,7 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
 
     @Override
     public void onClick(View view) {
+        Log.v(TAG, "onClick");
         User user = (User) getTag();
 
         if (user == null) {
@@ -36,9 +37,15 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
             tm.addTab(
                 String.format("%s @%s", user.getName(), user.getScreenName()),
                 R.drawable.ic_person,
-                new UserFragmentBuilder(user).build()
+                UserFragment.build(user)
             ),
             300
         );
+    }
+
+    @Override
+    public void onDetachedFromWindow() {
+        Log.v(TAG, "onDetachFromWindow");
+        super.onDetachedFromWindow();
     }
 }

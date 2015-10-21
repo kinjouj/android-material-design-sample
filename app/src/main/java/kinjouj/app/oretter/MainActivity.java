@@ -10,6 +10,8 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
+import android.view.MenuItem;
+
 import butterknife.Bind;
 import butterknife.BindString;
 import butterknife.ButterKnife;
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
 
     void initViewManager() {
+        Log.v(TAG, "initViewManager");
         EventManager.register(this);
 
         if (appBarLayoutManager == null) {
@@ -58,9 +61,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (searchViewManager == null) {
-            searchViewManager = new SearchViewManager(
-                MenuItemCompat.getActionView(toolbar.getMenu().findItem(R.id.tb_menu_search))
-            );
+            MenuItem menuItem = toolbar.getMenu().findItem(R.id.tb_menu_search);
+            searchViewManager = new SearchViewManager(MenuItemCompat.getActionView(menuItem));
         }
 
         if (tabLayoutManager == null) {
@@ -69,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void initTab() {
+        Log.v(TAG, "initTab");
+
         tabLayoutManager.addTab(
             getString(R.string.nav_menu_home),
             R.drawable.ic_home,
@@ -103,12 +107,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle bundle) {
+        Log.v(TAG, "onCreate");
         super.onCreate(bundle);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         toolbar.inflateMenu(R.menu.menu_toolbar);
         initViewManager();
         initTab();
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread thread, Throwable ex) {
+                Log.e(TAG, String.format("%s(%d)", thread.getName(), thread.getId()), ex);
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     @Override
@@ -142,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRestart() {
+        Log.v(TAG, "onRestart");
         super.onRestart();
         ButterKnife.bind(this);
         initViewManager();
@@ -165,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+        Log.v(TAG, "onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
     }
 
@@ -190,6 +204,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSearchRequested() {
+        Log.v(TAG, "onSearchRequested");
+
         if (!drawerLayoutManager.isOpen()) {
             searchViewManager.expand();
         }
@@ -214,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onEventMainThread(AppInterfaces.AppEvent event) {
-        Log.v(TAG, "onEvent[AppEvent]: " + Thread.currentThread());
+        Log.v(TAG, "onEvent: " + event);
         event.run(this);
     }
 }

@@ -8,6 +8,7 @@ import twitter4j.Paging;
 import twitter4j.Status;
 
 import kinjouj.app.oretter.view.adapter.StatusAdapter;
+import twitter4j.TwitterException;
 
 public class MentionListFragment extends RecyclerViewFragment<Status> {
 
@@ -17,16 +18,7 @@ public class MentionListFragment extends RecyclerViewFragment<Status> {
     }
 
     @Override
-    public List<Status> fetch(int currentPage) {
-        List<Status> statuses = null;
-
-        try {
-            statuses = getTwitter().getMentionsTimeline(new Paging(currentPage));
-        } catch (Exception e) {
-            e.printStackTrace();
-            statuses = Collections.<Status>emptyList();
-        }
-
-        return statuses;
+    public List<Status> fetch(int currentPage) throws TwitterException {
+        return getTwitter().getMentionsTimeline(new Paging(currentPage));
     }
 }

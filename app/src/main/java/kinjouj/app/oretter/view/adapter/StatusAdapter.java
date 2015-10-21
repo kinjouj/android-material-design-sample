@@ -2,11 +2,10 @@ package kinjouj.app.oretter.view.adapter;
 
 import java.util.List;
 
+import android.app.Activity;
 import android.content.Context;
-import android.support.design.widget.TabLayout;
 import android.support.v7.util.SortedList;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,18 +16,18 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
-import twitter4j.MediaEntity;
 import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.util.TimeSpanConverter;
 
 import kinjouj.app.oretter.AppInterfaces;
-import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.StatusFragmentBuilder;
+import kinjouj.app.oretter.util.ThreadUtil;
 import kinjouj.app.oretter.view.TweetTextView;
 import kinjouj.app.oretter.view.UserIconImageView;
-import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder>
     implements AppInterfaces.SortedListAdapter<Status> {
@@ -39,6 +38,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Log.v(TAG, "onCreateViewHolder");
         View view = LayoutInflater.from(parent.getContext())
                                     .inflate(R.layout.list_item_status, parent, false);
 
@@ -46,22 +46,11 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final ViewHolder viewHolder, final int position) {
+        Log.v(TAG, "onBindViewHolder");
         final Context context = viewHolder.getContext();
         final Status status = getStatus(position);
         final User user = status.getUser();
-
-        if (status.isFavorited()) {
-            viewHolder.favoriteIcon.setImageResource(R.drawable.ic_star_small_marked);
-        } else {
-            viewHolder.favoriteIcon.setImageResource(R.drawable.ic_star_small);
-        }
-
-        if (status.isRetweeted()) {
-            viewHolder.retweetIcon.setImageResource(R.drawable.ic_rt_small_marked);
-        } else {
-            viewHolder.retweetIcon.setImageResource(R.drawable.ic_rt_small);
-        }
 
         Picasso.with(context).load(user.getProfileImageURL()).fit().into(viewHolder.icon);
         viewHolder.icon.setTag(user);
@@ -69,9 +58,48 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         viewHolder.createdAt.setText(new TimeSpanConverter().toTimeSpanString(status.getCreatedAt()));
         viewHolder.content.linkify(status.getText());
         viewHolder.mediaGrid.setAdapter(new GridViewAdapter(status.getExtendedMediaEntities()));
-        viewHolder.favoriteIconText.setText(String.valueOf(status.getFavoriteCount()));
-        viewHolder.retweetIconText.setText(String.valueOf(status.getRetweetCount()));
+        viewHolder.favoriteIconLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ThreadUtil.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        Twitter twitter = TwitterFactory.getSingleton();
 
+                        if (status.isFavorited()) {
+                            try {
+                                final Status destroyStatus = twitter.destroyFavorite(status.getId());
+                                ((Activity) context).runOnUiThread(new Thread() {
+                                    @Override
+                                    public void run() {
+                                        updateFavoriteIcon(destroyStatus, viewHolder);
+                                        statuses.updateItemAt(position, destroyStatus);
+                                    }
+                                });
+                            } catch (TwitterException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            try {
+                                final Status favoritedStatus = twitter.createFavorite(status.getId());
+                                ((Activity) context).runOnUiThread(new Thread() {
+                                    @Override
+                                    public void run() {
+                                        updateFavoriteIcon(favoritedStatus, viewHolder);
+                                        statuses.updateItemAt(position, favoritedStatus);
+                                    }
+                                });
+                            } catch (TwitterException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        updateFavoriteIcon(status, viewHolder);
+        updateRetweetIcon(status, viewHolder);
         /*
         viewHolder.root.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +116,26 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
             }
         });
         */
+    }
+
+    void updateFavoriteIcon(Status status, ViewHolder viewHolder) {
+        if (status.isFavorited()) {
+            viewHolder.favoriteIcon.setImageResource(R.drawable.ic_star_small_marked);
+        } else {
+            viewHolder.favoriteIcon.setImageResource(R.drawable.ic_star_small);
+        }
+
+        viewHolder.favoriteIconText.setText(String.valueOf(status.getFavoriteCount()));
+    }
+
+    void updateRetweetIcon(Status status, ViewHolder viewHolder) {
+        if (status.isRetweeted()) {
+            viewHolder.retweetIcon.setImageResource(R.drawable.ic_rt_small_marked);
+        } else {
+            viewHolder.retweetIcon.setImageResource(R.drawable.ic_rt_small);
+        }
+
+        viewHolder.retweetIconText.setText(String.valueOf(status.getRetweetCount()));
     }
 
     @Override
@@ -155,6 +203,9 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         @Bind(R.id.status_retweet_icon_text)
         TextView retweetIconText;
 
+        @Bind(R.id.status_favorite_icon_layout)
+        View favoriteIconLayout;
+
         @Bind(R.id.status_favorite_icon)
         ImageView favoriteIcon;
 
@@ -184,13 +235,14 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
         @Override
         public boolean areContentsTheSame(Status oldItem, Status newItem) {
-            return oldItem.getText().equals(newItem.getText());
+            //return oldItem.get().equals(newItem.getText());
+            return areItemsTheSame(oldItem, newItem);
         }
 
         @Override
         public int compare(Status o1, Status o2) {
-            Log.v(TAG, "compare: "  + o1 + " = " + o2);
-            return Long.valueOf(o2.getId()).compareTo(o1.getId());
+            int compare = Long.valueOf(o2.getId()).compareTo(o1.getId());
+            return compare;
         }
 
         @Override

@@ -6,6 +6,7 @@ import java.util.List;
 import android.support.v7.widget.RecyclerView;
 import twitter4j.PagableResponseList;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 import twitter4j.User;
 
 import kinjouj.app.oretter.view.adapter.UserAdapter;
@@ -26,21 +27,11 @@ public class FollowerListFragment extends RecyclerViewFragment<User> {
     }
 
     @Override
-    public List<User> fetch(int currentPage) {
-        List<User> users = null;
-
-        try {
-            Twitter twitter = getTwitter();
-            PagableResponseList<User> _users = twitter.getFollowersList(
-                twitter.verifyCredentials().getId(),
-                cursor
-            );
-            cursor = _users.hasNext() ? _users.getNextCursor() : 0;
-            users = _users;
-        } catch (Exception e) {
-            e.printStackTrace();
-            users = Collections.<User>emptyList();
-        }
+    public List<User> fetch(int currentPage) throws TwitterException {
+        Twitter twitter = getTwitter();
+        long id = twitter.verifyCredentials().getId();
+        PagableResponseList<User> users = twitter.getFollowersList(id, cursor);
+        cursor = users.hasNext() ? users.getNextCursor() : 0;
 
         return users;
     }

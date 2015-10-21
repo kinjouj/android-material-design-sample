@@ -6,20 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import com.squareup.picasso.Picasso;
 import twitter4j.MediaEntity;
 
-import kinjouj.app.oretter.AppInterfaces;
-import kinjouj.app.oretter.EventManager;
-import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragments.dialog.PhotoPreviewDialogFragment;
-import kinjouj.app.oretter.fragments.dialog.PhotoPreviewDialogFragmentBuilder;
+import kinjouj.app.oretter.util.FragmentUtil;
 
 public class GridViewAdapter extends BaseAdapter {
 
@@ -61,7 +54,7 @@ public class GridViewAdapter extends BaseAdapter {
         }
 
         Picasso.with(context).load(entity.getMediaURL()).resize(90, 90).into(holder.media);
-        view.setOnClickListener(new View.OnClickListener() {
+        holder.media.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPreviewImage(context, entity.getMediaURL());
@@ -72,20 +65,15 @@ public class GridViewAdapter extends BaseAdapter {
     }
 
     void showPreviewImage(Context context, String url) {
-        PhotoPreviewDialogFragment fragment = new PhotoPreviewDialogFragmentBuilder(url).build();
-        fragment.show(
-            ((MainActivity) context).getSupportFragmentManager(),
-            PhotoPreviewDialogFragment.class.getName()
-        );
+        FragmentUtil.showDialogFragment(context, PhotoPreviewDialogFragment.build(url));
     }
 
     public static class ViewHolder {
 
-        @Bind(R.id.media_thumb_image_view)
         ImageView media;
 
         public ViewHolder(View root) {
-            ButterKnife.bind(this, root);
+            media = (ImageView) root.findViewById(R.id.media_thumb_image_view);
         }
 
         public Context getContext() {

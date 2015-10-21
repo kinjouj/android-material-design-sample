@@ -93,6 +93,8 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
 
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
+        Log.v(TAG, "onTabSelected");
+
         final Fragment fragment = getTagFragment(tab.getTag());
 
         if (fragment == null) {
@@ -114,6 +116,7 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
 
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
+        Log.v(TAG, "onTabReselected");
         Fragment fragment = getTagFragment(tab.getTag());
 
         if (fragment != null && fragment instanceof RecyclerViewFragment) {
@@ -123,6 +126,8 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
 
     @Override
     public void onTabUnselected(TabLayout.Tab tab) {
+        Log.v(TAG, "onTabUnselected");
+
         if (!backStackState) {
             backStackTabs.add(tab);
         } else {

@@ -5,7 +5,6 @@ import java.util.List;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
@@ -19,8 +18,10 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import twitter4j.Twitter;
+import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 
+import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.util.LayoutManagerUtil;
@@ -32,7 +33,6 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     implements SwipeRefreshLayout.OnRefreshListener, AppBarLayout.OnOffsetChangedListener {
 
     private static final String TAG = RecyclerViewFragment.class.getName();
-    private static final int FIRST_PAGE_NUM = 1;
 
     @Bind(R.id.refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -40,8 +40,11 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
 
-    int currentPage = 1;
+    RecyclerView.Adapter adapter;
     RecyclerView.OnScrollListener listener;
+
+    int currentPage = 1;
+    boolean loading = false;
 
     @Override
     public void onAttach(Context context) {
@@ -50,12 +53,24 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         listener = new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if (ViewCompat.canScrollVertically(recyclerView, 1)) {
+                boolean canScrollVertically = ViewCompat.canScrollVertically(recyclerView, 1);
+                Log.v(TAG, "loading: " + loading);
+                Log.v(TAG, "canScollVertically: " + canScrollVertically);
+
+                if (loading || canScrollVertically) {
                     return;
                 }
 
-                onLoadMore();
-                currentPage++;
+                loading = true;
+                load(currentPage + 1, new AppInterfaces.OnLoadCallback() {
+                    @Override
+                    public void run(Throwable t) {
+                        if (t == null) {
+                            currentPage++;
+                        }
+                        loading = false;
+                    }
+                });
             }
         };
     }
@@ -70,14 +85,14 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
         Log.v(TAG, "onCreateView");
-
         View view = inflater.inflate(R.layout.fragment_tweet_list, container, false);
         ButterKnife.bind(this, view);
+        adapter = getAdapter();
         recyclerView.setLayoutManager(getLayoutManager());
-        recyclerView.setAdapter(getAdapter());
+        recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(listener);
         swipeRefreshLayout.setOnRefreshListener(this);
-        load(FIRST_PAGE_NUM, null);
+        load(1, null);
 
         return view;
     }
@@ -106,9 +121,9 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     public void onDestroyView() {
         Log.v(TAG, "onDestroyView");
         recyclerView.removeOnScrollListener(listener);
-        recyclerView.setAdapter(null);
-        listener = null;
-        ButterKnife.unbind(this);
+        //adapter = null;
+        //listener = null;
+        //ButterKnife.unbind(this);
         super.onDestroyView();
     }
 
@@ -135,10 +150,10 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     @Override
     public void onRefresh() {
         Log.v(TAG, "onRefresh");
-        load(FIRST_PAGE_NUM, new Runnable() {
+        load(1, new AppInterfaces.OnLoadCallback() {
             @Override
-            public void run() {
-                if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+            public void run(Throwable t) {
+                if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
@@ -151,7 +166,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         swipeRefreshLayout.setEnabled(verticalOffset == 0);
     }
 
-    public Twitter getTwitter() {
+    protected Twitter getTwitter() {
         return TwitterFactory.getSingleton();
     }
 
@@ -165,40 +180,39 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         }
     }
 
-    private void load(final int currentPage, final Runnable callback) {
-        final Handler handler = new Handler();
-
+    private void load(final int currentPage, final AppInterfaces.OnLoadCallback callback) {
+        Toast.makeText(getActivity(), "load: page(" + currentPage + ")", Toast.LENGTH_LONG).show();
         ThreadUtil.run(new Runnable() {
             @Override
             public void run() {
-                final List<T> data = fetch(currentPage);
+                try {
+                    Log.v(TAG, RecyclerViewFragment.this + ".fetch( " + currentPage + ")");
+                    final List<T> data = fetch(currentPage);
 
-                handler.post(new Runnable() {
-                    @SuppressWarnings("unchecked")
-                    @Override
-                    public void run() {
-                        if (recyclerView != null) {
-                            RecyclerView.Adapter adapter = recyclerView.getAdapter();
-
-                            if (data != null && adapter != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @SuppressWarnings("unchecked")
+                        @Override
+                        public void run() {
+                            if (data != null) {
                                 ((SortedListAdapter<T>) adapter).addAll(data);
                             }
-                        }
 
-                        if (callback != null) {
-                            callback.run();
+                            if (callback != null) {
+                                callback.run(null);
+                            }
                         }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (callback != null) {
+                        callback.run(e);
                     }
-                });
+                }
             }
         });
     }
 
-    private void onLoadMore() {
-        load(currentPage + 1, null);
-    }
-
     abstract RecyclerView.Adapter getAdapter();
-    abstract List<T> fetch(int currentPage);
+    abstract List<T> fetch(int currentPage) throws TwitterException;
 
 }

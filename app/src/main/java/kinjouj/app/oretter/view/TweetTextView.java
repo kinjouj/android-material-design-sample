@@ -22,7 +22,7 @@ import twitter4j.User;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.UserFragmentBuilder;
+import kinjouj.app.oretter.fragments.UserFragment;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class TweetTextView extends TextView {
@@ -61,13 +61,15 @@ public class TweetTextView extends TextView {
                 return;
             }
 
-            TabLayoutManager tabManager = activity.getTabLayoutManager();
-            TabLayout.Tab tab = tabManager.addTab(
-                String.format("%s @%s", user.getName(), user.getScreenName()),
-                R.drawable.ic_person,
-                new UserFragmentBuilder(user).build()
+            TabLayoutManager tm = activity.getTabLayoutManager();
+            tm.select(
+                tm.addTab(
+                    String.format("%s @%s", user.getName(), user.getScreenName()),
+                    R.drawable.ic_person,
+                    UserFragment.build(user)
+                ),
+                300
             );
-            tabManager.select(tab, 300);
         } else if (URLUtil.isNetworkUrl(text)) {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(text));
             activity.startActivity(intent);
@@ -77,7 +79,6 @@ public class TweetTextView extends TextView {
     }
 
     public class TweetMovementMethod extends LinkMovementMethod {
-
         @Override
         public boolean onTouchEvent(TextView widget, Spannable buffer, MotionEvent event) {
             if (event.getAction() == MotionEvent.ACTION_UP) {

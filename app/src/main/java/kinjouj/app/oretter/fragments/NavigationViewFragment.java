@@ -1,10 +1,6 @@
 package kinjouj.app.oretter.fragments;
 
-import java.util.List;
-
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,10 +18,8 @@ import twitter4j.UserList;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragments.dialog.UserListDialogFragment;
-import kinjouj.app.oretter.fragments.dialog.UserListDialogFragmentBuilder;
 import kinjouj.app.oretter.util.ThreadUtil;
 import kinjouj.app.oretter.view.DrawerHeaderView;
-import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class NavigationViewFragment extends Fragment implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -135,8 +129,7 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
         ThreadUtil.run(new Runnable() {
             @Override
             public void run() {
-                ResponseList<UserList> userLists = getUserLists();
-                UserListDialogFragment fragment = new UserListDialogFragmentBuilder(userLists).build();
+                UserListDialogFragment fragment = UserListDialogFragment.build(getUserLists());
                 fragment.show(getFragmentManager(), UserListDialogFragment.class.getName());
             }
         });
@@ -159,9 +152,7 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
                     continue;
                 }
 
-                synchronized (userLists) {
-                    userLists.remove(userList);
-                }
+                userLists.remove(userList);
             }
         } catch (Exception e) {
             e.printStackTrace();

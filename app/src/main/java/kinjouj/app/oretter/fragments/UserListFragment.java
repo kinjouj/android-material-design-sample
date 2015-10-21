@@ -4,24 +4,19 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import com.hannesdorfmann.fragmentargs.FragmentArgs;
-import com.hannesdorfmann.fragmentargs.annotation.Arg;
+import android.util.Log;
+
 import twitter4j.Paging;
 import twitter4j.Status;
+import twitter4j.TwitterException;
 import twitter4j.UserList;
 
 import kinjouj.app.oretter.view.adapter.StatusAdapter;
 
 public class UserListFragment extends RecyclerViewFragment<Status> {
 
-    @Arg
-    UserList userList;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        FragmentArgs.inject(this);
-    }
+    private static final String EXTRA_KEY_USERLIST = "extra_key_userlist";
+    private static final String TAG = UserListFragment.class.getName();
 
     @Override
     public RecyclerView.Adapter getAdapter() {
@@ -29,15 +24,24 @@ public class UserListFragment extends RecyclerViewFragment<Status> {
     }
 
     @Override
-    public List<Status> fetch(int currentPage) {
-        List<Status> statuses = null;
+    public List<Status> fetch(int currentPage) throws TwitterException {
+        UserList userList = getUserList();
+        Log.v(TAG, "userList:" + userList);
+        return getTwitter().getUserListStatuses(userList.getId(), new Paging(currentPage));
+    }
 
-        try {
-            statuses = getTwitter().getUserListStatuses(userList.getId(), new Paging(currentPage));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    UserList getUserList() {
+        Bundle args = getArguments();
+        return (UserList) args.getSerializable(EXTRA_KEY_USERLIST);
+    }
 
-        return statuses;
+    public static UserListFragment build(UserList userList) {
+        Bundle args = new Bundle();
+        args.putSerializable(EXTRA_KEY_USERLIST, userList);
+
+        UserListFragment fragment = new UserListFragment();
+        fragment.setArguments(args);
+
+        return fragment;
     }
 }

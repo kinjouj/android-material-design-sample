@@ -18,6 +18,9 @@
 
 -repackageclasses
 
+# for android-support
+-keep class android.support.** { *; }
+
 # for Butter Knife (see http://jakewharton.github.io/butterknife/#proguard)
 -keep class butterknife.** { *; }
 -keep class **$$ViewBinder { *; }
@@ -25,8 +28,10 @@
 -keepclasseswithmembernames class * { @butterknife.* <fields>; }
 -keepclasseswithmembernames class * { @butterknife.* <methods>; }
 
+# for OkHttp
 -dontwarn com.squareup.okhttp.**
 
+# for Twitter4J
 -keep class twitter4j.** { *; }
 -dontwarn twitter4j.*
 -dontwarn twitter4j.management.**
@@ -34,5 +39,5 @@
 -keep class org.yaml.snakeyaml.** { public protected private *; }
 -dontwarn org.yaml.snakeyaml.**
 
--keep class android.support.** { *; }
+# for EventBus
 -keepclassmembers class ** { public void onEvent*(**); }

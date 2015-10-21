@@ -10,6 +10,10 @@ public interface AppInterfaces {
         void run(Context context);
     }
 
+    public static interface OnLoadCallback {
+        void run(Throwable t);
+    }
+
     public static interface SortedListAdapter<T> {
         void add(T value);
         void addAll(List<T> values);
