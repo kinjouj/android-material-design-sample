@@ -25,7 +25,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>
     implements AppInterfaces.SortedListAdapter<User> {
 
     private static final String TAG = UserAdapter.class.getName();
-
     private SortedList<User> users = new SortedList<>(User.class, new SortedListCallback());
 
     @Override
@@ -69,11 +68,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>
         }
 
         this.users.beginBatchedUpdates();
-
-        for (User user : users) {
-            add(user);
-        }
-
+        this.users.addAll(users);
         this.users.endBatchedUpdates();
     }
 

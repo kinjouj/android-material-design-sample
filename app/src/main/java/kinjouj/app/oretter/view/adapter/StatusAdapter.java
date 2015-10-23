@@ -15,6 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import com.annimon.stream.Stream;
+import com.annimon.stream.function.Consumer;
 import com.squareup.picasso.Picasso;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -52,7 +55,6 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         final Context context = viewHolder.getContext();
         final Status status = getStatus(position);
         final User user = status.getUser();
-
         Picasso.with(context).load(user.getProfileImageURL()).fit().into(viewHolder.icon);
         viewHolder.icon.setTag(user);
         viewHolder.userName.setText(user.getName() + "\r\n@" + user.getScreenName());
@@ -66,12 +68,12 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
                 /*
                 TabLayoutManager tm = ((MainActivity) context).getTabLayoutManager();
                 tm.select(
-                             tm.addTab(
-                                          String.format("%s @%s", user.getName(), user.getScreenName()),
-                                          R.drawable.ic_person,
-                                          new StatusFragmentBuilder(status).build()
-                             ),
-                             300
+                    tm.addTab(
+                        String.format("%s @%s", user.getName(), user.getScreenName()),
+                        R.drawable.ic_person,
+                        new StatusFragmentBuilder(status).build()
+                    ),
+                    300
                 );
                 */
             }
@@ -80,6 +82,8 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         viewHolder.favoriteIconLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Status status = getStatus(position);
+
                 if (status.isFavorited()) {
                     destroyFavorite(viewHolder, position);
                 } else {
@@ -123,8 +127,8 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
     }
 
     String getStatusText(Status status) {
-        String text = status.getText();
         URLEntity[] entities = status.getURLEntities();
+        String text = status.getText();
 
         for (URLEntity entity : entities) {
             text = text.replace(entity.getURL(), " " + entity.getExpandedURL() + " ");
@@ -228,7 +232,6 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
         public ViewHolder(View view) {
             super(view);
-            Log.v(TAG, "ViewHolder: " + view);
             root = view;
             ButterKnife.bind(this, view);
         }

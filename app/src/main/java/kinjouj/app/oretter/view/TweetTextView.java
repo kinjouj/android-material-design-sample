@@ -3,7 +3,6 @@ package kinjouj.app.oretter.view;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.design.widget.TabLayout;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
@@ -22,7 +21,7 @@ import twitter4j.User;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.UserFragment;
+import kinjouj.app.oretter.fragments.list.status.UserFragment;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class TweetTextView extends TextView {

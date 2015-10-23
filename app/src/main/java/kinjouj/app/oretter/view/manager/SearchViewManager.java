@@ -9,7 +9,7 @@ import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.EventManager;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.SearchFragment;
+import kinjouj.app.oretter.fragments.list.status.SearchFragment;
 
 public class SearchViewManager extends ViewManager<SearchView> implements SearchView.OnQueryTextListener {
 

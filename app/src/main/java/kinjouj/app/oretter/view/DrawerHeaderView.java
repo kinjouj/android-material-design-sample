@@ -33,7 +33,6 @@ public class DrawerHeaderView extends FrameLayout {
     }
 
     void init(Context context, User user) {
-        Log.v(TAG, "init");
         userName.setText(user.getName());
         Picasso.with(context).load(user.getProfileBackgroundImageURL()).fit().into(userBg);
         Picasso.with(context).load(user.getProfileImageURL()).into(userIcon);

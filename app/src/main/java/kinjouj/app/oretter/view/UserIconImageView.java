@@ -4,14 +4,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.support.design.widget.TabLayout;
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.squareup.picasso.Picasso;
 import twitter4j.User;
 
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
-import kinjouj.app.oretter.fragments.UserFragment;
+import kinjouj.app.oretter.fragments.list.status.UserFragment;
 import kinjouj.app.oretter.view.manager.TabLayoutManager;
 
 public class UserIconImageView extends RoundedImageView implements View.OnClickListener {
@@ -41,11 +39,5 @@ public class UserIconImageView extends RoundedImageView implements View.OnClickL
             ),
             300
         );
-    }
-
-    @Override
-    public void onDetachedFromWindow() {
-        Log.v(TAG, "onDetachFromWindow");
-        super.onDetachedFromWindow();
     }
 }

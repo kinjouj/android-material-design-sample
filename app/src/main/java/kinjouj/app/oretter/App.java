@@ -10,5 +10,6 @@ public class App extends Application {
     @Override
     public void onCreate() {
         Log.v(TAG, "onCreate");
+        super.onCreate( );
     }
 }

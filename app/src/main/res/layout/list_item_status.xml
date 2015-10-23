@@ -98,6 +98,7 @@
                 android:padding="5dp">
 
                 <LinearLayout
+                    android:id="@+id/status_reply_icon_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -109,9 +110,16 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_reply_small" />
 
+
+                    <TextView
+                        android:id="@+id/status_reply_icon_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/status_retweet_icon_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

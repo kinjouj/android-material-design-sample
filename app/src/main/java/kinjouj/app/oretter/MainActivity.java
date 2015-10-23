@@ -6,22 +6,18 @@ import android.util.Log;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.view.MenuItem;
-
 import butterknife.Bind;
-import butterknife.BindString;
 import butterknife.ButterKnife;
 
-import kinjouj.app.oretter.fragments.FavoriteListFragment;
-import kinjouj.app.oretter.fragments.FollowListFragment;
-import kinjouj.app.oretter.fragments.FollowerListFragment;
-import kinjouj.app.oretter.fragments.HomeFragment;
-import kinjouj.app.oretter.fragments.MentionListFragment;
-import kinjouj.app.oretter.fragments.dialog.ComposeDialogFragment;
+import kinjouj.app.oretter.fragments.list.status.FavoriteListFragment;
+import kinjouj.app.oretter.fragments.list.status.HomeFragment;
+import kinjouj.app.oretter.fragments.list.status.MentionListFragment;
+import kinjouj.app.oretter.fragments.list.user.FollowListFragment;
+import kinjouj.app.oretter.fragments.list.user.FollowerListFragment;
 import kinjouj.app.oretter.view.manager.AppBarLayoutManager;
 import kinjouj.app.oretter.view.manager.DrawerLayoutManager;
 import kinjouj.app.oretter.view.manager.SearchViewManager;
