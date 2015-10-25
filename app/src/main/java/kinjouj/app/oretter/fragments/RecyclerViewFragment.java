@@ -5,6 +5,8 @@ import java.util.List;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.UiThread;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
@@ -53,9 +55,9 @@ public abstract class RecyclerViewFragment<T> extends Fragment
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 boolean canScrollVertically = ViewCompat.canScrollVertically(recyclerView, 1);
                 Log.v(TAG, "loading: " + loading);
-                Log.v(TAG, "canScollVertically: " + canScrollVertically);
+                Log.v(TAG, "canScrollVertically: " + canScrollVertically);
 
-                if (loading || canScrollVertically) {
+                if (canScrollVertically || loading) {
                     return;
                 }
 
@@ -148,12 +150,15 @@ public abstract class RecyclerViewFragment<T> extends Fragment
     @Override
     public void onRefresh() {
         Log.v(TAG, "onRefresh");
+        ((AppInterfaces.SortedListAdapter) adapter).clear();
         load(1, new AppInterfaces.OnLoadCallback() {
             @Override
             public void run(Throwable t) {
                 if (swipeRefreshLayout.isRefreshing()) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
+
+                currentPage = 1;
             }
         });
     }
@@ -178,7 +183,9 @@ public abstract class RecyclerViewFragment<T> extends Fragment
         }
     }
 
+    @UiThread
     private void load(final int currentPage, final AppInterfaces.OnLoadCallback callback) {
+        final Handler handler = new Handler();
         ThreadUtil.run(new Runnable() {
             @Override
             public void run() {
@@ -186,7 +193,7 @@ public abstract class RecyclerViewFragment<T> extends Fragment
                     Log.v(TAG, RecyclerViewFragment.this + ".fetch(" + currentPage + ")");
                     final List<T> data = fetch(currentPage);
 
-                    getActivity().runOnUiThread(new Runnable() {
+                    handler.post(new Runnable() {
                         @SuppressWarnings("unchecked")
                         @Override
                         public void run() {

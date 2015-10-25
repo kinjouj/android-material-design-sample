@@ -4,7 +4,7 @@ import java.util.List;
 
 import android.content.Context;
 
-public interface AppInterfaces {
+public class AppInterfaces {
 
     public static interface AppEvent {
         void run(Context context);
@@ -15,7 +15,7 @@ public interface AppInterfaces {
     }
 
     public static interface SortedListAdapter<T> {
-        void add(T value);
         void addAll(List<T> values);
+        void clear();
     }
 }

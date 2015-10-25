@@ -16,8 +16,6 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-import com.annimon.stream.Stream;
-import com.annimon.stream.function.Consumer;
 import com.squareup.picasso.Picasso;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -45,7 +43,6 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         Log.v(TAG, "onCreateViewHolder");
         View view = LayoutInflater.from(parent.getContext())
                                     .inflate(R.layout.list_item_status, parent, false);
-
         return new ViewHolder(view);
     }
 
@@ -107,10 +104,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         return statuses.size();
     }
 
-    public void add(Status status) {
-        statuses.add(status);
-    }
-
+    @Override
     public void addAll(List<Status> statuses) {
         if (statuses.size() <= 0) {
             return;
@@ -119,6 +113,11 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         this.statuses.beginBatchedUpdates();
         this.statuses.addAll(statuses);
         this.statuses.endBatchedUpdates();
+    }
+
+    @Override
+    public void clear() {
+        statuses.clear();
     }
 
     Status getStatus(int position) {

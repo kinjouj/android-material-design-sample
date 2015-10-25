@@ -1,6 +1,7 @@
 package kinjouj.app.oretter.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,16 +57,17 @@ public class NavigationViewFragment extends Fragment implements NavigationView.O
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         navigationView.setNavigationItemSelectedListener(this);
+        final Handler handler = new Handler();
         ThreadUtil.run(new Runnable() {
             @Override
             public void run() {
                 try {
                     user = twitter.verifyCredentials();
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                    handler.post(new Runnable() {
+                         @Override
+                         public void run() {
                             navigationView.addHeaderView(new DrawerHeaderView(getActivity(), user));
-                        }
+                         }
                     });
                 } catch (Exception e) {
                     e.printStackTrace();

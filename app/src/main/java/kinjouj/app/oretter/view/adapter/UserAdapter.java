@@ -58,10 +58,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>
         return users.size();
     }
 
-    public void add(User user) {
-        users.add(user);
-    }
-
+    @Override
     public void addAll(List<User> users) {
         if (users.size() <= 0) {
             return;
@@ -70,6 +67,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder>
         this.users.beginBatchedUpdates();
         this.users.addAll(users);
         this.users.endBatchedUpdates();
+    }
+
+    @Override
+    public void clear() {
+        users.clear();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

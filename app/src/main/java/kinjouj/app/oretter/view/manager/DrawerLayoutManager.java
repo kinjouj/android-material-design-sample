@@ -11,12 +11,11 @@ import kinjouj.app.oretter.R;
 
 public class DrawerLayoutManager extends ViewManager<DrawerLayout> {
 
-    public DrawerLayoutManager(View view, Toolbar toolbar) {
+    public DrawerLayoutManager(View view) {
         super(view);
-        init(toolbar);
     }
 
-    private void init(Toolbar toolbar) {
+    public void init(Toolbar toolbar) {
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(
             (MainActivity) getContext(),
             getView(),

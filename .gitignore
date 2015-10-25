@@ -4,4 +4,5 @@ build
 twitter4j.properties
 gradle.properties
 local.properties
+fabric.properties
 *.iml

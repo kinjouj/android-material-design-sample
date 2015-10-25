@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.*;
@@ -16,7 +15,8 @@ public class MainActivityTest {
 
     @Test
     public void test() {
-        MainActivity activity = Robolectric.buildActivity(MainActivity.class).create().get();
+        //MainActivity activity = Robolectric.buildActivity(MainActivity.class).create().get();
+        MainActivity activity = Robolectric.setupActivity(MainActivity.class);
         assertThat(activity, notNullValue());
         assertThat(activity.getTabLayoutManager(), notNullValue());
     }
