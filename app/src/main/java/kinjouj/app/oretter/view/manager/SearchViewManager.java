@@ -1,7 +1,6 @@
 package kinjouj.app.oretter.view.manager;
 
 import android.content.Context;
-import android.support.design.widget.TabLayout;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 

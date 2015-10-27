@@ -3,11 +3,9 @@ package kinjouj.app.oretter.view.manager;
 import android.view.View;
 import android.support.design.widget.AppBarLayout;
 
-import kinjouj.app.oretter.MainActivity;
-
 public class AppBarLayoutManager extends ViewManager<AppBarLayout> {
 
-    private AppBarLayout.OnOffsetChangedListener listener;
+    AppBarLayout.OnOffsetChangedListener listener;
 
     public AppBarLayoutManager(View view) {
         super(view);

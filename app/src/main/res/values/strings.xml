@@ -1,6 +1,8 @@
 <?xml version="1.0" ?>
 <resources>
     <string name="app_name">oretter</string>
+    <string name="drawer_open">open</string>
+    <string name="drawer_close">close</string>
 
     <!-- navigation view -->
     <string name="nav_menu_home">ホーム</string>

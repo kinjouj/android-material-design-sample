@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (drawerLayoutManager == null) {
-            drawerLayoutManager = new DrawerLayoutManager(drawerLayout);
+            drawerLayoutManager = new DrawerLayoutManager(drawerLayout, toolbar);
         }
 
         if (searchViewManager == null) {
@@ -110,13 +110,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.inflateMenu(R.menu.menu_toolbar);
         initViewManager();
         initTab();
-        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        drawerLayoutManager.init(toolbar);
+        //Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
     }
 
     @Override
