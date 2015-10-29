@@ -24,6 +24,7 @@ public class SearchViewManagerTest {
     public void setUp() {
         SearchView view = new SearchView(RuntimeEnvironment.application);
         manager = new SearchViewManager(view);
+        manager.getView().setOnQueryTextListener(null);
     }
 
     @Test
@@ -48,7 +49,8 @@ public class SearchViewManagerTest {
                 return null;
             }
         }).when(_manager).search(anyString());
-        _manager.onQueryTextSubmit("A");
+        _manager.registerListener();
+        _manager.listener.onQueryTextSubmit("A");
         verify(_manager, times(1)).search(anyString());
     }
 
@@ -56,7 +58,11 @@ public class SearchViewManagerTest {
     public void test_unbind() {
         assertThat(manager.getView(), notNullValue());
 
+        manager.registerListener();
+        assertThat(manager.listener, notNullValue());
+
         manager.unbind();
         assertThat(manager.getView(), nullValue());
+        assertThat(manager.listener, nullValue());
     }
 }

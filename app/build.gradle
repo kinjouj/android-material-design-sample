@@ -85,6 +85,10 @@ android {
         }
     }
 
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     /*
     jacoco {
         version = "0.7.5.201505241946"

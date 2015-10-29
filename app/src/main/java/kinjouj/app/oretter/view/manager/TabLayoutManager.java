@@ -4,28 +4,26 @@ import java.util.LinkedList;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
 
 import kinjouj.app.oretter.AppInterfaces;
 import kinjouj.app.oretter.EventManager;
 import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragments.RecyclerViewFragment;
-import kinjouj.app.oretter.util.ThreadUtil;
 
 public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayout.OnTabSelectedListener {
 
     private static final String TAG = TabLayoutManager.class.getName();
-    private static LinkedList<TabLayout.Tab> backStackTabs = new LinkedList<>();
-    private boolean backStackState = false;
+    static LinkedList<TabLayout.Tab> backStackTabs = new LinkedList<>();
+    boolean backStackState = false;
 
     public TabLayoutManager(View view) {
         super(view);
@@ -37,11 +35,12 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
     }
 
     public TabLayout.Tab addTab(String title, int icon, Fragment fragment, boolean isSelected) {
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.tab, null);
         TabLayout.Tab tab = getView().newTab()
                                     .setText(title)
                                     .setIcon(icon)
                                     .setTag(fragment)
-                                    .setCustomView(createTabView());
+                                    .setCustomView(view);
 
         return addTab(tab, isSelected);
     }
@@ -56,24 +55,25 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
     }
 
     public void select(final TabLayout.Tab tab, final int interval) {
-        final Handler handler = new Handler();
-
-        ThreadUtil.run(new Runnable() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(interval);
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            tab.select();
-                        }
-                    });
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                tab.select();
             }
-        });
+        }, interval);
+    }
+
+    void addBackStack(TabLayout.Tab tab) {
+        if (backStackState) {
+            backStackState = false;
+            return;
+        }
+
+        if (tab == null) {
+            throw new IllegalArgumentException("tab is null");
+        }
+
+        backStackTabs.add(tab);
     }
 
     public boolean hasBackStack() {
@@ -95,12 +95,37 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
     public void onTabSelected(TabLayout.Tab tab) {
         Log.v(TAG, "onTabSelected");
 
-        final Fragment fragment = getTagFragment(tab.getTag());
-
-        if (fragment == null) {
-            return;
+        if (tab.getTag() instanceof Fragment) {
+            Fragment fragment = (Fragment) tab.getTag();
+            renderFragment(fragment);
         }
+    }
 
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+        Log.v(TAG, "onTabReselected");
+
+        if (tab.getTag() instanceof Fragment) {
+            Fragment fragment = (Fragment) tab.getTag();
+
+            if (fragment instanceof RecyclerViewFragment) {
+                ((RecyclerViewFragment) fragment).scrollToTop();
+            }
+        }
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+        Log.v(TAG, "onTabUnselected");
+        addBackStack(tab);
+    }
+
+    @Override
+    public void unbind() {
+        getView().setOnTabSelectedListener(null);
+    }
+
+    void renderFragment(final Fragment fragment) {
         EventManager.getInstance().post(new AppInterfaces.AppEvent() {
             @Override
             public void run(Context context) {
@@ -112,49 +137,5 @@ public class TabLayoutManager extends ViewManager<TabLayout> implements TabLayou
                 tx.commit();
             }
         });
-    }
-
-    @Override
-    public void onTabReselected(TabLayout.Tab tab) {
-        Log.v(TAG, "onTabReselected");
-        Fragment fragment = getTagFragment(tab.getTag());
-
-        if (fragment != null && fragment instanceof RecyclerViewFragment) {
-            ((RecyclerViewFragment) fragment).scrollToTop();
-        }
-    }
-
-    @Override
-    public void onTabUnselected(TabLayout.Tab tab) {
-        Log.v(TAG, "onTabUnselected");
-
-        if (!backStackState) {
-            backStackTabs.add(tab);
-        } else {
-            backStackState = false;
-        }
-    }
-
-    @Override
-    public void unbind() {
-        getView().setOnTabSelectedListener(null);
-    }
-
-    Fragment getTagFragment(Object obj) {
-        return obj instanceof Fragment ? (Fragment) obj : null;
-    }
-
-    View createTabView() {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.tab, null);
-        /*
-        view.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Toast.makeText(v.getContext(), "long click", Toast.LENGTH_LONG).show();
-                return false;
-            }
-        });
-        */
-        return view;
     }
 }

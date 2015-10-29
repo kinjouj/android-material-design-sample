@@ -74,9 +74,5 @@ public class GridViewAdapter extends BaseAdapter {
         public ViewHolder(View root) {
             media = (ImageView) root.findViewById(R.id.media_thumb_image_view);
         }
-
-        public Context getContext() {
-            return media.getContext();
-        }
     }
 }

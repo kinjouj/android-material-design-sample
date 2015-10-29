@@ -10,28 +10,19 @@ import kinjouj.app.oretter.MainActivity;
 import kinjouj.app.oretter.R;
 import kinjouj.app.oretter.fragments.list.status.SearchFragment;
 
-public class SearchViewManager extends ViewManager<SearchView> implements SearchView.OnQueryTextListener {
+public class SearchViewManager extends ViewManager<SearchView> {
+
+    SearchView.OnQueryTextListener listener;
 
     public SearchViewManager(View view) {
         super(view);
-        getView().setOnQueryTextListener(this);
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        collapse();
-        search(query);
-        return false;
+        registerListener();
     }
 
     @Override
     public void unbind() {
         getView().setOnQueryTextListener(null);
+        listener = null;
         destroyView();
     }
 
@@ -63,5 +54,24 @@ public class SearchViewManager extends ViewManager<SearchView> implements Search
             getView().clearFocus();
             getView().onActionViewCollapsed();
         }
+    }
+
+    private class OnQueryTextListener implements SearchView.OnQueryTextListener {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            collapse();
+            search(query);
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            return false;
+        }
+    }
+
+    void registerListener() {
+        listener = new OnQueryTextListener();
+        getView().setOnQueryTextListener(listener);
     }
 }

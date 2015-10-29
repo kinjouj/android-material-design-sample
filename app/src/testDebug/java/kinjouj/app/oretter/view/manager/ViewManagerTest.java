@@ -1,10 +1,7 @@
 package kinjouj.app.oretter.view.manager;
 
-import android.content.Context;
-import android.view.View;
 import android.widget.TextView;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

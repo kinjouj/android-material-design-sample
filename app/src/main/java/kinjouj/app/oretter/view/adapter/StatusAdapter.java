@@ -257,8 +257,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
         @Override
         public int compare(Status o1, Status o2) {
-            int compare = Long.valueOf(o2.getId()).compareTo(o1.getId());
-            return compare;
+            return Long.valueOf(o2.getId()).compareTo(o1.getId());
         }
 
         @Override

@@ -219,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
         return tabLayoutManager;
     }
 
+    @SuppressWarnings("unused")
     public void onEventMainThread(AppInterfaces.AppEvent event) {
         Log.v(TAG, "onEvent: " + event);
         event.run(this);

@@ -7,14 +7,19 @@ import android.support.v7.widget.Toolbar;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
+import butterknife.ButterKnife;
 import kinjouj.app.oretter.MainActivity;
+import kinjouj.app.oretter.R;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(RobolectricGradleTestRunner.class)
 public class DrawerLayoutManagerTest {
@@ -23,7 +28,7 @@ public class DrawerLayoutManagerTest {
 
     @Before
     public void setUp() {
-        MainActivity activity = Robolectric.buildActivity(MainActivity.class).create().get();
+        MainActivity activity = spy(Robolectric.buildActivity(MainActivity.class).create().get());
         manager = activity.getDrawerLayoutManager();
     }
 

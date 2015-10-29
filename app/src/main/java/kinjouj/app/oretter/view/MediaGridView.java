@@ -1,13 +1,12 @@
 package kinjouj.app.oretter.view;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
 public class MediaGridView extends GridView {
-
-    private static final String TAG = MediaGridView.class.getName();
 
     public MediaGridView(Context context) {
         super(context);
@@ -23,7 +22,10 @@ public class MediaGridView extends GridView {
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int expandSpec = MeasureSpec.makeMeasureSpec(MEASURED_SIZE_MASK, MeasureSpec.AT_MOST);
+        int expandSpec = MeasureSpec.makeMeasureSpec(
+            ViewCompat.MEASURED_SIZE_MASK, MeasureSpec
+            .AT_MOST
+        );
         super.onMeasure(widthMeasureSpec, expandSpec);
         ViewGroup.LayoutParams params = getLayoutParams();
         params.height = getMeasuredHeight();
